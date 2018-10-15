@@ -24,7 +24,7 @@ import { RouterModule, Routes } from '@angular/router';
     
     // Says the Routermodule where to take all the routes
     // that exisit in the project from.
-    RouterModule.forRoot(ROUTES, { enableTracing: true }),
+    RouterModule.forRoot(ROUTES, { enableTracing: false }),
 
   ],
   providers: [

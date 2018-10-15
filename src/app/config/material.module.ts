@@ -14,7 +14,11 @@ import {
   MatSidenavModule,
   MatInputModule,
   MatChipsModule,
-  MatListModule
+  MatListModule,
+  MatRadioModule,
+  MatOptionModule,
+  MatSelectModule,
+  MatAutocompleteModule,
 
 } from '@angular/material';
 
@@ -33,8 +37,12 @@ import {
     MatSidenavModule,
     MatInputModule,
     MatChipsModule,
-    MatListModule
-    
+    MatListModule,
+    MatRadioModule,
+    MatOptionModule,
+    MatSelectModule,
+    MatAutocompleteModule,
+
   ], exports: [
 
     MatButtonModule,
@@ -48,7 +56,11 @@ import {
     MatSidenavModule,
     MatInputModule,
     MatChipsModule,
-    MatListModule
+    MatListModule,
+    MatRadioModule,
+    MatOptionModule,
+    MatSelectModule,
+MatAutocompleteModule
 
   ]
 

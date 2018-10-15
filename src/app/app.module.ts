@@ -4,29 +4,29 @@ import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppComponent } from './app.component';
-import { ColorComponent } from './color/color.component';
 import { ConfigModule } from './config/config.module';
 import { MaterialModule } from './config/material.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MarioComponent } from './mario/mario.component';
+import { ColorModule } from './color/color.module'
 
 @NgModule({
   declarations: [
 
     AppComponent,
-    ColorComponent,
     MarioComponent
     
   ],
   imports: [
     
     BrowserModule,
-    ConfigModule,
     MaterialModule,
     BrowserModule,
     FormsModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
+    ConfigModule,
+    ColorModule,
 
   ], providers: [
     

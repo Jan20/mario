@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { ColorComponent } from './../color/color.component';
+import { ColorComponent } from './../color/color/color.component';
 import { AppComponent } from '../app.component';
 
 // Routing

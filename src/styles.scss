@@ -1,1 +1,123 @@
-/* You can add global styles to this file, and also import other style files */
+@import './theme.scss';
+
+
+*{
+
+    padding:0;
+    margin:0;
+    font-family: 'Roboto', sans-serif;
+
+}
+
+html, body {
+    
+    height: 100%;
+
+}
+
+h1 {
+
+    line-height: 100%;
+    font-size: 30px;
+    font-weight: 300;
+    margin-bottom: 10px;
+    font-family: 'Roboto', sans-serif;
+
+}
+
+p {
+
+    line-height: 200%;
+    font-size: 16px;
+    font-weight: 300;
+    text-align: justify;
+
+}
+// -------------------------------
+//          Mat Card
+// -------------------------------
+
+@media (max-width: 680px) {
+    mat-card {
+        height: 180px;
+        width: 80%;
+    }
+}
+
+@media (min-width: 680px) {
+    mat-card {
+        height: 180px;
+        width: 500px;
+        
+    }
+}
+
+@media (max-width: 680px) {
+    .card-button-container {
+        
+        width: 80%;
+        margin: auto;
+        
+    }
+}
+
+@media (min-width: 680px) {
+    .card-button-container  {
+        
+        width: 550px;
+        margin: auto;
+        
+    }
+
+}
+
+.mat-raised-button {
+    padding: 0;
+}
+
+
+.full-width {
+    
+    width: 100%;
+    
+}
+
+    
+// -------------------------------
+//          Spaces
+// -------------------------------
+.small-space{
+    
+    margin: 20px;    
+
+}
+
+.normal-space {
+
+    margin: 50px;
+
+}
+
+.whitespace {
+    
+    margin: 50px;
+    
+}
+
+.whitespace-tiny {
+
+    margin: 5px;
+
+}
+
+// -------------------------------
+//          Buttons
+// -------------------------------
+
+.mat-fab-container {
+
+    margin-top: -45px;
+    margin-left: -48px;
+    position: absolute;
+    
+}
