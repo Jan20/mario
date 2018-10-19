@@ -1,11 +1,12 @@
 import { Routes } from '@angular/router';
 import { ColorComponent } from './../color/color/color.component';
-import { AppComponent } from '../app.component';
+import { MarioComponent } from './../mario/mario.component';
 
-// Routing
 export const ROUTES: Routes = [
 
-  { path: '', component: AppComponent },
+  { path: '', component: MarioComponent },
   { path: 'color', component: ColorComponent },
+  { path: 'mario', component: MarioComponent },
   
 ]
+

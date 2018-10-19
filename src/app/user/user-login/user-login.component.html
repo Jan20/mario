@@ -1,0 +1,29 @@
+<div *ngIf='user.userId != ""; then authenticated else guest'></div>
+<!-- User NOT logged in -->
+<ng-template #guest>
+    <div class='banner'>
+        <div class='wrapper'>
+            <h1>Log In</h1>
+            <button mat-raised-button (click)='userService.googleLogin()' class='control-button'>
+                <i class='fa fa-google'></i> Connect Google
+            </button>        
+        </div>
+    </div>
+</ng-template>
+
+<!-- User logged in -->
+<ng-template #authenticated>
+    <div class='banner'>
+        <div class='wrapper'>
+            <img [src]='user.photoURL' class='profile-picture'>
+            <h1>{{ user.displayName }}</h1>
+            <button mat-raised-button class='control-button' (click)='userService.signOut()' >Logout</button>
+            <button mat-raised-button class='control-button' (click)='switchToAdmin()'>Switch to Admin</button>
+        </div>
+    </div>
+</ng-template>
+
+
+
+
+  

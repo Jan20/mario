@@ -1,0 +1,45 @@
+.spacer{
+	flex: 1 1 auto;
+}
+
+mat-toolbar {
+
+	border-top: 1px solid rgb(237, 237, 237);
+	border-bottom: 1px solid rgb(237, 237, 237);
+
+}	
+
+span {
+
+	font-family: 'Roboto', sans-serif;
+	color: rgb(128, 128, 128);
+    font-weight: 300;
+
+}
+
+
+@media (min-width: 600px) {
+	.mobile-menu {
+		display: none;
+	}
+}
+
+@media (max-width: 600px) {
+	.desktop-menu {
+		display: none;
+	}
+}
+
+.title {
+
+	color: rgb(128, 128, 128);
+	font-size: 24px;
+	font-weight: 100;
+
+}
+
+.user {
+
+	width: 72px;
+
+}

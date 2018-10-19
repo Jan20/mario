@@ -1,0 +1,57 @@
+@font-face { font-family: Mario; src: url('/assets/fonts/SuperMario256.ttf'); }
+@font-face { font-family: Arcade; src: url('/assets/fonts/ArcadeClassic.ttf'); }
+
+#page-wrap {
+
+    position:relative; 
+    margin: 35px auto; 
+    width:512px
+
+}
+
+#start {
+    position: absolute; 
+    top: 0; 
+    z-index: 10; 
+    width: 512px; 
+    height: 512px; 
+    background-image: url('/assets/background.png'); 
+    text-align: center; 
+    font-family: Mario;
+}
+
+#pause {
+    position: absolute; 
+    top: 0; 
+    z-index: 10; 
+    width: 512px; 
+    height: 512px; 
+    background-color: rgba(0,0,0,0.5); 
+    text-align: center; 
+    display: none;
+}
+
+#gg {
+
+    
+    position: absolute; 
+    top: 0; 
+    z-index: 10; 
+    width: 512px; 
+    height: 512px; 
+    background-color: black; 
+    text-align: center; 
+    display: none;
+
+}
+
+#done {
+    position: absolute; 
+    top: 0; 
+    z-index: 10; 
+    width: 512px; 
+    height: 512px; 
+    background-color: black; 
+    text-align: center; 
+    display: none;
+}

@@ -9,7 +9,8 @@ import { MaterialModule } from './config/material.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MarioComponent } from './mario/mario.component';
 import { ColorModule } from './color/color.module'
-
+import { MenuModule } from './menu/menu.module'
+import { UserModule } from './user/user.module'
 @NgModule({
   declarations: [
 
@@ -27,6 +28,8 @@ import { ColorModule } from './color/color.module'
     BrowserAnimationsModule,
     ConfigModule,
     ColorModule,
+    UserModule,
+    MenuModule
 
   ], providers: [
     
