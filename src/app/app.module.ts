@@ -7,15 +7,15 @@ import { AppComponent } from './app.component';
 import { ConfigModule } from './config/config.module';
 import { MaterialModule } from './config/material.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MarioComponent } from './mario/mario.component';
 import { ColorModule } from './color/color.module'
 import { MenuModule } from './menu/menu.module'
 import { UserModule } from './user/user.module'
+import { MarioModule } from './mario/mario.module'
+
 @NgModule({
   declarations: [
 
     AppComponent,
-    MarioComponent
     
   ],
   imports: [
@@ -29,7 +29,8 @@ import { UserModule } from './user/user.module'
     ConfigModule,
     ColorModule,
     UserModule,
-    MenuModule
+    MenuModule,
+    MarioModule
 
   ], providers: [
     

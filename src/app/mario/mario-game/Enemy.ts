@@ -1,8 +1,8 @@
 import { MovableObject } from './MoveableObject'
-import { Timer } from '../mario.common/timer'
-import { mult, flatten, mat4, translate } from '../mario.common/MV'
-import { texCoord } from '../mario.common/textures';
-import { GLS } from './gl.service';
+import { Timer } from '../mario-common/timer'
+import { mult, flatten, mat4, translate } from '../mario-common/MV'
+import { texCoord } from '../mario-common/textures';
+import { GLS } from '../mario-services/gl.service';
 
 const ENEMY_XVELO_CONSTANT = .025;
 const ENEMY_GRAVITY_CONSTANT = -.0075;

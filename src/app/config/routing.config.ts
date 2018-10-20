@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
-import { ColorComponent } from './../color/color/color.component';
-import { MarioComponent } from './../mario/mario.component';
+import { ColorComponent } from '../color/color/color.component';
+import { MarioComponent } from '../mario/mario-component/mario.component';
 
 export const ROUTES: Routes = [
 

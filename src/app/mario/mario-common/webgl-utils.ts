@@ -1,5 +1,4 @@
 import { ElementRef } from "@angular/core";
-import { Vec2 } from "./vectors/vec2";
 import { vec2 } from "./MV";
 import { interval } from "rxjs";
 

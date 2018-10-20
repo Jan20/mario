@@ -1,7 +1,7 @@
 import { MovableObject } from "./MoveableObject";
-import { texCoord } from "../mario.common/textures";
-import { GLS } from "./gl.service";
-import { flatten, mult, translate, mat4, scale } from "../mario.common/MV";
+import { texCoord } from "../mario-common/textures";
+import { GLS } from "../mario-services/gl.service";
+import { flatten, mult, translate, mat4, scale } from "../mario-common/MV";
 
 export class PowerUp extends MovableObject{
     

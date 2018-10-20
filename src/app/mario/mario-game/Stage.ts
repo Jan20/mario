@@ -1,6 +1,6 @@
-import { quad } from "../mario.common/webgl-utils";
-import { mat4, flatten } from "../mario.common/MV";
-import { GLS } from "./gl.service";
+import { quad } from "../mario-common/webgl-utils";
+import { mat4, flatten } from "../mario-common/MV";
+import { GLS } from "../mario-services/gl.service";
 
 export class Stage {
 

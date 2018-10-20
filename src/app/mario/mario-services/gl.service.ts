@@ -1,6 +1,6 @@
-import { World } from "./World";
-import { perspective, radians } from "../mario.common/MV";
-import { Vec3 } from "../mario.common/vectors/vec3";
+import { World } from "../mario-game/World";
+import { perspective, radians, vec3 } from "../mario-common/MV";
+import { Injectable } from '@angular/core';
 
 export class GLS {
 
@@ -17,7 +17,7 @@ export class GLS {
 
     public PERSPECTIVE = perspective(this.FOVY, this.ASPECT_RATIO, 0.1, 500);
 
-    public INITIAL_CAMERA_POS = new Vec3(-7.5, -7.5, -7.5/Math.tan(radians(this.FOVY/2)))
+    public INITIAL_CAMERA_POS = vec3(-7.5, -7.5, -7.5/Math.tan(radians(this.FOVY/2)))
 
     public GL: WebGLRenderingContext
     public pixels;

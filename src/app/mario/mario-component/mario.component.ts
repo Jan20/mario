@@ -1,12 +1,11 @@
 import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { HostListener, } from '@angular/core';
-import { World } from './mario.game/World';
-import { resetTimer, myTimer } from './mario.game/hud'
-import { Vec3 } from './mario.common/vectors/vec3'
-import { initShaders } from './mario.common/InitShaders'
-import { mult, radians, flatten, mat4, translate } from './mario.common/MV'
-import { GLS } from './mario.game/gl.service'
-import { WebGLUtils } from './mario.common/webgl-utils';
+import { World } from '../mario-game/World';
+import { resetTimer, myTimer } from '../mario-game/hud'
+import { initShaders } from '../mario-common/InitShaders'
+import { mult, flatten, mat4, translate, vec3 } from '../mario-common/MV'
+import { GLS } from '../mario-services/gl.service'
+import { WebGLUtils } from '../mario-common/webgl-utils';
 import {interval} from "rxjs";
 
 @Component({
@@ -89,7 +88,7 @@ export class MarioComponent implements OnInit, AfterViewInit  {
 
     private init() {
        
-        GLS.I().lightPosition = new Vec3(0.0, 15.0, -1.0)
+        GLS.I().lightPosition = vec3(0.0, 15.0, -1.0)
 
         if (!GLS.I().GL) { alert("WebGL isn't available"); }
 
@@ -128,7 +127,7 @@ export class MarioComponent implements OnInit, AfterViewInit  {
         GLS.I().UNIFORM_CAMERA_X = GLS.I().GL.getUniformLocation(GLS.I().PROGRAM, "cameraX");
         
         // set initial camera position
-        GLS.I().CAMERA_POS = GLS.I().INITIAL_CAMERA_POS.getVec3().slice(0);
+        GLS.I().CAMERA_POS = GLS.I().INITIAL_CAMERA_POS.slice(0);
 
         GLS.I().GAMEWORLD = new World(GLS.I().stage);
 

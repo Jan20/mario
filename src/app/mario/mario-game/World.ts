@@ -2,10 +2,10 @@ import { Enemy } from './Enemy'
 import { Player} from './Player'
 import { Stage } from './Stage'
 import { Background } from './Background'
-import { loadImages } from '../mario.common/textures'
+import { loadImages } from '../mario-common/textures'
 import { pad, pauseGame, continueGame, finishLevel } from './hud'
-import { GLS } from './gl.service';
-import { Howl } from '../mario.common/howler';
+import { GLS } from '../mario-services/gl.service';
+import { Howl } from '../mario-common/howler';
 
 export class World {
     
@@ -249,7 +249,7 @@ export class World {
             finishLevel();
         }
         // TODO: only draw what can be seen?
-        this.back.draw();
+        // this.back.draw();
         this.stage.draw();
         /////////////////
         /// Todo //////////

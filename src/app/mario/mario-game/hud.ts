@@ -1,4 +1,4 @@
-import { GLS } from "./gl.service";
+import { GLS } from "../mario-services/gl.service";
 import { interval } from "rxjs";
 
 var startTime = new Date().getTime();

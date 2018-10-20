@@ -1,9 +1,9 @@
 import { MovableObject } from './MoveableObject'
-import { Timer } from '../mario.common/timer'
-import { Howl } from '../mario.common/howler'
-import { texCoord } from '../mario.common/textures'
-import { mat4, mult, translate, flatten } from '../mario.common/MV';
-import { GLS } from './gl.service';
+import { Timer } from '../mario-common/timer'
+import { Howl } from '../mario-common/howler'
+import { texCoord } from '../mario-common/textures'
+import { mat4, mult, translate, flatten } from '../mario-common/MV';
+import { GLS } from '../mario-services/gl.service'
 import { gameOver } from './hud';
 import { Projectile } from './Projectile';
 import { PowerUp } from './PowerUp'
