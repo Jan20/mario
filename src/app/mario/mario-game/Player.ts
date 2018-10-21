@@ -22,7 +22,7 @@ export class Player extends MovableObject{
     texDir: number;
     projectileTimer: Timer;
     hasProjectiles: boolean;
-    walkTime: number;
+    walktime: number;
     collisionUp: boolean;
     collisionDown: boolean;
     lives: any;
@@ -39,9 +39,9 @@ export class Player extends MovableObject{
     lifeSound: HTMLAudioElement;
     powerUpSound: HTMLAudioElement;
     constructor(world) {
-
-        super(world, GLS.I().INITIAL_PLAYER_POS.slice(0), GLS.I().INITIAL_PLAYER_VEL.slice(0), GLS.I().INITIAL_PLAYER_LIVES)
         
+        super(world, GLS.I().INITIAL_PLAYER_POS.slice(0), GLS.I().INITIAL_PLAYER_VEL.slice(0), GLS.I().INITIAL_PLAYER_LIVES);
+
         this.projectileTimer = new Timer();
         this.hasProjectiles = false;
         this.texDir = 0;
@@ -51,7 +51,8 @@ export class Player extends MovableObject{
         this.normals = [];
         this.walkTimer = new Timer();
         this.walkTimer.reset();
-        this.walkTime = 0;
+        this.walktime = 0;
+        this.generateVertices(this.vertices, this.texCoords, this.normals);
         this.collisionUp = false;
         this.collisionDown = false;
         this.collisionLeft = false;
@@ -59,10 +60,10 @@ export class Player extends MovableObject{
         this.playerHeight = .5;
         this.playerWidth = .5;
         this.bounds = [];
-        this.enemyKillSound = new Audio('../assets/Sound/Stomp.mp3');
-        this.coinSound = new Audio('../assets/Sound/Coin.mp3');
+        this.enemyKillSound = new Audio('../Sound/Stomp.mp3');
+        this.coinSound = new Audio('../Sound/Coin.mp3');
         this.lostLifeSound = new Howl({
-            urls: ['../assets/Sound/LostLife.mp3'],
+            urls: ['../Sound/LostLife.mp3'],
             volume: 0.5,
             onplay: function () {
                 world.bgMusic[world.currStageIndex].pause();
@@ -71,73 +72,50 @@ export class Player extends MovableObject{
                 world.bgMusic[world.currStageIndex].play();
             }
         });
-        this.lives = undefined;
-        this.generateVertices(this.vertices, this.texCoords, this.normals);
-
     }
-
-    public generateVertices(buffer, texbuffer, normalbuffer) {
-    
+    generateVertices(buffer, texbuffer, normalbuffer) {
         buffer.push([1, 1, 0]);
         buffer.push([0, 1, 0]);
         buffer.push([0, 0, 0]);
         buffer.push([1, 1, 0]);
         buffer.push([0, 0, 0]);
         buffer.push([1, 0, 0]);
-    
         texbuffer.push(texCoord[2]);
         texbuffer.push(texCoord[1]);
         texbuffer.push(texCoord[0]);
         texbuffer.push(texCoord[2]);
         texbuffer.push(texCoord[0]);
         texbuffer.push(texCoord[3]);
-    
         normalbuffer.push([0, 0, 1]);
         normalbuffer.push([0, 0, 1]);
         normalbuffer.push([0, 0, 1]);
         normalbuffer.push([0, 0, 1]);
         normalbuffer.push([0, 0, 1]);
         normalbuffer.push([0, 0, 1]);
-    
     }
-    
-    public draw() {
-        console.log('player has been drawn')
-        !GLS.I().pauseMode ? this.move() : null
-
+    draw() {
+        if (!GLS.I().pauseMode)
+            this.move();
         var ctm = mat4();
-        
         ctm = mult(ctm, translate(this.pos));
         ctm = mult(ctm, translate([0, 0, -1]));
-        
         GLS.I().GL.uniformMatrix4fv(GLS.I().UNIFORM_MODEL, false, flatten(ctm));
         GLS.I().GL.bindBuffer(GLS.I().GL.ARRAY_BUFFER, GLS.I().T_BUFFER);
         GLS.I().GL.bufferData(GLS.I().GL.ARRAY_BUFFER, flatten(this.texCoords), GLS.I().GL.STATIC_DRAW);
-        
         var vTexCoord = GLS.I().GL.getAttribLocation(GLS.I().PROGRAM, "vTexCoord");
-        
         GLS.I().GL.vertexAttribPointer(vTexCoord, 2, GLS.I().GL.FLOAT, false, 0, 0);
         GLS.I().GL.enableVertexAttribArray(vTexCoord);
         GLS.I().GL.bindBuffer(GLS.I().GL.ARRAY_BUFFER, GLS.I().V_BUFFER);
         GLS.I().GL.bufferData(GLS.I().GL.ARRAY_BUFFER, flatten(this.vertices), GLS.I().GL.STATIC_DRAW);
-        
         var vPosition = GLS.I().GL.getAttribLocation(GLS.I().PROGRAM, "vPosition");
-        
         GLS.I().GL.vertexAttribPointer(vPosition, 3, GLS.I().GL.FLOAT, false, 0, 0);
         GLS.I().GL.enableVertexAttribArray(vPosition);
         GLS.I().GL.bindBuffer(GLS.I().GL.ARRAY_BUFFER, GLS.I().N_BUFFER);
         GLS.I().GL.bufferData(GLS.I().GL.ARRAY_BUFFER, flatten(this.normals), GLS.I().GL.STATIC_DRAW);
-        
         var vNormal = GLS.I().GL.getAttribLocation(GLS.I().PROGRAM, "vNormal");
-        
         GLS.I().GL.vertexAttribPointer(vNormal, 3, GLS.I().GL.FLOAT, false, 0, 0);
         GLS.I().GL.enableVertexAttribArray(vNormal);
         GLS.I().GL.bindTexture(GLS.I().GL.TEXTURE_2D, this.world.stageTextures[this.world.currStageIndex].player.textures[this.animIndex()]);
-        
-        console.log(GLS.I().GL.TRIANGLES)
-        console.log(this.vertices.length)
-        ///////////////
-        // Todo //
         GLS.I().GL.drawArrays(GLS.I().GL.TRIANGLES, 0, this.vertices.length);
     }
     animIndex() {
@@ -148,15 +126,15 @@ export class Player extends MovableObject{
         if (Math.abs(this.velocity[0]) < GLS.I().WALK_CUTOFF) {
             this.texIndex = 0;
             this.walkTimer.reset();
-            this.walkTime = 0;
+            this.walktime = 0;
         }
         else {
-            this.walkTime += this.walkTimer.getElapsedTime() / GLS.I().ANIM_SPEED;
-            this.texIndex = Math.floor(this.walkTime % this.world.stageTextures[this.world.currStageIndex].player.textures.length / 2) * 2;
+            this.walktime += this.walkTimer.getElapsedTime() / GLS.I().ANIM_SPEED;
+            this.texIndex = Math.floor(this.walktime % this.world.stageTextures[this.world.currStageIndex].player.textures.length / 2) * 2;
             if (this.texIndex >= this.world.stageTextures[this.world.currStageIndex].player.textures.length - 2) {
                 this.texIndex = 2;
                 this.walkTimer.reset();
-                this.walkTime = 2;
+                this.walktime = 2;
             }
         }
         // document.getElementById("2").innerHTML = "walktime: " + this.walktime
@@ -164,13 +142,12 @@ export class Player extends MovableObject{
         if (!this.collisionDown) {
             this.texIndex = this.world.stageTextures[this.world.currStageIndex].player.textures.length - 2;
             this.walkTimer.reset();
-            this.walkTime = 0;
+            this.walktime = 0;
         }
         this.texIndex += this.texDir;
         return this.texIndex;
     }
-
-    public move() {
+    move() {
         // so I don't have to retype it
         var keyMap = this.world.keyMap;
         if (keyMap[32] && this.pos[1] < 14) {
@@ -236,14 +213,14 @@ export class Player extends MovableObject{
             var blockCollide = this.getStage(blockX, blockY);
             for (var i = 0; i < rowsToCheck.length; i++) {
                 blockCollide = this.getStage(blockX, rowsToCheck[i] + 1);
-                if (this.isBlock(blockCollide)) {
+                if (isBlock(blockCollide)) {
                     if (blockCollide == 'S') {
                         this.world.score += 150;
-                        this.coinSound = new Audio('../assets/Sound/Coin.mp3');
+                        this.coinSound = new Audio('../Sound/Coin.mp3');
                         this.coinSound.play();
                     }
                     else {
-                        this.powerUpAppearsSound = new Audio('../assets/Sound/PowerUpAppears.wav');
+                        this.powerUpAppearsSound = new Audio('../Sound/PowerUpAppears.wav');
                         this.powerUpAppearsSound.play();
                     }
                     this.world.items.push(new PowerUp(this.world, [Math.floor(blockX) + 0.25, Math.floor(blockY), 0], Math.floor(blockY + 1), blockCollide));
@@ -300,7 +277,7 @@ export class Player extends MovableObject{
                         gameOver();
                 }
                 this.pos = GLS.I().INITIAL_PLAYER_POS.slice(0);
-                GLS.I().CAMERA_POS = GLS.I().INITIAL_CAMERA_POS.getVec3().slice(0);
+                GLS.I().CAMERA_POS = GLS.I().INITIAL_CAMERA_POS.slice(0);
                 this.world.xBoundRight = GLS.I().INITIAL_WORLD_BOUND_RIGHT;
                 this.world.xBoundLeft = GLS.I().INITIAL_WORLD_BOUND_LEFT;
                 this.velocity = [0, 0];
@@ -315,28 +292,27 @@ export class Player extends MovableObject{
                 (Math.abs(this.pos[1] - curItem.pos[1])) * 2 < (this.playerHeight + curItem.powerHeight)) {
                 switch (curItem.powerType) {
                     case 'L':
-                        this.lifeSound = new Audio('../assets/Sound/1-up.wav');
+                        this.lifeSound = new Audio('../Sound/1-up.wav');
                         this.lifeSound.play();
                         this.world.player.lives++;
                         this.world.getLives();
                         break;
                     case 'P':
-                        this.powerUpSound = new Audio('../assets/Sound/PowerUp.wav');
+                        this.powerUpSound = new Audio('../Sound/PowerUp.wav');
                         this.powerUpSound.play();
                         this.hasProjectiles = true;
                         break;
                     case 'F':
-                        this.powerUpSound = new Audio('../assets/Sound/PowerUp.wav');
+                        this.powerUpSound = new Audio('../Sound/PowerUp.wav');
                         this.powerUpSound.play();
                         GLS.I().X_VELO_CONSTANT = .045;
                         break;
                     case 'G':
-                        this.powerUpSound = new Audio('../assets/Sound/PowerUp.wav');
+                        this.powerUpSound = new Audio('../Sound/PowerUp.wav');
                         this.powerUpSound.play();
                         GLS.I().GRAVITY_CONSTANT = -.0055;
                         break;
                 }
-                
                 var p = this; // settimeout function "this" scope issue
                 setTimeout(function () {
                     GLS.I().GRAVITY_CONSTANT = -.0075;
@@ -345,6 +321,18 @@ export class Player extends MovableObject{
                 curItem.lives = 0;
             }
         }
+        /*case 'L':
+            this.world.player.lives++;
+            this.world.getLives();
+            break;
+        case 'P':
+            break
+        case 'F':
+            X_VELO_CONSTANT = .045;
+            break;
+        case 'G':
+            GRAVITY_CONSTANT = -.0055;
+            break;*/
         // handle off stage death
         if (this.pos[1] <= -.5) {
             this.lives--;
@@ -358,7 +346,7 @@ export class Player extends MovableObject{
             }
             else {
                 this.pos = GLS.I().INITIAL_PLAYER_POS.slice(0);
-                GLS.I().CAMERA_POS = GLS.I().INITIAL_CAMERA_POS.getVec3().slice(0);
+                GLS.I().CAMERA_POS = GLS.I().INITIAL_CAMERA_POS.slice(0);
                 this.world.xBoundRight = GLS.I().INITIAL_WORLD_BOUND_RIGHT;
                 this.world.xBoundLeft = GLS.I().INITIAL_WORLD_BOUND_LEFT;
                 this.velocity = [0, 0];
@@ -414,8 +402,7 @@ export class Player extends MovableObject{
                 }
         this.bounds[3] = minY + 1;
     }
-    
-    public getColsToCheck() {
+    getColsToCheck() {
         var offsetX = (1 - this.playerWidth) / 2;
         var lowerCol = Math.floor(this.pos[0] + offsetX);
         var upperCol = this.pos[0] + offsetX + this.playerWidth;
@@ -428,8 +415,7 @@ export class Player extends MovableObject{
             colsToCheck.push(i);
         return colsToCheck;
     }
-    
-    public getRowsToCheck() {
+    getRowsToCheck() {
         var lowerRow = Math.floor(this.pos[1]);
         var upperRow = this.pos[1] + this.playerHeight;
         // touching an edge
@@ -442,31 +428,32 @@ export class Player extends MovableObject{
             rowsToCheck.push(i);
         return rowsToCheck;
     }
-    
-    public setCollision() {
-    
+    setCollision() {
         this.collisionLeft = Math.abs(this.pos[0] - this.bounds[0]) <= .005;
         this.collisionRight = Math.abs(this.pos[0] - this.bounds[1]) <= .005;
         this.collisionUp = Math.abs(this.pos[1] - this.bounds[2]) <= .005;
         this.collisionDown = Math.abs(this.pos[1] - this.bounds[3]) <= .005;
-    
     }
-    
-    public resetToDefault() {
-    
+    resetToDefault() {
         GLS.I().GRAVITY_CONSTANT = -.0075;
         GLS.I().X_VELO_CONSTANT = .0175;
         this.hasProjectiles = false;
         this.world.enemies = this.world.enemies.concat(this.world.deadEnemies);
         this.world.deadEnemies = [];
-    
     }
-
-    public isBlock(block){
-        
-        return (block == 'S') || (block == 'Y') || (block == 'L') || (block == 'P') || (block == 'F') || (block == 'G');
-    
-    };
-    
-    
 }
+    
+
+
+
+
+
+
+
+
+
+
+function isBlock(block){
+    return (block == 'S') || (block == 'Y') || (block == 'L') || (block == 'P') || (block == 'F') || (block == 'G');
+};
+

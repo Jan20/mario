@@ -58,30 +58,10 @@ export class World {
             volume: 0.45,
         });
         
-        this.samusTheme = new Howl({
-            urls: ['../assets/Sound/Samus.mp3'],
-            loop: true,
-            buffer: true,
-            volume: 0.75,
-        });
-        this.kirbyTheme = new Howl({
-            urls: ['../assets/Sound/Kirby.mp3'],
-            loop: true,
-            buffer: true,
-            volume: 0.45,
-        });
-        this.linkTheme = new Howl({
-            urls: ['../assets/Sound/Link.mp3'],
-            loop: true,
-            buffer: true,
-            volume: 0.45,
-        });
         
         this.bgMusic = [];
         this.bgMusic.push(this.marioTheme);
-        this.bgMusic.push(this.samusTheme);
-        this.bgMusic.push(this.kirbyTheme);
-        this.bgMusic.push(this.linkTheme);
+
         this.stageTextures = [
             // mario = 0
             {
@@ -249,12 +229,12 @@ export class World {
             finishLevel();
         }
         // TODO: only draw what can be seen?
-        // this.back.draw();
+        this.back.draw();
         this.stage.draw();
+        this.player.draw();
         /////////////////
         /// Todo //////////
         ////////////////////
-        this.player.draw();
         for (var i = 0; i < this.enemies.length; i++) {
             if (this.enemies[i].pos[0] + 1 > this.xBoundLeft && this.enemies[i].pos[0] - 1 < this.xBoundRight)
                 this.enemies[i].draw();

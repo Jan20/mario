@@ -108,9 +108,7 @@ export class PowerUp extends MovableObject{
         GLS.I().GL.enableVertexAttribArray(vNormal);
         GLS.I().GL.bindTexture(GLS.I().GL.TEXTURE_2D, this.world.stageTextures[this.world.currStageIndex].item.textures[this.powerIndex]);
         
-        console.log('________________________________Hello_______________________________________')
-        console.log(GLS.I().GL.TRIANGLES)
-        console.log(this.vertices.length)
+
         GLS.I().GL.drawArrays(GLS.I().GL.TRIANGLES, 0, this.vertices.length);
     }
 }

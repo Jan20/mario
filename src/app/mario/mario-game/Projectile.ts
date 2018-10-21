@@ -114,8 +114,7 @@ export class Projectile extends MovableObject{
         GLS.I().GL.vertexAttribPointer(vNormal, 3, GLS.I().GL.FLOAT, false, 0, 0);
         GLS.I().GL.enableVertexAttribArray(vNormal);
         GLS.I().GL.bindTexture(GLS.I().GL.TEXTURE_2D, this.world.stageTextures[this.world.currStageIndex].projectile.textures[0]);
-        console.log('________________________________Hello_______________________________________')
-        console.log(GLS.I().GL.TRIANGLES)
+
         console.log(this.vertices.length)
         GLS.I().GL.drawArrays(GLS.I().GL.TRIANGLES, 0, this.vertices.length);
     }
