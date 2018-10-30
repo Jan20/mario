@@ -7,6 +7,8 @@ import { mult, flatten, mat4, translate, vec3 } from '../mario-common/MV'
 import { GLS } from '../mario-services/gl.service'
 import { WebGLUtils } from '../mario-common/webgl-utils';
 import {interval} from "rxjs";
+import { UserService } from '../../analytics/analytics-services/user.service';
+import { User } from '../../analytics/analytics-models/user';
 
 @Component({
   selector: 'app-mario',
@@ -23,7 +25,7 @@ export class MarioComponent implements OnInit, AfterViewInit  {
      * Gets the HTML canvas element
      *
      */
-     @ViewChild('canvas') canvas: ElementRef
+    @ViewChild('canvas') canvas: ElementRef
 
 
     //////////////////
@@ -34,16 +36,33 @@ export class MarioComponent implements OnInit, AfterViewInit  {
      * Default constructor
      * 
      */
-    public constructor() {
+    public constructor(
+
+        public userService: UserService,
+
+    ) {
         
+
     }
 
 
 
-    ngOnInit(): void {}
+    async ngOnInit(): Promise<void> {
+
+        const userId = await this.userService.checkUserStatus()
+        console.log(userId)
+        const user = await this.userService.getUser(userId)
+        console.log(user)
+
+        user.setDeaths(3)
+        this.userService.updateUser(user)
+
+    }
 
     public TITLE_MAP = {
+
         0: 'Mario',
+    
     };
 
     @HostListener('document:keydown', ['$event'])
@@ -87,7 +106,6 @@ export class MarioComponent implements OnInit, AfterViewInit  {
     
 
     private init() {
-       
         GLS.I().lightPosition = vec3(0.0, 15.0, -1.0)
 
         if (!GLS.I().GL) { alert("WebGL isn't available"); }
@@ -186,14 +204,6 @@ export class MarioComponent implements OnInit, AfterViewInit  {
         GLS.I().GL = new WebGLUtils().setupWebGL(this.canvas);
     }        
 
-
-
-    
-
-
-
-
-
     private vertexShaderText = [
         
         'attribute vec4 vPosition;',
@@ -251,108 +261,4 @@ export class MarioComponent implements OnInit, AfterViewInit  {
 
     ].join('\n')
 
-
-
-
-
-
-        
-    //     gl.clearColor(0.1, 0.1, 0.2, 1)
-    //     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
-
-    //     const vertexShader = gl.createShader(gl.VERTEX_SHADER)
-    //     const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER)
-
-    //     gl.shaderSource(vertexShader, this.vertexShaderText)
-    //     gl.shaderSource(fragmentShader, this.fragmentShaderText)
-
-    //     gl.compileShader(vertexShader)
-
-    //     if (!gl.getShaderParameter(vertexShader, gl.COMPILE_STATUS)) {
-
-    //     console.error('ERROR compiling vertex shader!', gl.getShaderInfoLog(vertexShader))
-    //     return
-
-    //     }
-
-    //     gl.compileShader(fragmentShader)
-
-    //     if (!gl.getShaderParameter(vertexShader, gl.COMPILE_STATUS)) {
-
-    //     console.error('ERROR compiling vertex shader!', gl.getShaderInfoLog(fragmentShader))
-    //     return
-        
-    //     }
-
-    //     /**
-    //      * 
-    //      * Create Program
-    //      * 
-    //      */
-    //     const program = gl.createProgram()
-    //     gl.attachShader(program, vertexShader)
-    //     gl.attachShader(program, fragmentShader)
-
-    //     gl.linkProgram(program)
-
-    //     if(!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-
-    //     console.error('ERROR liking programs!', gl.getProgramInfoLog(program))
-    //     return
-
-    //     }
-
-    //     gl.validateProgram(program)
-    //     if (!gl.getProgramParameter(program, gl.VALIDATE_STATUS)) {
-
-    //     console.error('ERROR liking programs!', gl.getProgramInfoLog(program))
-    //     return
-
-    //     }
-
-    //     /**
-    //      * 
-    //      * Create Buffer
-    //      * 
-    //      */
-    //     const triangleVertices: Float32Array = new Float32Array([
-        
-    //     // X     Y      R    G    B
-    //     0.0,  0.5,   1.0, 1.0, 0.0,
-    //     -0.5, -0.5,   1.0, 0.0, 1.0,
-    //     0.5, -0.5,   0.0, 1.0, 1.0,
-        
-    //     ])
-    
-    //     const triangleVertexBufferObject = gl.createBuffer()
-    //     gl.bindBuffer(gl.ARRAY_BUFFER, triangleVertexBufferObject)
-    //     gl.bufferData(gl.ARRAY_BUFFER, triangleVertices, gl.STATIC_DRAW)
-
-    //     const positionAttribLocation = gl.getAttribLocation(program, 'vertPosition')
-    //     const colorAttribLocation = gl.getAttribLocation(program, 'vertColor')
-        
-    //     gl.vertexAttribPointer( positionAttribLocation, // Attribute location
-    //                             2, // Number of elements per attribute
-    //                             gl.FLOAT,  // Type of elements
-    //                             false,
-    //                             5 * Float32Array.BYTES_PER_ELEMENT, // Size of an individual vertex
-    //                             0
-    //     )
-
-    //     gl.vertexAttribPointer( colorAttribLocation, // Attribute location
-    //                             3, // Number of elements per attribute
-    //                             gl.FLOAT,  // Type of elements
-    //                             false,
-    //                             5 * Float32Array.BYTES_PER_ELEMENT, // Size of an individual vertex
-    //                             2 * Float32Array.BYTES_PER_ELEMENT,
-    //     )
-
-    //     gl.enableVertexAttribArray(positionAttribLocation)
-    //     gl.enableVertexAttribArray(colorAttribLocation)
-    //     gl.useProgram(program)
-    //     gl.drawArrays(gl.TRIANGLES, 0, 3)
-
-    // }
-
-    
 }

@@ -13,6 +13,7 @@ import { ROUTES } from './routing.config';
 import { RouterModule, Routes } from '@angular/router';
 
 @NgModule({
+  
   imports: [
   
     CommonModule,
@@ -26,11 +27,9 @@ import { RouterModule, Routes } from '@angular/router';
     // that exisit in the project from.
     RouterModule.forRoot(ROUTES, { enableTracing: false }),
 
-  ],
-  providers: [
+  ], providers: [
   
-  ],
-  exports: [
+  ], exports: [
 
     RouterModule,
 

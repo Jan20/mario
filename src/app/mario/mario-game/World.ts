@@ -4,63 +4,62 @@ import { Stage } from './Stage'
 import { Background } from './Background'
 import { loadImages } from '../mario-common/textures'
 import { pad, pauseGame, continueGame, finishLevel } from './hud'
-import { GLS } from '../mario-services/gl.service';
-import { Howl } from '../mario-common/howler';
+import { GLS } from '../mario-services/gl.service'
+import { Howl } from '../mario-common/howler'
 
 export class World {
     
-    xBoundLeft: any;
-    xBoundRight: any;
-    drawBound: any;
-    currStageIndex: any;
-    enemies: any[];
-    deadEnemies: any[];
-    items: any[];
-    projectiles: any[];
-    score: number;
-    keyMap: any[];
-    player: Player;
-    stage: Stage;
-    back: Background;
-    marioTheme: any;
-    samusTheme: any;
-    kirbyTheme: any;
-    linkTheme: any;
-    bgMusic: any[];
-    stageTextures: any
+    public xBoundLeft: number
+    public xBoundRight: number
+    public drawBound: number
+    public currStageIndex: any
+    public enemies: Enemy[]
+    public deadEnemies: Enemy[]
+    public items: any[]
+    public projectiles: any[]
+    public score: number
+    public keyMap: any[]
+    public player: Player
+    public stage: Stage
+    public back: Background
+    public marioTheme: any
+    public bgMusic: any[]
+    public stageTextures: any
 
-    constructor(stageSelection) {
+    public constructor(stageSelection) {
         
-        this.xBoundLeft = GLS.I().INITIAL_WORLD_BOUND_LEFT;
-        this.xBoundRight = GLS.I().INITIAL_WORLD_BOUND_RIGHT;
-        this.drawBound = GLS.I().DRAW_BOUND;
+        this.xBoundLeft = GLS.I().INITIAL_WORLD_BOUND_LEFT
+        this.xBoundRight = GLS.I().INITIAL_WORLD_BOUND_RIGHT
+        this.drawBound = GLS.I().DRAW_BOUND
         
         // might pick this index on initial screen
-        this.currStageIndex = stageSelection;
+        this.currStageIndex = stageSelection
         
         // need to do this before constructing the stage
-        this.enemies = [];
-        this.deadEnemies = [];
-        this.generateEnemies();
-        this.items = [];
-        this.projectiles = [];
-        this.score = 0;
-        this.keyMap = [];
-        this.player = new Player(this);
-        this.stage = new Stage(this, GLS.I().STAGES[this.currStageIndex]);
-        this.back = new Background(this);
+        this.enemies = []
+        this.deadEnemies = []
+        this.generateEnemies()
+        this.items = []
+        this.projectiles = []
+        this.score = 0
+        this.keyMap = []
+        this.player = new Player(this)
+        this.stage = new Stage(this, GLS.I().STAGES[this.currStageIndex])
+        this.back = new Background(this)
         
         // Load sounds here so I don't mess up the json magic
         this.marioTheme = new Howl({
+        
             urls: ['../assets/Sound/Mario.mp3'],
             loop: true,
             buffer: true,
             volume: 0.45,
-        });
+        
+        })
         
         
-        this.bgMusic = [];
-        this.bgMusic.push(this.marioTheme);
+        this.bgMusic = []
+        this.bgMusic.push(this.marioTheme)
 
         this.stageTextures = [
             // mario = 0
@@ -161,49 +160,49 @@ export class World {
                 }
             },
             
-        ];
+        ]
         
         // for moving the player on button presses
-        var world = this;
+        var world = this
         document.addEventListener('keydown', function (evt) {
             console.log(evt)
-            world.keyMap[evt.keyCode] = true;
+            world.keyMap[evt.keyCode] = true
             if (evt.keyCode == 37 && !GLS.I().pauseMode) {
-                world.player.texDir = 1;
+                world.player.texDir = 1
             }
             else if (evt.keyCode == 39 && !GLS.I().pauseMode) {
-                world.player.texDir = 0;
+                world.player.texDir = 0
                 // press 'p' for pause menu
             }
             else if (evt.keyCode == 80) {
-                GLS.I().pauseMode = 1;
-                pauseGame();
+                GLS.I().pauseMode = 1
+                pauseGame()
                 // change to continue
             }
             else if (evt.keyCode == 38 && GLS.I().pauseMode) {
-                document.getElementById("selectRestart").style.display = "none";
-                document.getElementById("selectContinue").style.display = "inline";
-                GLS.I().continueOrRestart = 0;
+                document.getElementById("selectRestart").style.display = "none"
+                document.getElementById("selectContinue").style.display = "inline"
+                GLS.I().continueOrRestart = 0
                 // change to restart
             }
             else if (evt.keyCode == 40 && GLS.I().pauseMode) {
-                document.getElementById("selectRestart").style.display = "inline";
-                document.getElementById("selectContinue").style.display = "none";
-                GLS.I().continueOrRestart = 1;
+                document.getElementById("selectRestart").style.display = "inline"
+                document.getElementById("selectContinue").style.display = "none"
+                GLS.I().continueOrRestart = 1
                 // select item in pause mode with enter key
             }
             else if (evt.keyCode == 13 && GLS.I().pauseMode) {
                 if (GLS.I().continueOrRestart)
-                    location.reload();
+                    location.reload()
                 else
-                continueGame();
+                continueGame()
             }
-        }, false);
+        }, false)
         document.addEventListener('keyup', function (evt) {
-            world.keyMap[evt.keyCode] = false;
-        }, false);
-        this.loadTextures();
-        this.bgMusic[this.currStageIndex].play();
+            world.keyMap[evt.keyCode] = false
+        }, false)
+        this.loadTextures()
+        this.bgMusic[this.currStageIndex].play()
     }
 
     public loadTextures() {
@@ -229,7 +228,7 @@ export class World {
             finishLevel();
         }
         // TODO: only draw what can be seen?
-        this.back.draw();
+        // this.back.draw();
         this.stage.draw();
         this.player.draw();
         /////////////////

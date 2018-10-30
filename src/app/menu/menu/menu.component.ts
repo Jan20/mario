@@ -26,12 +26,12 @@ export class MenuComponent implements OnInit {
 
   ) {
   
-    this.title = 'Super Mario Test'
+    this.title = 'Mario 0.3'
     this.items = []
     this.items.push(
 
       // new MenuItem('Predictions', 'lock_open', '/predictions'),
-      new MenuItem('Markets', 'grain', '/markets'),
+      // new MenuItem('Markets', 'grain', '/markets'),
 
     )
 

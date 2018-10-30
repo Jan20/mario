@@ -11,6 +11,7 @@ import { ColorModule } from './color/color.module'
 import { MenuModule } from './menu/menu.module'
 import { UserModule } from './user/user.module'
 import { MarioModule } from './mario/mario.module'
+import { AnalyticsModule } from './analytics/analytics.module'
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { MarioModule } from './mario/mario.module'
     ColorModule,
     UserModule,
     MenuModule,
-    MarioModule
+    MarioModule,
+    AnalyticsModule
 
   ], providers: [
     

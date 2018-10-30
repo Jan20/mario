@@ -14,183 +14,214 @@ export class Player extends MovableObject{
     ///////////////
     // Variables //
     ///////////////
-    texCoords: any[];
-    walkTimer: Timer;
-    normals: any[];
-    texIndex: number;
-    vertices: any[];
-    texDir: number;
-    projectileTimer: Timer;
-    hasProjectiles: boolean;
-    walktime: number;
-    collisionUp: boolean;
-    collisionDown: boolean;
-    lives: any;
-    collisionLeft: boolean;
-    collisionRight: boolean;
-    playerHeight: number;
-    playerWidth: number;
-    bounds: any[];
-    enemyKillSound: HTMLAudioElement;
-    coinSound: HTMLAudioElement;
-    lostLifeSound: any
-    fireballSound: HTMLAudioElement;
-    powerUpAppearsSound: HTMLAudioElement;
-    lifeSound: HTMLAudioElement;
-    powerUpSound: HTMLAudioElement;
-    constructor(world) {
+    public texCoords: any[];
+    public walkTimer: Timer
+    public normals: any[]
+    public texIndex: number
+    public vertices: any[]
+    public texDir: number
+    public projectileTimer: Timer
+    public hasProjectiles: boolean
+    public walktime: number
+    public collisionUp: boolean
+    public collisionDown: boolean
+    public lives: any
+    public collisionLeft: boolean
+    public collisionRight: boolean
+    public playerHeight: number
+    public playerWidth: number
+    public bounds: any[]
+    public enemyKillSound: HTMLAudioElement
+    public coinSound: HTMLAudioElement
+    public lostLifeSound: any
+    public fireballSound: HTMLAudioElement
+    public powerUpAppearsSound: HTMLAudioElement
+    public lifeSound: HTMLAudioElement
+    public powerUpSound: HTMLAudioElement
+    
+    public constructor(world) {
         
-        super(world, GLS.I().INITIAL_PLAYER_POS.slice(0), GLS.I().INITIAL_PLAYER_VEL.slice(0), GLS.I().INITIAL_PLAYER_LIVES);
+        super(world, GLS.I().INITIAL_PLAYER_POS.slice(0), GLS.I().INITIAL_PLAYER_VEL.slice(0), GLS.I().INITIAL_PLAYER_LIVES)
 
-        this.projectileTimer = new Timer();
-        this.hasProjectiles = false;
-        this.texDir = 0;
-        this.vertices = [];
-        this.texCoords = [];
-        this.texIndex = 0;
-        this.normals = [];
-        this.walkTimer = new Timer();
-        this.walkTimer.reset();
-        this.walktime = 0;
-        this.generateVertices(this.vertices, this.texCoords, this.normals);
-        this.collisionUp = false;
-        this.collisionDown = false;
-        this.collisionLeft = false;
-        this.collisionRight = false;
-        this.playerHeight = .5;
-        this.playerWidth = .5;
-        this.bounds = [];
-        this.enemyKillSound = new Audio('../Sound/Stomp.mp3');
-        this.coinSound = new Audio('../Sound/Coin.mp3');
+        this.projectileTimer = new Timer()
+        this.hasProjectiles = false
+        this.texDir = 0
+        this.vertices = []
+        this.texCoords = []
+        this.texIndex = 0
+        this.normals = []
+        this.walkTimer = new Timer()
+        this.walkTimer.reset()
+        this.walktime = 0
+        this.generateVertices(this.vertices, this.texCoords, this.normals)
+        this.collisionUp = false
+        this.collisionDown = false
+        this.collisionLeft = false
+        this.collisionRight = false
+        this.playerHeight = .5
+        this.playerWidth = .5
+        this.bounds = []
+        this.enemyKillSound = new Audio('../Sound/Stomp.mp3')
+        this.coinSound = new Audio('../Sound/Coin.mp3')
+        
         this.lostLifeSound = new Howl({
+        
             urls: ['../Sound/LostLife.mp3'],
             volume: 0.5,
-            onplay: function () {
-                world.bgMusic[world.currStageIndex].pause();
+        
+            onplay: () => {
+            
+                world.bgMusic[world.currStageIndex].pause()
+            
             },
-            onend: function () {
-                world.bgMusic[world.currStageIndex].play();
+        
+            onend: () => {
+            
+                world.bgMusic[world.currStageIndex].play()
             }
-        });
+        
+        })
     }
-    generateVertices(buffer, texbuffer, normalbuffer) {
-        buffer.push([1, 1, 0]);
-        buffer.push([0, 1, 0]);
-        buffer.push([0, 0, 0]);
-        buffer.push([1, 1, 0]);
-        buffer.push([0, 0, 0]);
-        buffer.push([1, 0, 0]);
-        texbuffer.push(texCoord[2]);
-        texbuffer.push(texCoord[1]);
-        texbuffer.push(texCoord[0]);
-        texbuffer.push(texCoord[2]);
-        texbuffer.push(texCoord[0]);
-        texbuffer.push(texCoord[3]);
-        normalbuffer.push([0, 0, 1]);
-        normalbuffer.push([0, 0, 1]);
-        normalbuffer.push([0, 0, 1]);
-        normalbuffer.push([0, 0, 1]);
-        normalbuffer.push([0, 0, 1]);
-        normalbuffer.push([0, 0, 1]);
+    
+    public generateVertices(buffer, texbuffer, normalbuffer) {
+    
+        buffer.push([1, 1, 0])
+        buffer.push([0, 1, 0])
+        buffer.push([0, 0, 0])
+        buffer.push([1, 1, 0])
+        buffer.push([0, 0, 0])
+        buffer.push([1, 0, 0])
+    
+        texbuffer.push(texCoord[2])
+        texbuffer.push(texCoord[1])
+        texbuffer.push(texCoord[0])
+        texbuffer.push(texCoord[2])
+        texbuffer.push(texCoord[0])
+        texbuffer.push(texCoord[3])
+    
+        normalbuffer.push([0, 0, 1])
+        normalbuffer.push([0, 0, 1])
+        normalbuffer.push([0, 0, 1])
+        normalbuffer.push([0, 0, 1])
+        normalbuffer.push([0, 0, 1])
+        normalbuffer.push([0, 0, 1])
+    
     }
+    
     draw() {
+        
         if (!GLS.I().pauseMode)
-            this.move();
-        var ctm = mat4();
-        ctm = mult(ctm, translate(this.pos));
-        ctm = mult(ctm, translate([0, 0, -1]));
-        GLS.I().GL.uniformMatrix4fv(GLS.I().UNIFORM_MODEL, false, flatten(ctm));
-        GLS.I().GL.bindBuffer(GLS.I().GL.ARRAY_BUFFER, GLS.I().T_BUFFER);
-        GLS.I().GL.bufferData(GLS.I().GL.ARRAY_BUFFER, flatten(this.texCoords), GLS.I().GL.STATIC_DRAW);
-        var vTexCoord = GLS.I().GL.getAttribLocation(GLS.I().PROGRAM, "vTexCoord");
-        GLS.I().GL.vertexAttribPointer(vTexCoord, 2, GLS.I().GL.FLOAT, false, 0, 0);
-        GLS.I().GL.enableVertexAttribArray(vTexCoord);
-        GLS.I().GL.bindBuffer(GLS.I().GL.ARRAY_BUFFER, GLS.I().V_BUFFER);
-        GLS.I().GL.bufferData(GLS.I().GL.ARRAY_BUFFER, flatten(this.vertices), GLS.I().GL.STATIC_DRAW);
-        var vPosition = GLS.I().GL.getAttribLocation(GLS.I().PROGRAM, "vPosition");
-        GLS.I().GL.vertexAttribPointer(vPosition, 3, GLS.I().GL.FLOAT, false, 0, 0);
-        GLS.I().GL.enableVertexAttribArray(vPosition);
-        GLS.I().GL.bindBuffer(GLS.I().GL.ARRAY_BUFFER, GLS.I().N_BUFFER);
-        GLS.I().GL.bufferData(GLS.I().GL.ARRAY_BUFFER, flatten(this.normals), GLS.I().GL.STATIC_DRAW);
-        var vNormal = GLS.I().GL.getAttribLocation(GLS.I().PROGRAM, "vNormal");
-        GLS.I().GL.vertexAttribPointer(vNormal, 3, GLS.I().GL.FLOAT, false, 0, 0);
-        GLS.I().GL.enableVertexAttribArray(vNormal);
-        GLS.I().GL.bindTexture(GLS.I().GL.TEXTURE_2D, this.world.stageTextures[this.world.currStageIndex].player.textures[this.animIndex()]);
-        GLS.I().GL.drawArrays(GLS.I().GL.TRIANGLES, 0, this.vertices.length);
+            this.move()
+        
+        var ctm = mat4()
+        ctm = mult(ctm, translate(this.pos))
+        ctm = mult(ctm, translate([0, 0, -1]))
+        GLS.I().GL.uniformMatrix4fv(GLS.I().UNIFORM_MODEL, false, flatten(ctm))
+        GLS.I().GL.bindBuffer(GLS.I().GL.ARRAY_BUFFER, GLS.I().T_BUFFER)
+        GLS.I().GL.bufferData(GLS.I().GL.ARRAY_BUFFER, flatten(this.texCoords), GLS.I().GL.STATIC_DRAW)
+        var vTexCoord = GLS.I().GL.getAttribLocation(GLS.I().PROGRAM, "vTexCoord")
+        GLS.I().GL.vertexAttribPointer(vTexCoord, 2, GLS.I().GL.FLOAT, false, 0, 0)
+        GLS.I().GL.enableVertexAttribArray(vTexCoord)
+        GLS.I().GL.bindBuffer(GLS.I().GL.ARRAY_BUFFER, GLS.I().V_BUFFER)
+        GLS.I().GL.bufferData(GLS.I().GL.ARRAY_BUFFER, flatten(this.vertices), GLS.I().GL.STATIC_DRAW)
+        var vPosition = GLS.I().GL.getAttribLocation(GLS.I().PROGRAM, "vPosition")
+        GLS.I().GL.vertexAttribPointer(vPosition, 3, GLS.I().GL.FLOAT, false, 0, 0)
+        GLS.I().GL.enableVertexAttribArray(vPosition)
+        GLS.I().GL.bindBuffer(GLS.I().GL.ARRAY_BUFFER, GLS.I().N_BUFFER)
+        GLS.I().GL.bufferData(GLS.I().GL.ARRAY_BUFFER, flatten(this.normals), GLS.I().GL.STATIC_DRAW)
+        var vNormal = GLS.I().GL.getAttribLocation(GLS.I().PROGRAM, "vNormal")
+        GLS.I().GL.vertexAttribPointer(vNormal, 3, GLS.I().GL.FLOAT, false, 0, 0)
+        GLS.I().GL.enableVertexAttribArray(vNormal)
+        GLS.I().GL.bindTexture(GLS.I().GL.TEXTURE_2D, this.world.stageTextures[this.world.currStageIndex].player.textures[this.animIndex()])
+        GLS.I().GL.drawArrays(GLS.I().GL.TRIANGLES, 0, this.vertices.length)
     }
-    animIndex() {
+    
+    public animIndex() {
         if (this.world.currStageIndex == 2 || this.world.currStageIndex == 1)
-        GLS.I().ANIM_SPEED = 40;
+        GLS.I().ANIM_SPEED = 40
         else
-        GLS.I().ANIM_SPEED = 80;
+        GLS.I().ANIM_SPEED = 80
+        
         if (Math.abs(this.velocity[0]) < GLS.I().WALK_CUTOFF) {
-            this.texIndex = 0;
-            this.walkTimer.reset();
-            this.walktime = 0;
-        }
-        else {
-            this.walktime += this.walkTimer.getElapsedTime() / GLS.I().ANIM_SPEED;
-            this.texIndex = Math.floor(this.walktime % this.world.stageTextures[this.world.currStageIndex].player.textures.length / 2) * 2;
+        
+            this.texIndex = 0
+            this.walkTimer.reset()
+            this.walktime = 0
+        
+        } else {
+
+            this.walktime += this.walkTimer.getElapsedTime() / GLS.I().ANIM_SPEED
+            this.texIndex = Math.floor(this.walktime % this.world.stageTextures[this.world.currStageIndex].player.textures.length / 2) * 2
+            
             if (this.texIndex >= this.world.stageTextures[this.world.currStageIndex].player.textures.length - 2) {
-                this.texIndex = 2;
-                this.walkTimer.reset();
-                this.walktime = 2;
+            
+                this.texIndex = 2
+                this.walkTimer.reset()
+                this.walktime = 2
+            
             }
         }
         // document.getElementById("2").innerHTML = "walktime: " + this.walktime
         // document.getElementById("3").innerHTML = "texIndex: " + this.texIndex
         if (!this.collisionDown) {
-            this.texIndex = this.world.stageTextures[this.world.currStageIndex].player.textures.length - 2;
-            this.walkTimer.reset();
-            this.walktime = 0;
+            this.texIndex = this.world.stageTextures[this.world.currStageIndex].player.textures.length - 2
+            this.walkTimer.reset()
+            this.walktime = 0
         }
-        this.texIndex += this.texDir;
-        return this.texIndex;
+        this.texIndex += this.texDir
+        return this.texIndex
     }
-    move() {
-        // so I don't have to retype it
-        var keyMap = this.world.keyMap;
+
+    public move() {
+        
+        var keyMap = this.world.keyMap
+        
         if (keyMap[32] && this.pos[1] < 14) {
+        
             if (this.hasProjectiles && ((this.projectileTimer.getNowTime() - this.projectileTimer.prevTime) >= 600)) {
-                this.projectileTimer.reset();
-                this.world.projectiles.push(new Projectile(this.world, this.pos.slice(0), this.getRowsToCheck()));
-                this.fireballSound = new Audio('../Sound/Fireball.wav');
-                this.fireballSound.play();
+                this.projectileTimer.reset()
+                this.world.projectiles.push(new Projectile(this.world, this.pos.slice(0), this.getRowsToCheck()))
+                this.fireballSound = new Audio('../Sound/Fireball.wav')
+                this.fireballSound.play()
             }
+        
         }
-        this.getBounds();
-        this.setCollision();
+        
+        this.getBounds()
+        this.setCollision()
+        
         // Set Y Velocity, handle jumps
         // If on the ground
         if (this.collisionDown) {
+        
             if (this.velocity[1] < 0)
-                this.velocity[1] = 0;
+                this.velocity[1] = 0
             if ((keyMap[38]) && !this.collisionUp && !GLS.I().pauseMode) {
-                this.velocity[1] = GLS.I().JUMP_CONSTANT;
+                this.velocity[1] = GLS.I().JUMP_CONSTANT
             }
         }
         // beneath something
         else if (this.collisionUp) {
-            this.velocity[1] = GLS.I().GRAVITY_CONSTANT;
+            this.velocity[1] = GLS.I().GRAVITY_CONSTANT
         }
         // IN THE AIR
         else {
-            this.velocity[1] += GLS.I().GRAVITY_CONSTANT;
+            this.velocity[1] += GLS.I().GRAVITY_CONSTANT
             if (this.velocity[1] <= .05 && this.velocity[1] > 0)
-                this.velocity[1] = -.045;
+                this.velocity[1] = -.045
         }
         // Set X velocity and handle friction
         // 'leftArrow' 
         if (keyMap[37] && !GLS.I().pauseMode)
-            this.velocity[0] += -GLS.I().X_VELO_CONSTANT;
+            this.velocity[0] += -GLS.I().X_VELO_CONSTANT
         // 'rightArrow' 
         if (keyMap[39] && !GLS.I().pauseMode)
-            this.velocity[0] += GLS.I().X_VELO_CONSTANT;
-        this.velocity[0] *= GLS.I().X_GROUND_FRICTION;
+            this.velocity[0] += GLS.I().X_VELO_CONSTANT
+        this.velocity[0] *= GLS.I().X_GROUND_FRICTION
         // HANDLE STAGE COLLISIONS, using boundary positions
         // left
         if (this.velocity[0] < 0 && (this.velocity[0] + this.pos[0] < this.bounds[0])) {
-            this.velocity[0] = 0;
+            this.velocity[0] = 0
             // added 1.01 * ... to prevent getting stuck on corners
             this.pos[0] = this.bounds[0] + (1.01) * GLS.I().X_VELO_CONSTANT * GLS.I().X_GROUND_FRICTION;
         }
@@ -227,7 +258,7 @@ export class Player extends MovableObject{
                     this.world.stage.stage[14 - Math.floor(blockY)][Math.floor(blockX)] = 'B';
                     this.world.stage = new Stage(this.world, this.world.stage.stage);
                     this.world.score += 100;
-                    this.world.getScore();
+                    this.world.getScore()
                 }
             }
         }
@@ -241,6 +272,7 @@ export class Player extends MovableObject{
             this.pos[1] += this.velocity[1];
         // HANDLE Enemy collisions, using world's list of enemies
         for (var i = 0; i < this.world.enemies.length; i++) {
+            
             var curEnemy = this.world.enemies[i];
             // Bounding boxes intersect
             var adjustedPlayerPos = this.pos[0] + (1 - this.playerWidth) / 2;
@@ -283,6 +315,7 @@ export class Player extends MovableObject{
                 this.velocity = [0, 0];
             }
         }
+
         // handle power up collision
         for (var i = 0; i < this.world.items.length; i++) {
             var curItem = this.world.items[i];
@@ -353,6 +386,7 @@ export class Player extends MovableObject{
             }
         }
     }
+    
     // helper function to get stage characters
     getStage(xPos, yPos) {
         // Errors otherwise
@@ -415,43 +449,55 @@ export class Player extends MovableObject{
             colsToCheck.push(i);
         return colsToCheck;
     }
-    getRowsToCheck() {
-        var lowerRow = Math.floor(this.pos[1]);
-        var upperRow = this.pos[1] + this.playerHeight;
+    
+    private getRowsToCheck() {
+        
+        const lowerRow = Math.floor(this.pos[1])
+        let upperRow = this.pos[1] + this.playerHeight
+        
         // touching an edge
-        if (upperRow > 0 && (upperRow == Math.floor(upperRow)))
-            upperRow--;
-        else
-            upperRow = Math.floor(upperRow);
-        var rowsToCheck = [];
-        for (var i = lowerRow; i <= upperRow; i++)
-            rowsToCheck.push(i);
+        if (upperRow > 0 && (upperRow == Math.floor(upperRow))){
+
+            upperRow = upperRow - 1
+            
+        } else {
+
+            upperRow = Math.floor(upperRow)
+
+        }
+
+        let rowsToCheck = []
+        
+        for (var i = lowerRow; i <= upperRow; i++) {
+
+            rowsToCheck.push(i)
+
+        }
+
         return rowsToCheck;
+
     }
-    setCollision() {
+
+    private setCollision() {
+    
         this.collisionLeft = Math.abs(this.pos[0] - this.bounds[0]) <= .005;
         this.collisionRight = Math.abs(this.pos[0] - this.bounds[1]) <= .005;
         this.collisionUp = Math.abs(this.pos[1] - this.bounds[2]) <= .005;
         this.collisionDown = Math.abs(this.pos[1] - this.bounds[3]) <= .005;
-    }
-    resetToDefault() {
-        GLS.I().GRAVITY_CONSTANT = -.0075;
-        GLS.I().X_VELO_CONSTANT = .0175;
-        this.hasProjectiles = false;
-        this.world.enemies = this.world.enemies.concat(this.world.deadEnemies);
-        this.world.deadEnemies = [];
-    }
-}
     
+    }
 
+    private resetToDefault() {
+    
+        GLS.I().GRAVITY_CONSTANT = -.0075
+        GLS.I().X_VELO_CONSTANT = .0175
+        this.hasProjectiles = false
+        this.world.enemies = this.world.enemies.concat(this.world.deadEnemies)
+        this.world.deadEnemies = []
+    
+    }
 
-
-
-
-
-
-
-
+}
 
 function isBlock(block){
     return (block == 'S') || (block == 'Y') || (block == 'L') || (block == 'P') || (block == 'F') || (block == 'G');

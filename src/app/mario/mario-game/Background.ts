@@ -1,37 +1,42 @@
 import { quad } from "../mario-common/webgl-utils";
-import { mat4, mult, translate, flatten } from "../mario-common/MV";
-import { GLS } from "../mario-services/gl.service";
-import { World } from "./World";
+import { mat4, mult, translate, flatten } from "../mario-common/MV"
+import { GLS } from "../mario-services/gl.service"
+import { World } from "./World"
 
 export class Background {
 
     ///////////////
     // Variables //
     ///////////////
-    world: World;
-    vertices: any[];
-    texCoords: any[];
-    normals: any[];
+    public world: World
+    public vertices: any[]
+    public texCoords: any[]
+    public normals: any[]
 
+    //////////////////
+    // Constructors //
+    //////////////////
     public constructor(world) {
 
-        // DrawableObject.call(this);
-        this.world = world;
-        this.vertices = [];
-        this.texCoords = [];
-        this.normals = [];
-        this.generateVertices(this.vertices, this.texCoords);
-        this.generateNormals(this.normals);
+        this.world = world
+        this.vertices = []
+        this.texCoords = []
+        this.normals = []
+        this.generateVertices(this.vertices, this.texCoords)
+        this.generateNormals(this.normals)
     
     }
 
-    public generateVertices(vBuffer, tBuffer) {
+    ///////////////
+    // Functions //
+    ///////////////
+    public generateVertices(vBuffer, tBuffer): void {
 
-        quad([16, 16, -3], [16, -1, -3], [-1, 16, -3], [-1, -1, -3], vBuffer, tBuffer);
+        quad([16, 16, -3], [16, -1, -3], [-1, 16, -3], [-1, -1, -3], vBuffer, tBuffer)
 
     }
 
-    public generateNormals(nBuffer) {
+    public generateNormals(nBuffer): void {
 
         for (var i = 0; i < 6; i++){
 
@@ -41,9 +46,9 @@ export class Background {
             
     }
 
-    public draw() {
+    public draw(): void {
 
-        var ctm = mat4();
+        let ctm = mat4();
         
         ctm = mult(ctm, translate([GLS.I().INITIAL_CAMERA_POS[0] - GLS.I().CAMERA_POS[0], 0, 0]));
         
@@ -80,15 +85,6 @@ export class Background {
         GLS.I().GL.vertexAttribPointer(vTexCoord, 2, GLS.I().GL.FLOAT, false, 0, 0);
         GLS.I().GL.enableVertexAttribArray(vTexCoord);
         GLS.I().GL.bindTexture(GLS.I().GL.TEXTURE_2D, this.world.stageTextures[this.world.currStageIndex].background.textures[0]);
-        
-        console.log('Background')
-        console.log(this.world.currStageIndex)
-        console.log(this.world.stageTextures[this.world.currStageIndex])
-        console.log(this.world.stageTextures[this.world.currStageIndex].background)
-        console.log(this.world.stageTextures[this.world.currStageIndex].background.fileNames)
-
-        console.log(GLS.I().GL.TRIANGLES)
-        console.log(this.vertices.length)
         GLS.I().GL.drawArrays(GLS.I().GL.TRIANGLES, 0, this.vertices.length);
         GLS.I().GL.uniformMatrix4fv(GLS.I().UNIFORM_PROJECTION, false, flatten(GLS.I().PERSPECTIVE));
     

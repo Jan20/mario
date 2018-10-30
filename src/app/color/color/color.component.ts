@@ -49,8 +49,8 @@ export class ColorComponent implements OnInit {
    */
   private setup() {
 
-    this.canvas.nativeElement.width = 1510
-    this.canvas.nativeElement.height = 300
+    this.canvas.nativeElement.width = 700
+    this.canvas.nativeElement.height = 700
     this.fillRect(this.canvas.nativeElement.getContext('2d'))
 
   }
