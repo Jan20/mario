@@ -5,18 +5,18 @@ import { flatten, mult, translate, mat4, scale } from "../mario-common/MV";
 
 export class PowerUp extends MovableObject{
     
-    yBound: any;
-    powerType: any;
-    powerWidth: number;
-    powerHeight: number;
-    vertices: any[];
-    texCoords: any[];
-    normals: any[];
-    powerIndex: number;
-    pos: any;
-    lives: number;
-    velocity: any;
-    world: any;
+    public yBound: any;
+    public powerType: any;
+    public powerWidth: number;
+    public powerHeight: number;
+    public vertices: any[];
+    public texCoords: any[];
+    public normals: any[];
+    public powerIndex: number;
+    public pos: any;
+    public lives: number;
+    public velocity: any;
+    public world: any;
     
     constructor(world, pos, yBound, powerType) {
 
@@ -49,7 +49,9 @@ export class PowerUp extends MovableObject{
         }
         this.generateVertices(this.vertices, this.texCoords, this.normals);
     }
-    generateVertices(buffer, texbuffer, normalbuffer) {
+    
+    public generateVertices(buffer, texbuffer, normalbuffer) {
+    
         buffer.push([1, 1, 0]);
         buffer.push([0, 1, 0]);
         buffer.push([0, 0, 0]);
@@ -68,48 +70,69 @@ export class PowerUp extends MovableObject{
         normalbuffer.push([0, 0, 1]);
         normalbuffer.push([0, 0, 1]);
         normalbuffer.push([0, 0, 1]);
+    
     }
-    move() {
+    
+    public move(): void {
+        
         if (this.pos[1] >= this.yBound) {
             if (this.powerType == 'S' && this.lives != 0)
                 this.lives -= 1;
             return;
         }
+        
         // coin moves twice as fast
-        if (this.powerType == 'S')
+        if (this.powerType == 'S'){
+
             this.pos[1] += (this.velocity[1] * 8);
-        // all other power-ups move at same rate
-        else
+
+        } else {
+
             this.pos[1] += this.velocity[1];
+
+        }
+
+        // all other power-ups move at same rate
         return;
+
     }
+
     draw() {
+    
         if (!GLS.I().pauseMode) {
+    
             this.move();
         }
+    
         var ctm = mat4();
+    
         ctm = mult(ctm, translate(this.pos));
         ctm = mult(ctm, scale(0.5, 0.5, 0.5));
         GLS.I().GL.uniformMatrix4fv(GLS.I().UNIFORM_MODEL, false, flatten(ctm));
         GLS.I().GL.bindBuffer(GLS.I().GL.ARRAY_BUFFER, GLS.I().T_BUFFER);
         GLS.I().GL.bufferData(GLS.I().GL.ARRAY_BUFFER, flatten(this.texCoords), GLS.I().GL.STATIC_DRAW);
+    
         var vTexCoord = GLS.I().GL.getAttribLocation(GLS.I().PROGRAM, "vTexCoord");
+    
         GLS.I().GL.vertexAttribPointer(vTexCoord, 2, GLS.I().GL.FLOAT, false, 0, 0);
         GLS.I().GL.enableVertexAttribArray(vTexCoord);
         GLS.I().GL.bindBuffer(GLS.I().GL.ARRAY_BUFFER, GLS.I().V_BUFFER);
         GLS.I().GL.bufferData(GLS.I().GL.ARRAY_BUFFER, flatten(this.vertices), GLS.I().GL.STATIC_DRAW);
+    
         var vPosition = GLS.I().GL.getAttribLocation(GLS.I().PROGRAM, "vPosition");
+    
         GLS.I().GL.vertexAttribPointer(vPosition, 3, GLS.I().GL.FLOAT, false, 0, 0);
         GLS.I().GL.enableVertexAttribArray(vPosition);
         GLS.I().GL.bindBuffer(GLS.I().GL.ARRAY_BUFFER, GLS.I().N_BUFFER);
         GLS.I().GL.bufferData(GLS.I().GL.ARRAY_BUFFER, flatten(this.normals), GLS.I().GL.STATIC_DRAW);
+    
         var vNormal = GLS.I().GL.getAttribLocation(GLS.I().PROGRAM, "vNormal");
+    
         GLS.I().GL.vertexAttribPointer(vNormal, 3, GLS.I().GL.FLOAT, false, 0, 0);
         GLS.I().GL.enableVertexAttribArray(vNormal);
         GLS.I().GL.bindTexture(GLS.I().GL.TEXTURE_2D, this.world.stageTextures[this.world.currStageIndex].item.textures[this.powerIndex]);
-        
-
         GLS.I().GL.drawArrays(GLS.I().GL.TRIANGLES, 0, this.vertices.length);
+
     }
 }
 

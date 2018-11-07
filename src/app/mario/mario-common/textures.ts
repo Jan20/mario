@@ -46,7 +46,6 @@ export function loadImageRec(urls, textures, i) {
         configureTexture(image, textures, i);
     
     }
-    console.log('loadImageRec executed')
     loadImageRec(urls.slice(1), textures, i+1);
 
 }

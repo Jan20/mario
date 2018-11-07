@@ -6,12 +6,10 @@ export function initShaders( gl: WebGLRenderingContext, vertexShaderText: string
 
     let vertexShader: WebGLShader
     let fragmentShader: WebGLShader
-    console.log(vertexShaderText)
     vertexShader = gl.createShader( gl.VERTEX_SHADER );
     
     gl.shaderSource( vertexShader, vertexShaderText );
     gl.compileShader( vertexShader );
-    console.log(gl.COMPILE_STATUS)
 
     if ( !gl.getShaderParameter(vertexShader, gl.COMPILE_STATUS) ) {
         var msg = "Vertex shader failed to compile.  The error log is:"

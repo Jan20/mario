@@ -12,6 +12,7 @@ import { MenuModule } from './menu/menu.module'
 import { UserModule } from './user/user.module'
 import { MarioModule } from './mario/mario.module'
 import { AnalyticsModule } from './analytics/analytics.module'
+import { SurveyModule } from './survey/survey.module'
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import { AnalyticsModule } from './analytics/analytics.module'
     UserModule,
     MenuModule,
     MarioModule,
-    AnalyticsModule
+    AnalyticsModule,
+    SurveyModule
 
   ], providers: [
     

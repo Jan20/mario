@@ -2,13 +2,17 @@ import { MovableObject } from './MoveableObject'
 import { Timer } from '../mario-common/timer'
 import { Howl } from '../mario-common/howler'
 import { texCoord } from '../mario-common/textures'
-import { mat4, mult, translate, flatten } from '../mario-common/MV';
+import { mat4, mult, translate, flatten } from '../mario-common/MV'
 import { GLS } from '../mario-services/gl.service'
-import { gameOver } from './hud';
-import { Projectile } from './Projectile';
+import { gameOver } from './hud'
+import { Projectile } from './Projectile'
 import { PowerUp } from './PowerUp'
-import { Stage } from './Stage';
+import { Stage } from './Stage'
+import { World } from './World'
+import { Injectable } from '@angular/core';
+import { SessionService } from '../../analytics/analytics-services/session.service';
 
+@Injectable()
 export class Player extends MovableObject{
     
     ///////////////
@@ -38,8 +42,13 @@ export class Player extends MovableObject{
     public powerUpAppearsSound: HTMLAudioElement
     public lifeSound: HTMLAudioElement
     public powerUpSound: HTMLAudioElement
-    
-    public constructor(world) {
+
+    public constructor(
+        
+        world: World,
+        private sessionService: SessionService
+
+    ) {
         
         super(world, GLS.I().INITIAL_PLAYER_POS.slice(0), GLS.I().INITIAL_PLAYER_VEL.slice(0), GLS.I().INITIAL_PLAYER_LIVES)
 
@@ -61,12 +70,12 @@ export class Player extends MovableObject{
         this.playerHeight = .5
         this.playerWidth = .5
         this.bounds = []
-        this.enemyKillSound = new Audio('../Sound/Stomp.mp3')
-        this.coinSound = new Audio('../Sound/Coin.mp3')
+        this.enemyKillSound = new Audio('../assets/Sound/Stomp.mp3')
+        this.coinSound = new Audio('../assets/Sound/Coin.mp3')
         
         this.lostLifeSound = new Howl({
         
-            urls: ['../Sound/LostLife.mp3'],
+            urls: ['../assets/Sound/LostLife.mp3'],
             volume: 0.5,
         
             onplay: () => {
@@ -110,37 +119,54 @@ export class Player extends MovableObject{
     
     draw() {
         
-        if (!GLS.I().pauseMode)
+        if (!GLS.I().pauseMode) {
+
             this.move()
+
+        }
         
-        var ctm = mat4()
+        let ctm = mat4()
+
         ctm = mult(ctm, translate(this.pos))
         ctm = mult(ctm, translate([0, 0, -1]))
         GLS.I().GL.uniformMatrix4fv(GLS.I().UNIFORM_MODEL, false, flatten(ctm))
         GLS.I().GL.bindBuffer(GLS.I().GL.ARRAY_BUFFER, GLS.I().T_BUFFER)
         GLS.I().GL.bufferData(GLS.I().GL.ARRAY_BUFFER, flatten(this.texCoords), GLS.I().GL.STATIC_DRAW)
-        var vTexCoord = GLS.I().GL.getAttribLocation(GLS.I().PROGRAM, "vTexCoord")
+
+        let vTexCoord = GLS.I().GL.getAttribLocation(GLS.I().PROGRAM, "vTexCoord")
+
         GLS.I().GL.vertexAttribPointer(vTexCoord, 2, GLS.I().GL.FLOAT, false, 0, 0)
         GLS.I().GL.enableVertexAttribArray(vTexCoord)
         GLS.I().GL.bindBuffer(GLS.I().GL.ARRAY_BUFFER, GLS.I().V_BUFFER)
         GLS.I().GL.bufferData(GLS.I().GL.ARRAY_BUFFER, flatten(this.vertices), GLS.I().GL.STATIC_DRAW)
-        var vPosition = GLS.I().GL.getAttribLocation(GLS.I().PROGRAM, "vPosition")
+
+        let vPosition = GLS.I().GL.getAttribLocation(GLS.I().PROGRAM, "vPosition")
+
         GLS.I().GL.vertexAttribPointer(vPosition, 3, GLS.I().GL.FLOAT, false, 0, 0)
         GLS.I().GL.enableVertexAttribArray(vPosition)
         GLS.I().GL.bindBuffer(GLS.I().GL.ARRAY_BUFFER, GLS.I().N_BUFFER)
         GLS.I().GL.bufferData(GLS.I().GL.ARRAY_BUFFER, flatten(this.normals), GLS.I().GL.STATIC_DRAW)
-        var vNormal = GLS.I().GL.getAttribLocation(GLS.I().PROGRAM, "vNormal")
+
+        let vNormal = GLS.I().GL.getAttribLocation(GLS.I().PROGRAM, "vNormal")
+
         GLS.I().GL.vertexAttribPointer(vNormal, 3, GLS.I().GL.FLOAT, false, 0, 0)
         GLS.I().GL.enableVertexAttribArray(vNormal)
         GLS.I().GL.bindTexture(GLS.I().GL.TEXTURE_2D, this.world.stageTextures[this.world.currStageIndex].player.textures[this.animIndex()])
         GLS.I().GL.drawArrays(GLS.I().GL.TRIANGLES, 0, this.vertices.length)
+
     }
     
-    public animIndex() {
-        if (this.world.currStageIndex == 2 || this.world.currStageIndex == 1)
-        GLS.I().ANIM_SPEED = 40
-        else
-        GLS.I().ANIM_SPEED = 80
+    public animIndex(): number {
+
+        if (this.world.currStageIndex == 2 || this.world.currStageIndex == 1) {
+
+            GLS.I().ANIM_SPEED = 40
+
+        } else {
+
+            GLS.I().ANIM_SPEED = 80
+
+        }
         
         if (Math.abs(this.velocity[0]) < GLS.I().WALK_CUTOFF) {
         
@@ -172,9 +198,14 @@ export class Player extends MovableObject{
         return this.texIndex
     }
 
-    public move() {
+    /**
+     * 
+     * 
+     * 
+     */
+    public move(): void {
         
-        var keyMap = this.world.keyMap
+        let keyMap: number[] = this.world.keyMap
         
         if (keyMap[32] && this.pos[1] < 14) {
         
@@ -194,26 +225,42 @@ export class Player extends MovableObject{
         // If on the ground
         if (this.collisionDown) {
         
-            if (this.velocity[1] < 0)
-                this.velocity[1] = 0
+            this.velocity[1] < 0 ? this.velocity[1] = 0 : null
+
             if ((keyMap[38]) && !this.collisionUp && !GLS.I().pauseMode) {
+
                 this.velocity[1] = GLS.I().JUMP_CONSTANT
+
             }
         }
+       
         // beneath something
         else if (this.collisionUp) {
+        
             this.velocity[1] = GLS.I().GRAVITY_CONSTANT
+        
         }
+        
         // IN THE AIR
         else {
+
             this.velocity[1] += GLS.I().GRAVITY_CONSTANT
-            if (this.velocity[1] <= .05 && this.velocity[1] > 0)
+            
+            if (this.velocity[1] <= .05 && this.velocity[1] > 0) {
+
                 this.velocity[1] = -.045
+
+            }
         }
+
         // Set X velocity and handle friction
         // 'leftArrow' 
-        if (keyMap[37] && !GLS.I().pauseMode)
+        if (keyMap[37] && !GLS.I().pauseMode) {
+
             this.velocity[0] += -GLS.I().X_VELO_CONSTANT
+
+        }
+
         // 'rightArrow' 
         if (keyMap[39] && !GLS.I().pauseMode)
             this.velocity[0] += GLS.I().X_VELO_CONSTANT
@@ -261,15 +308,20 @@ export class Player extends MovableObject{
                     this.world.getScore()
                 }
             }
-        }
+        
         // down
-        else if (this.velocity[1] < 0 && (this.velocity[1] + this.pos[1] < this.bounds[3])) {
+        } else if (this.velocity[1] < 0 && (this.velocity[1] + this.pos[1] < this.bounds[3])) {
+        
             this.velocity[1] = 0;
             this.pos[1] = this.bounds[3];
-        }
+        
+        } else {
+
         // no y collision
-        else
-            this.pos[1] += this.velocity[1];
+        this.pos[1] += this.velocity[1];
+
+        }
+
         // HANDLE Enemy collisions, using world's list of enemies
         for (var i = 0; i < this.world.enemies.length; i++) {
             
@@ -300,19 +352,31 @@ export class Player extends MovableObject{
                     return;
                 }
                 else {
+                
                     this.lives--;
+
+                    this.sessionService.getSession().setDeathsThroughOpponents(this.sessionService.getSession().getDeathsThroughOpponents() + 1)
+                    this.sessionService.getSession().setTotalDeaths(this.sessionService.getSession().getTotalDeaths() + 1)
+                    
                     this.resetToDefault();
                     this.lostLifeSound.play();
                     this.world.getLives();
-                    // TODO: Restart level or whole game?
-                    if (this.lives == 0)
-                        gameOver();
+                    
+                    if (this.lives === 0) {
+                
+                        this.sessionService.storeGameplayData()
+                        gameOver()
+
+                    }
+
                 }
+                
                 this.pos = GLS.I().INITIAL_PLAYER_POS.slice(0);
                 GLS.I().CAMERA_POS = GLS.I().INITIAL_CAMERA_POS.slice(0);
                 this.world.xBoundRight = GLS.I().INITIAL_WORLD_BOUND_RIGHT;
                 this.world.xBoundLeft = GLS.I().INITIAL_WORLD_BOUND_LEFT;
                 this.velocity = [0, 0];
+            
             }
         }
 
@@ -367,22 +431,34 @@ export class Player extends MovableObject{
             GRAVITY_CONSTANT = -.0055;
             break;*/
         // handle off stage death
+
         if (this.pos[1] <= -.5) {
+            
             this.lives--;
+
+            this.sessionService.getSession().setTotalDeaths(this.sessionService.getSession().getTotalDeaths() + 1)
+            this.sessionService.getSession().setDeathsThroughGaps(this.sessionService.getSession().getDeathsThroughGaps() + 1)
+
             this.resetToDefault();
             this.lostLifeSound.play();
             this.world.getLives();
-            if (this.lives == 0) {
+            
+            if (this.lives === 0) {
+
+                this.sessionService.getSession().setTotalDeaths(this.sessionService.getSession().getTotalDeaths() + 1)
+
                 // need this to stop the music from playing twice, doesn't hurt the restart
                 this.pos = GLS.I().INITIAL_PLAYER_POS.slice(0);
-                gameOver();
-            }
-            else {
+                gameOver()
+            
+            } else {
+             
                 this.pos = GLS.I().INITIAL_PLAYER_POS.slice(0);
                 GLS.I().CAMERA_POS = GLS.I().INITIAL_CAMERA_POS.slice(0);
                 this.world.xBoundRight = GLS.I().INITIAL_WORLD_BOUND_RIGHT;
                 this.world.xBoundLeft = GLS.I().INITIAL_WORLD_BOUND_LEFT;
                 this.velocity = [0, 0];
+            
             }
         }
     }
@@ -436,23 +512,40 @@ export class Player extends MovableObject{
                 }
         this.bounds[3] = minY + 1;
     }
-    getColsToCheck() {
-        var offsetX = (1 - this.playerWidth) / 2;
-        var lowerCol = Math.floor(this.pos[0] + offsetX);
-        var upperCol = this.pos[0] + offsetX + this.playerWidth;
-        if (upperCol > 0 && (upperCol == Math.floor(upperCol)))
+
+    /**
+     * 
+     */
+    private getColsToCheck() {
+        
+        let offsetX: number = (1 - this.playerWidth) / 2;
+        let lowerCol: number = Math.floor(this.pos[0] + offsetX);
+        let upperCol: number = this.pos[0] + offsetX + this.playerWidth;
+        
+        if (upperCol > 0 && (upperCol == Math.floor(upperCol))) {
+
             upperCol--;
-        else
+
+        } else {
+
             upperCol = Math.floor(upperCol);
-        var colsToCheck = [];
+
+        }
+        
+        let colsToCheck = [];
         for (var i = lowerCol; i <= upperCol; i++)
             colsToCheck.push(i);
         return colsToCheck;
     }
     
+    /**
+     * 
+     * 
+     * 
+     */
     private getRowsToCheck() {
         
-        const lowerRow = Math.floor(this.pos[1])
+        const lowerRow: number = Math.floor(this.pos[1])
         let upperRow = this.pos[1] + this.playerHeight
         
         // touching an edge
@@ -474,10 +567,15 @@ export class Player extends MovableObject{
 
         }
 
-        return rowsToCheck;
+        return rowsToCheck
 
     }
 
+    /**
+     * 
+     * 
+     * 
+     */
     private setCollision() {
     
         this.collisionLeft = Math.abs(this.pos[0] - this.bounds[0]) <= .005;
@@ -499,7 +597,9 @@ export class Player extends MovableObject{
 
 }
 
-function isBlock(block){
-    return (block == 'S') || (block == 'Y') || (block == 'L') || (block == 'P') || (block == 'F') || (block == 'G');
-};
+function isBlock(block: string): boolean {
+
+    return (block === 'S') || (block === 'Y') || (block === 'L') || (block === 'P') || (block === 'F') || (block === 'G')
+
+}
 

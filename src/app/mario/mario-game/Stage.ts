@@ -1,6 +1,7 @@
 import { quad } from "../mario-common/webgl-utils";
 import { mat4, flatten } from "../mario-common/MV";
 import { GLS } from "../mario-services/gl.service";
+import { World } from "./World";
 
 export class Stage {
 
@@ -8,7 +9,7 @@ export class Stage {
     // Variables //
     ///////////////
     public stage
-    public world
+    public world: World
     public finishLine
     public texIndexMap
     public runningSum 

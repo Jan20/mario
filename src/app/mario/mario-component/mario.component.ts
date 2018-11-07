@@ -8,7 +8,8 @@ import { GLS } from '../mario-services/gl.service'
 import { WebGLUtils } from '../mario-common/webgl-utils';
 import {interval} from "rxjs";
 import { UserService } from '../../analytics/analytics-services/user.service';
-import { User } from '../../analytics/analytics-models/user';
+import { SessionService } from '../../analytics/analytics-services/session.service';
+import { Session } from '../../analytics/analytics-models/session';
 
 @Component({
   selector: 'app-mario',
@@ -22,11 +23,10 @@ export class MarioComponent implements OnInit, AfterViewInit  {
     ///////////////
     /**
      * 
-     * Gets the HTML canvas element
+     * Gets a HTML canvas element
      *
      */
     @ViewChild('canvas') canvas: ElementRef
-
 
     //////////////////
     // Constructors //
@@ -38,7 +38,8 @@ export class MarioComponent implements OnInit, AfterViewInit  {
      */
     public constructor(
 
-        public userService: UserService,
+        private userService: UserService,
+        private sessionService: SessionService
 
     ) {
         
@@ -46,25 +47,30 @@ export class MarioComponent implements OnInit, AfterViewInit  {
     }
 
 
-
+    /**
+     * 
+     * 
+     * 
+     */
     async ngOnInit(): Promise<void> {
 
-        const userId = await this.userService.checkUserStatus()
-        console.log(userId)
-        const user = await this.userService.getUser(userId)
-        console.log(user)
+        this.sessionService.setSession(new Session())
 
-        user.setDeaths(3)
-        this.userService.updateUser(user)
-
+        // document.getElementById("start").style.display = "none";
+        // GLS.I().gameScreen = 0;
+        // this.init();
     }
 
     public TITLE_MAP = {
 
         0: 'Mario',
     
-    };
+    }
 
+    /**
+     * 
+     * @param event 
+     */
     @HostListener('document:keydown', ['$event'])
     handleKeyboardEvent(event: KeyboardEvent) { 
 
@@ -147,7 +153,7 @@ export class MarioComponent implements OnInit, AfterViewInit  {
         // set initial camera position
         GLS.I().CAMERA_POS = GLS.I().INITIAL_CAMERA_POS.slice(0);
 
-        GLS.I().GAMEWORLD = new World(GLS.I().stage);
+        GLS.I().GAMEWORLD = new World(GLS.I().stage, this.sessionService);
 
         // for hud initialization
         resetTimer();
@@ -189,8 +195,6 @@ export class MarioComponent implements OnInit, AfterViewInit  {
             
                 // Draw the world and everything in it    
                 GLS.I().GAMEWORLD.draw();
-                console.log("mario component")
-                console.log(GLS.I().GAMEWORLD)
             });
           
           

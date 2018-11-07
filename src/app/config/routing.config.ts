@@ -1,12 +1,12 @@
 import { Routes } from '@angular/router';
 import { ColorComponent } from '../color/color/color.component';
-import { MarioComponent } from '../mario/mario-component/mario.component';
+import { SurveyComponent } from '../survey/survey/survey.component';
 
 export const ROUTES: Routes = [
 
-  { path: '', component: MarioComponent },
+  { path: '', component: SurveyComponent },
   { path: 'color', component: ColorComponent },
-  { path: 'mario', component: MarioComponent },
+  { path: 'survey', component: SurveyComponent },
   
 ]
 

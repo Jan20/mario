@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from 'angularfire2/firestore';
-import { Subject } from 'rxjs';
 import { User } from '../analytics-models/user'
 
 @Injectable({
+
   providedIn: 'root'
+
 })
 export class UserService {
 
@@ -22,49 +23,50 @@ export class UserService {
   ///////////////
   /**
    * 
-   * 
+   * TODO: Check whether localStorage is available
    * 
    */
-  public async checkUserStatus(): Promise<string> {
-
-    if (localStorage.getItem('userId') === null) {
-
-      await this.createUser()
-
-    }
+  public async getCurrentUserId(): Promise<string> {
     
-    return localStorage.getItem('userId')
+    console.log('userId')
+    console.log(localStorage.getItem('userId'))
+
+    let userId: string
+
+    if (localStorage.getItem('userId') === undefined || localStorage.getItem('userId') === null) {
+
+      userId = await this.createUser()
+      
+    } else {
+
+      userId = localStorage.getItem('userId')
+      
+    }
+
+    return new Promise<string>(async resolve => resolve(userId))
 
   }
 
   /**
    * 
-   * 
+   * Creates a new 
    * 
    */
-  private async createUser(): Promise<void> {
+  private async createUser(): Promise<string> {
 
     let highestUserId = await this.getHighestUserId() + 1
+    console.log(highestUserId)
+    let userId: string
 
-    if (highestUserId < 10) {
+    if (highestUserId < 10)                       userId = 'user00' + highestUserId
+    if (highestUserId > 9 && highestUserId < 100) userId = 'user0' + highestUserId
+    if (highestUserId > 99)                       userId = 'user' + highestUserId
 
-      await this.angularFirestore.collection(`users`).doc('user00' + highestUserId).set({id: highestUserId})
-      localStorage.setItem('userId', 'user00' + highestUserId)
-      return 
-    
-    } 
+    await this.angularFirestore.collection(`users`).doc(userId).set({id: highestUserId})
+    localStorage.setItem('userId', userId)
 
-    if (highestUserId < 100) {
-
-      await this.angularFirestore.collection(`users`).doc('user0' + highestUserId).set({id: highestUserId})
-      localStorage.setItem('userId', 'user0' + highestUserId)
-      return 
-    
-    }
-
-    await this.angularFirestore.collection(`users`).doc('user' + highestUserId).set({id: highestUserId})
-    localStorage.setItem('userId', 'user' + highestUserId)
-    return
+    console.log('user has been created')
+    return new Promise<string>(resolve => resolve(userId))
 
   }
 
@@ -90,6 +92,7 @@ export class UserService {
   /**
    * 
    * @param user 
+   * 
    */
   public async updateUser(user: User): Promise<any> {
 
@@ -100,10 +103,10 @@ export class UserService {
     if (uid > 9 && uid < 100) { userId = 'user0' + uid}
     if (uid > 99) { userId = 'user' + uid}
 
-    await this.angularFirestore.doc<User>(`users/${userId}`).set({
+    await this.angularFirestore.doc<any>(`users/${userId}`).set({
 
-      'id': user.getId()
-      'dealths': user.getDealths()
+      'id': user.getId(),
+      'dealths': user.getDeaths()
 
     })
 
@@ -119,7 +122,8 @@ export class UserService {
    * @param userId 
    * 
    */
-  public async getUser(userId: string): Promise<User> { 
+  public async getUser(userId: string): Promise<User> {
+
     console.log(userId)
     let result: User
 

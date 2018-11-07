@@ -16,6 +16,11 @@ import { MarioService } from './mario-services/mario.service'
 
     MarioService
 
+  ],
+  exports: [
+
+    MarioComponent
+
   ]
 })
 export class MarioModule { }

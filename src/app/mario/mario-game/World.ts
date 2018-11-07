@@ -6,6 +6,7 @@ import { loadImages } from '../mario-common/textures'
 import { pad, pauseGame, continueGame, finishLevel } from './hud'
 import { GLS } from '../mario-services/gl.service'
 import { Howl } from '../mario-common/howler'
+import { SessionService } from '../../analytics/analytics-services/session.service';
 
 export class World {
     
@@ -26,7 +27,7 @@ export class World {
     public bgMusic: any[]
     public stageTextures: any
 
-    public constructor(stageSelection) {
+    public constructor(stageSelection, sessionService: SessionService) {
         
         this.xBoundLeft = GLS.I().INITIAL_WORLD_BOUND_LEFT
         this.xBoundRight = GLS.I().INITIAL_WORLD_BOUND_RIGHT
@@ -43,7 +44,7 @@ export class World {
         this.projectiles = []
         this.score = 0
         this.keyMap = []
-        this.player = new Player(this)
+        this.player = new Player(this, sessionService)
         this.stage = new Stage(this, GLS.I().STAGES[this.currStageIndex])
         this.back = new Background(this)
         
@@ -164,8 +165,9 @@ export class World {
         
         // for moving the player on button presses
         var world = this
+        
         document.addEventListener('keydown', function (evt) {
-            console.log(evt)
+
             world.keyMap[evt.keyCode] = true
             if (evt.keyCode == 37 && !GLS.I().pauseMode) {
                 world.player.texDir = 1
@@ -210,8 +212,6 @@ export class World {
             for (var key in this.stageTextures[i]) {
                 if (!Array.isArray(this.stageTextures[i][key])) {
                     loadImages(this.stageTextures[i][key].fileNames, this.stageTextures[i][key].textures);
-                    console.log('World')
-                    console.log(this.stageTextures[i][key].fileNames, this.stageTextures[i][key].textures)
                 }
                 else {
                     for (var j = 0; j < this.stageTextures[i][key].length; j++) {

@@ -1,5 +1,6 @@
 // below defines your custom color to build a theme palette from
 $mat-white: (
+
     50: #ffffff,
     100: #ffcdd2,
     200: #ef9a9a,
@@ -14,6 +15,7 @@ $mat-white: (
     A200: #ff5252,
     A400: #ff1744,
     A700: #d50000,
+  
     contrast: (
       50: grey,
       100: grey,
@@ -37,7 +39,7 @@ $mat-white: (
 @import '~@angular/material/theming';
 @include mat-core();
 
-$flow-app-primary: mat-palette($mat-grey, 500);
+$flow-app-primary: mat-palette($mat-light-green, 700);
 $flow-app-accent:  mat-palette($mat-grey, 500);
 $flow-app-warn:    mat-palette($mat-white, 50);
 

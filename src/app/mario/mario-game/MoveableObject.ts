@@ -4,27 +4,27 @@
 -virtual functions: move, draw
 
 */
-import { DrawableObject } from './DrawableObject'
+import { World } from './World';
 
 export class MovableObject {
 
 	///////////////
 	// Variables //
 	///////////////
-	public world
-	public pos
-	public velocity
-	public lives
+	public world: World
+	public pos: number[]
+	public velocity: [number, number]
+	public lives: number
 
 	//////////////////
 	// Constructors //
 	//////////////////
 	public constructor(world, pos, velocity, lives) {
 	
-		this.world = world;
-		this.pos = pos;
-		this.velocity = velocity;
-		this.lives = lives;
+		this.world = world
+		this.pos = pos
+		this.velocity = velocity
+		this.lives = lives
 	
 	}
 

@@ -30,22 +30,39 @@ export class Background {
     ///////////////
     // Functions //
     ///////////////
+    /**
+     * 
+     * 
+     * 
+     * @param vBuffer 
+     * @param tBuffer 
+     */
     public generateVertices(vBuffer, tBuffer): void {
 
         quad([16, 16, -3], [16, -1, -3], [-1, 16, -3], [-1, -1, -3], vBuffer, tBuffer)
 
     }
 
+    /**
+     * 
+     * @param nBuffer 
+     * 
+     */
     public generateNormals(nBuffer): void {
 
         for (var i = 0; i < 6; i++){
 
             nBuffer.push([1, 0, 0]);
-
+ 
         }
             
     }
 
+    /**
+     * 
+     * 
+     * 
+     */
     public draw(): void {
 
         let ctm = mat4();
