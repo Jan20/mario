@@ -49,9 +49,9 @@ export class Player extends MovableObject{
         private sessionService: SessionService
 
     ) {
-        
         super(world, GLS.I().INITIAL_PLAYER_POS.slice(0), GLS.I().INITIAL_PLAYER_VEL.slice(0), GLS.I().INITIAL_PLAYER_LIVES)
 
+        this.sessionService.createSessionId()
         this.projectileTimer = new Timer()
         this.hasProjectiles = false
         this.texDir = 0
@@ -355,8 +355,11 @@ export class Player extends MovableObject{
                 
                     this.lives--;
 
-                    this.sessionService.getSession().setDeathsThroughOpponents(this.sessionService.getSession().getDeathsThroughOpponents() + 1)
-                    this.sessionService.getSession().setTotalDeaths(this.sessionService.getSession().getTotalDeaths() + 1)
+                    const deathsThroughOpponents: number = this.sessionService.getSession().getGameplayData().getDeathsThroughOpponents() + 1
+                    this.sessionService.getSession().getGameplayData().setDeathsThroughOpponents(deathsThroughOpponents)
+
+                    const totalDeaths = this.sessionService.getSession().getGameplayData().getTotalDeaths() + 1
+                    this.sessionService.getSession().getGameplayData().setTotalDeaths(totalDeaths)
                     
                     this.resetToDefault();
                     this.lostLifeSound.play();
@@ -436,16 +439,19 @@ export class Player extends MovableObject{
             
             this.lives--;
 
-            this.sessionService.getSession().setTotalDeaths(this.sessionService.getSession().getTotalDeaths() + 1)
-            this.sessionService.getSession().setDeathsThroughGaps(this.sessionService.getSession().getDeathsThroughGaps() + 1)
+            const deathsThroughGaps: number = this.sessionService.getSession().getGameplayData().getDeathsThroughGaps() + 1
+            this.sessionService.getSession().getGameplayData().setDeathsThroughGaps(deathsThroughGaps)
 
+            const totalDeaths = this.sessionService.getSession().getGameplayData().getTotalDeaths() + 1
+            this.sessionService.getSession().getGameplayData().setTotalDeaths(totalDeaths)
+            
             this.resetToDefault();
             this.lostLifeSound.play();
             this.world.getLives();
             
             if (this.lives === 0) {
 
-                this.sessionService.getSession().setTotalDeaths(this.sessionService.getSession().getTotalDeaths() + 1)
+                this.sessionService.getSession().getGameplayData().setTotalDeaths(this.sessionService.getSession().getGameplayData().getTotalDeaths() + 1)
 
                 // need this to stop the music from playing twice, doesn't hurt the restart
                 this.pos = GLS.I().INITIAL_PLAYER_POS.slice(0);

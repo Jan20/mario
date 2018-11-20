@@ -6,7 +6,6 @@ import { ROUTES } from './../config/routing.config';
 import { RouterModule, Routes } from '@angular/router';
 import { MenuComponent } from './menu/menu.component';
 import { MenuService } from './menu-service/menu.service';
-import { MenuSidenavComponent } from './menu-sidenav/menu-sidenav.component';
 
 @NgModule({
   imports: [
@@ -19,7 +18,6 @@ import { MenuSidenavComponent } from './menu-sidenav/menu-sidenav.component';
   ],declarations: [
   
     MenuComponent,
-    MenuSidenavComponent,
   
   ], providers: [
   
@@ -29,7 +27,6 @@ import { MenuSidenavComponent } from './menu-sidenav/menu-sidenav.component';
   
     MenuComponent,
     RouterModule,
-    MenuSidenavComponent,
   
   ]
 })

@@ -23,92 +23,110 @@ export class UserService {
   ///////////////
   /**
    * 
-   * TODO: Check whether localStorage is available
+   * Tries to retrieve an userId for a user who
+   * has already participated in a previous round
+   * of the experiment. If this is the case, a
+   * reference to the user's firestore id should
+   * be found in the localStorage. However, for
+   * every new user a new id is created. 
    * 
    */
   public async getCurrentUserId(): Promise<string> {
     
-    console.log('userId')
-    console.log(localStorage.getItem('userId'))
+    // Retrieves a user id from the localStorage.
+    // If no 'userId' can be found, the variable
+    // should be null.
+    let userKey: string = localStorage.getItem('userKey')
 
-    let userId: string
+    // If no userId has been stored in the user's 
+    // browser, a new user is created at the firestore
+    // database and a reference set to the userId variable.
+    if (userKey === undefined || userKey === null) {
 
-    if (localStorage.getItem('userId') === undefined || localStorage.getItem('userId') === null) {
-
-      userId = await this.createUser()
-      
-    } else {
-
-      userId = localStorage.getItem('userId')
+      userKey = await this.createUser()
       
     }
 
-    return new Promise<string>(async resolve => resolve(userId))
+    // Checks whether the userId stored at the user's browser
+    // actually exists within the firestore database. This should
+    // be always the case unless the user's entry has been explicitly
+    // deleted from the database or the dataset got somehow corrupted.
+    await this.angularFirestore.collection(`users`).doc(userKey).get().toPromise().then(async user => {
+
+      user.data() === undefined ? userKey = await this.createUser() : null
+
+    })
+
+    // Returns a promise resolving the userId variable.
+    return new Promise<string>(async resolve => resolve(userKey))
 
   }
 
   /**
    * 
-   * Creates a new 
+   * Creates a new user entry at firestore and promises
+   * that the newly created user id will be returned
+   * eventually.
    * 
    */
   private async createUser(): Promise<string> {
 
-    let highestUserId = await this.getHighestUserId() + 1
-    console.log(highestUserId)
-    let userId: string
+    // Fetches the highest existing user id and
+    // increases the value by one. This should
+    // ensure that a user id is not used twice
+    // throughtout the experiment.
+    const id: number = await this.getHighestUserId() + 1
 
-    if (highestUserId < 10)                       userId = 'user00' + highestUserId
-    if (highestUserId > 9 && highestUserId < 100) userId = 'user0' + highestUserId
-    if (highestUserId > 99)                       userId = 'user' + highestUserId
+    // Constructs a key value for storing a new
+    // user at firestore. The key should look
+    // like 'user001'.
+    const user = new User(id)
 
-    await this.angularFirestore.collection(`users`).doc(userId).set({id: highestUserId})
-    localStorage.setItem('userId', userId)
+    // Creates a new entry at Firestore that 
+    // corresponds to the newly created user key.
+    await this.angularFirestore.collection(`users`).doc(user.getKey()).set({id: user.getId()})
 
-    console.log('user has been created')
-    return new Promise<string>(resolve => resolve(userId))
+    // Sets a key-value-pair for the newly created
+    // user key at the user's localStorage.
+    localStorage.setItem('userKey', user.getKey())
+
+    // Returns a promise pointing to the just
+    // created userKey.
+    return new Promise<string>(resolve => resolve(user.getKey()))
 
   }
 
   /**
    * 
-   * 
+   * Returns the highest user id that can be found at firestore.
    * 
    */
   private async getHighestUserId(): Promise<number> {
     
-    let highestId: number = 0
+    // Sets a default user id.
+    let highestUserId: number = 0
 
-    await this.angularFirestore.collection<any>(`users`).get().toPromise().then(async users => {
+    // Iterates through all users from firestore and
+    // compares their user ids with the one stored in
+    // the highestUserId variable.
+    await this.angularFirestore.collection<User>(`users`).get().toPromise().then(users => {
       
-      await users.docs.forEach(user => (parseInt(user.data().id) > highestId ? highestId = parseInt(user.data().id) : null))
+      users.docs.forEach(user => {
+
+        // If the user's id is higher than
+        // the former highest user id, the
+        // value of the highestUserId variable 
+        // is is replaced by the one stored in
+        // the userId variable.
+        user.data().id > highestUserId ? highestUserId = user.data().id : null
+
+      })
 
     })
 
-    return new Promise<number>(resolve => resolve(highestId))
-
-  }
-
-  /**
-   * 
-   * @param user 
-   * 
-   */
-  public async updateUser(user: User): Promise<any> {
-
-    console.log(user)
-    const uid = user.getId()
-    let userId: string
-    if (uid < 10) { userId = 'user00' + uid}
-    if (uid > 9 && uid < 100) { userId = 'user0' + uid}
-    if (uid > 99) { userId = 'user' + uid}
-
-    await this.angularFirestore.doc<any>(`users/${userId}`).set({
-
-      'id': user.getId(),
-      'dealths': user.getDeaths()
-
-    })
+    // Resolves promise by returning the highest user id
+    // which should always be an number.
+    return new Promise<number>(resolve => resolve(highestUserId))
 
   }
 
@@ -116,43 +134,44 @@ export class UserService {
   /////////////
   // Getters //
   /////////////
-  /**
-   * 
-   * 
-   * @param userId 
-   * 
-   */
-  public async getUser(userId: string): Promise<User> {
+  // /**
+  //  * 
+  //  * 
+  //  * @param userId 
+  //  * 
+  //  */
+  // public async getUser(userId: string): Promise<User> {
 
-    console.log(userId)
-    let result: User
+  //   console.log(userId)
+  //   let result: User
 
-    await this.angularFirestore.doc<any>(`users/${userId}`).get().toPromise().then(user => {
-      console.log(user.data())
-      result = new User(parseInt(user.data().id))
+  //   await this.angularFirestore.doc<any>(`users/${userId}`).get().toPromise().then(user => {
+  //     console.log(user.data())
+  //     result = new User(parseInt(user.data().id))
     
-    }) 
+  //   }) 
     
-    return new Promise<User>(resolve => resolve(result))  
+  //   return new Promise<User>(resolve => resolve(result))  
   
-  }
+  // }
 
   /**
    * 
    * 
    * 
    */
-  public async getUsers(): Promise<any> {
+  public async getUsers(): Promise<User[]> {
     
-    let result: User[] = []
+    let userArray: User[] = []
 
-    await this.angularFirestore.collection<any>(`users`).get().toPromise().then(async users => {
+    await this.angularFirestore.collection<any>(`users`).get().toPromise().then(users => {
       
-      await users.docs.forEach(user => result.push(new User(parseInt(user.data().id))))
+      users.docs.forEach(user => userArray.push(new User(parseInt(user.data().id))))
 
     })
 
-    return new Promise<User[]>(resolve => resolve(result))
+    console.log(userArray)
+    return new Promise<User[]>(resolve => resolve(userArray))
     
   }
 

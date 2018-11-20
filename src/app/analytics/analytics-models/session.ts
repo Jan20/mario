@@ -1,79 +1,91 @@
+import { GameplayData } from "./gameplayData";
+
 export class Session {
 
     ///////////////
     // Variables //
     ///////////////
+    private sessionKey: string
     private sessionId: number
-    public totalDeaths: number
-    public deathsThroughOpponents: number
-    public deathsThroughGaps: number
+    private gameplayData: GameplayData
 
     //////////////////
     // Constructors //
     //////////////////
-    public constructor() {
+    public constructor(sessionId?: number) {
 
-        this.totalDeaths = 0
-        this.deathsThroughOpponents = 0
-        this.deathsThroughGaps = 0
+        sessionId !== undefined ? this.sessionKey = this.generateKey(sessionId) : null
+        this.gameplayData = new GameplayData()
+
+    }
+    
+    ///////////////
+    // Functions //
+    ///////////////
+    /**
+     * 
+     * Helper function to convert a session id stored
+     * as a number to a string like id:1 => 'user001'.
+     * 
+     * @param sessionId: An user id as a number
+     * 
+     */
+    private generateKey(sessionId: number): string {
+
+        // Checks wether the user id is smaller than
+        // ten leading to a result like 'user004'.
+        if (sessionId < 10) return `session00${sessionId}`
+
+        // If the user id is smaller than 100, a user
+        // key like 'user095' should be returned.
+        if (sessionId < 100) return `session0${sessionId}`
+
+        // By default, an generic user key should
+        // be returned. 
+        return `session${sessionId}`
 
     }
 
     /////////////
     // Getters //
     /////////////
+    public getSessionKey(): string {
+
+        return this.sessionKey
+
+    }
+
     public getSessionId(): number {
 
         return this.sessionId
 
     }
 
-    public getTotalDeaths(): number {
+    public getGameplayData(): GameplayData {
 
-        return this.totalDeaths
-
-    }
-
-    public getDeathsThroughOpponents(): number {
-
-        return this.deathsThroughOpponents
+        return this.gameplayData
 
     }
-
-    public getDeathsThroughGaps(): number {
-
-        return this.deathsThroughGaps
-
-    }
-
 
     /////////////
     // Setters //
     /////////////
+    public setSessionKey(sessionKey: string): void {
+
+        this.sessionKey = sessionKey
+
+    }
+    
     public setSessionId(sessionId: number): void {
 
         this.sessionId = sessionId
 
     }
-    
-    public setTotalDeaths(totalDeaths: number): void {
 
-        this.totalDeaths = totalDeaths
-        console.log('############## DEALTH COUNT ############')
-        console.log(totalDeaths)
+    public setGameplayData(gameplayData: GameplayData): void {
+
+        this.gameplayData = gameplayData
 
     }
-
-    public setDeathsThroughOpponents(deathsThroughOpponents: number): void {
-
-        this.deathsThroughOpponents = deathsThroughOpponents
-
-    }
-
-    public setDeathsThroughGaps(deathsThroughGaps: number): void {
-
-        this.deathsThroughGaps = deathsThroughGaps
-
-    }
-
+ 
 }

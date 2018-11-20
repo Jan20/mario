@@ -164,7 +164,7 @@ export class World {
         ]
         
         // for moving the player on button presses
-        var world = this
+        let world = this
         
         document.addEventListener('keydown', function (evt) {
 
@@ -228,7 +228,7 @@ export class World {
             finishLevel();
         }
         // TODO: only draw what can be seen?
-        // this.back.draw();
+        this.back.draw();
         this.stage.draw();
         this.player.draw();
         /////////////////
@@ -276,27 +276,28 @@ export class World {
 
     }
 
-    public getScore() {
+    public getScore(): void {
     
-        document.getElementById("score").innerHTML = pad(this.score);
-        return;
+        document.getElementById("score").innerHTML = pad(this.score)
+        return
+
     }
     
-    public getLives() {
+    public getLives(): void {
     
-        document.getElementById("lives").innerHTML = this.player.lives;
-        return;
-    
-    }
-    
-    public getWorldLevel() {
-    
-        document.getElementById("worldLevel").innerHTML = this.currStageIndex + 1;
-        return;
+        document.getElementById("lives").innerHTML = this.player.lives
+        return
     
     }
     
-    public generateEnemies() {
+    public getWorldLevel(): void {
+    
+        document.getElementById("worldLevel").innerHTML = this.currStageIndex + 1
+        return
+    
+    }
+    
+    public generateEnemies(): void {
         
         // Go through stage and create enemies
         // Might want to store the stages themselves somewhere

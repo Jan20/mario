@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { UserService } from './user.service'
 import { Session } from '../analytics-models/session';
+import { GameplayData } from '../analytics-models/gameplayData';
+import { resolve } from 'q';
 
 @Injectable({
 
@@ -38,7 +40,6 @@ export class SessionService {
 
   ) { 
 
-    this.createSessionId()
 
   }
 
@@ -110,17 +111,84 @@ export class SessionService {
     // Gets the userId of the current user Id from UserService
     const userId: string = await this.userService.getCurrentUserId()
     console.log(userId)
-
     // Creates a new session at firestore database.
-    this.angularFirestore.collection(`users/${userId}/sessions`).doc(this.sessionId).set({
+
+    this.angularFirestore.collection(`users/${userId}/sessions`).doc(this.sessionId).set({ 
       
       id: this.session.getSessionId(),
       questionnaireFinished: false,
-      totalDeaths: this.session.getTotalDeaths(),
-      deathsThroughGaps : this.session.getDeathsThroughGaps(),
-      deathsThroughOpponents : this.session.getDeathsThroughOpponents(),
-    
+
     })
+
+    this.angularFirestore.doc(`users/${userId}/sessions/${this.sessionId}/data/gameplayData`).set({ 
+      
+      totalDeaths: this.session.getGameplayData().getTotalDeaths(),
+      deathsThroughGaps : this.session.getGameplayData().getDeathsThroughGaps(),
+      deathsThroughOpponents : this.session.getGameplayData().getDeathsThroughOpponents(),      
+
+    })
+
+  }
+
+  public async getAllGameplayDataFromUser(userKey: string): Promise<GameplayData[]> {
+
+    let gameplayDatapoints: GameplayData[] = []
+    const sessions: Session[] = await this.getSessions(userKey)  
+
+    sessions.forEach(async session => {
+
+      gameplayDatapoints.push(await this.getGameplayData(userKey, session.getSessionKey()))
+
+    })
+
+    return new Promise<GameplayData[]>(resolve => resolve(gameplayDatapoints))
+
+  }
+
+  /**
+   * 
+   * 
+   * 
+   * @param userId 
+   * @param sessionKey 
+   */
+  public async getGameplayData(userKey: string, sessionKey: string): Promise<GameplayData> {
+
+    let gameplayData: GameplayData
+
+    // Creates a new session at firestore database.
+    await this.angularFirestore.doc<any>(`users/${userKey}/sessions/${sessionKey}/data/gameplayData`).get().toPromise().then(gameplay => {
+      
+      gameplayData = new GameplayData(
+        
+        gameplay.data().totalDeaths,
+        gameplay.data().deathsThroughOpponents,
+        gameplay.data().deathsThroughGaps  
+        
+      )
+
+    })
+
+    return new Promise<GameplayData>(resolve => resolve(gameplayData))
+
+  }
+
+
+  public async getSessions(userKey: string): Promise<Session[]> {
+
+    let sessions: Session[] = []
+
+    await this.angularFirestore.collection(`users/${userKey}/sessions`).get().toPromise().then(sessionData => {
+
+      sessionData.forEach(session => {
+
+        sessions.push(new Session(session.data().id))
+
+      })
+
+    })
+
+    return new Promise<Session[]>(resolve => resolve(sessions))
 
   }
 

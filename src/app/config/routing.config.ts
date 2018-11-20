@@ -1,11 +1,13 @@
 import { Routes } from '@angular/router';
-import { ColorComponent } from '../color/color/color.component';
 import { SurveyComponent } from '../survey/survey/survey.component';
+import { AnalyticsComponent } from '../analytics/analytics/analytics.component'
+import { EvolutionComponent } from '../evolution/evolution/evolution.component'
 
 export const ROUTES: Routes = [
 
+  // { path: '', component: AnalyticsComponent },
   { path: '', component: SurveyComponent },
-  { path: 'color', component: ColorComponent },
+  { path: 'evolution', component: EvolutionComponent },
   { path: 'survey', component: SurveyComponent },
   
 ]
