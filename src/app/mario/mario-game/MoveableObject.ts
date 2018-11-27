@@ -1,10 +1,11 @@
+import { World } from "./world/world.component";
+
 /* MovableObject class
 - goomba, koopa, enemies, Player, anything that moves/has lives
 
 -virtual functions: move, draw
 
 */
-import { World } from './World';
 
 export class MovableObject {
 

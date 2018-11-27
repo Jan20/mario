@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { HostListener, } from '@angular/core';
-import { World } from '../mario-game/World';
 import { resetTimer, myTimer } from '../mario-game/hud'
 import { initShaders } from '../mario-common/InitShaders'
 import { mult, flatten, mat4, translate, vec3 } from '../mario-common/MV'
@@ -10,6 +9,8 @@ import {interval} from "rxjs";
 import { UserService } from '../../analytics/analytics-services/user.service';
 import { SessionService } from '../../analytics/analytics-services/session.service';
 import { Session } from '../../analytics/analytics-models/session';
+import { World } from '../mario-game/world/world.component';
+import { LevelService } from '../mario-services/level.service';
 
 @Component({
   selector: 'app-mario',
@@ -39,7 +40,8 @@ export class MarioComponent implements OnInit, AfterViewInit  {
     public constructor(
 
         private userService: UserService,
-        private sessionService: SessionService
+        private sessionService: SessionService,
+        private levelService: LevelService
 
     ) {
         
@@ -153,7 +155,7 @@ export class MarioComponent implements OnInit, AfterViewInit  {
         // set initial camera position
         GLS.I().CAMERA_POS = GLS.I().INITIAL_CAMERA_POS.slice(0);
 
-        GLS.I().GAMEWORLD = new World(GLS.I().stage, this.sessionService);
+        GLS.I().GAMEWORLD = new World(GLS.I().stage, this.sessionService, this.levelService);
 
         // for hud initialization
         resetTimer();

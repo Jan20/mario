@@ -1,7 +1,7 @@
 import { quad } from "../mario-common/webgl-utils";
 import { mat4, mult, translate, flatten } from "../mario-common/MV"
 import { GLS } from "../mario-services/gl.service"
-import { World } from "./World"
+import { World } from "./world/world.component";
 
 export class Background {
 
@@ -101,7 +101,7 @@ export class Background {
         
         GLS.I().GL.vertexAttribPointer(vTexCoord, 2, GLS.I().GL.FLOAT, false, 0, 0);
         GLS.I().GL.enableVertexAttribArray(vTexCoord);
-        GLS.I().GL.bindTexture(GLS.I().GL.TEXTURE_2D, this.world.stageTextures[this.world.currStageIndex].background.textures[0]);
+        GLS.I().GL.bindTexture(GLS.I().GL.TEXTURE_2D, this.world.stageTextures[this.world.getLevelIndex()].background.textures[0]);
         GLS.I().GL.drawArrays(GLS.I().GL.TRIANGLES, 0, this.vertices.length);
         GLS.I().GL.uniformMatrix4fv(GLS.I().UNIFORM_PROJECTION, false, flatten(GLS.I().PERSPECTIVE));
     

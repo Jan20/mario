@@ -8,9 +8,10 @@ import { gameOver } from './hud'
 import { Projectile } from './Projectile'
 import { PowerUp } from './PowerUp'
 import { Stage } from './Stage'
-import { World } from './World'
 import { Injectable } from '@angular/core';
 import { SessionService } from '../../analytics/analytics-services/session.service';
+import { World } from './world/world.component';
+import { LevelService } from '../mario-services/level.service';
 
 @Injectable()
 export class Player extends MovableObject{
@@ -46,8 +47,9 @@ export class Player extends MovableObject{
     public constructor(
         
         world: World,
-        private sessionService: SessionService
-
+        private sessionService: SessionService,
+        private levelService: LevelService,
+        
     ) {
         super(world, GLS.I().INITIAL_PLAYER_POS.slice(0), GLS.I().INITIAL_PLAYER_VEL.slice(0), GLS.I().INITIAL_PLAYER_LIVES)
 
@@ -80,13 +82,13 @@ export class Player extends MovableObject{
         
             onplay: () => {
             
-                world.bgMusic[world.currStageIndex].pause()
+                world.bgMusic[world.getLevelIndex()].pause()
             
             },
         
             onend: () => {
             
-                world.bgMusic[world.currStageIndex].play()
+                world.bgMusic[world.getLevelIndex()].play()
             }
         
         })
@@ -151,14 +153,14 @@ export class Player extends MovableObject{
 
         GLS.I().GL.vertexAttribPointer(vNormal, 3, GLS.I().GL.FLOAT, false, 0, 0)
         GLS.I().GL.enableVertexAttribArray(vNormal)
-        GLS.I().GL.bindTexture(GLS.I().GL.TEXTURE_2D, this.world.stageTextures[this.world.currStageIndex].player.textures[this.animIndex()])
+        GLS.I().GL.bindTexture(GLS.I().GL.TEXTURE_2D, this.world.stageTextures[this.world.getLevelIndex()].player.textures[this.animIndex()])
         GLS.I().GL.drawArrays(GLS.I().GL.TRIANGLES, 0, this.vertices.length)
 
     }
     
     public animIndex(): number {
 
-        if (this.world.currStageIndex == 2 || this.world.currStageIndex == 1) {
+        if (this.world.getLevelIndex() == 2 || this.world.getLevelIndex() == 1) {
 
             GLS.I().ANIM_SPEED = 40
 
@@ -177,9 +179,9 @@ export class Player extends MovableObject{
         } else {
 
             this.walktime += this.walkTimer.getElapsedTime() / GLS.I().ANIM_SPEED
-            this.texIndex = Math.floor(this.walktime % this.world.stageTextures[this.world.currStageIndex].player.textures.length / 2) * 2
+            this.texIndex = Math.floor(this.walktime % this.world.stageTextures[this.world.getLevelIndex()].player.textures.length / 2) * 2
             
-            if (this.texIndex >= this.world.stageTextures[this.world.currStageIndex].player.textures.length - 2) {
+            if (this.texIndex >= this.world.stageTextures[this.world.getLevelIndex()].player.textures.length - 2) {
             
                 this.texIndex = 2
                 this.walkTimer.reset()
@@ -190,7 +192,7 @@ export class Player extends MovableObject{
         // document.getElementById("2").innerHTML = "walktime: " + this.walktime
         // document.getElementById("3").innerHTML = "texIndex: " + this.texIndex
         if (!this.collisionDown) {
-            this.texIndex = this.world.stageTextures[this.world.currStageIndex].player.textures.length - 2
+            this.texIndex = this.world.stageTextures[this.world.getLevelIndex()].player.textures.length - 2
             this.walkTimer.reset()
             this.walktime = 0
         }
@@ -211,7 +213,7 @@ export class Player extends MovableObject{
         
             if (this.hasProjectiles && ((this.projectileTimer.getNowTime() - this.projectileTimer.prevTime) >= 600)) {
                 this.projectileTimer.reset()
-                this.world.projectiles.push(new Projectile(this.world, this.pos.slice(0), this.getRowsToCheck()))
+                this.world.projectiles.push(new Projectile(this.world, this.pos.slice(0), this.getRowsToCheck(), this.levelService))
                 this.fireballSound = new Audio('../Sound/Fireball.wav')
                 this.fireballSound.play()
             }
@@ -549,7 +551,7 @@ export class Player extends MovableObject{
      * 
      * 
      */
-    private getRowsToCheck() {
+    private getRowsToCheck(): number[] {
         
         const lowerRow: number = Math.floor(this.pos[1])
         let upperRow = this.pos[1] + this.playerHeight

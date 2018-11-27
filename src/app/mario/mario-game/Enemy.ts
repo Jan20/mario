@@ -3,6 +3,7 @@ import { Timer } from '../mario-common/timer'
 import { mult, flatten, mat4, translate } from '../mario-common/MV'
 import { texCoord } from '../mario-common/textures';
 import { GLS } from '../mario-services/gl.service'
+import { World } from './world/world.component';
 
 const ENEMY_XVELO_CONSTANT = .025
 const ENEMY_GRAVITY_CONSTANT = -.0075
@@ -34,7 +35,7 @@ export class Enemy extends MovableObject{
     public velocity
     public bounds: any[]
 
-    public constructor(world, pos, xBoundLeft, xBoundRight, yBoundLow, yBoundHigh, enemyType) {
+    public constructor(world: World, pos, xBoundLeft, xBoundRight, yBoundLow, yBoundHigh, enemyType) {
         
         super(world, pos, [ENEMY_XVELO_CONSTANT, 0], 1)
         
@@ -103,7 +104,7 @@ export class Enemy extends MovableObject{
         
         this.walkTime += this.enemyWalkTimer.getElapsedTime() / 80
         
-        this.texIndex = Math.floor(this.walkTime % this.world.stageTextures[this.world.currStageIndex].enemies[this.enemyIndex].textures.length / 2) * 2
+        this.texIndex = Math.floor(this.walkTime % this.world.stageTextures[this.world.getLevelIndex()].enemies[this.enemyIndex].textures.length / 2) * 2
         
         if (this.velocity[0] < 0.0 || this.enemyIndex == 1 || this.enemyIndex == 3)
             this.texIndex++
@@ -234,7 +235,7 @@ export class Enemy extends MovableObject{
         
         GLS.I().GL.vertexAttribPointer(vNormal, 3, GLS.I().GL.FLOAT, false, 0, 0)
         GLS.I().GL.enableVertexAttribArray(vNormal)
-        GLS.I().GL.bindTexture(GLS.I().GL.TEXTURE_2D, this.world.stageTextures[this.world.currStageIndex].enemies[this.enemyIndex].textures[this.animIndex()])
+        GLS.I().GL.bindTexture(GLS.I().GL.TEXTURE_2D, this.world.stageTextures[this.world.getLevelIndex()].enemies[this.enemyIndex].textures[this.animIndex()])
         GLS.I().GL.drawArrays(GLS.I().GL.TRIANGLES, 0, this.vertices.length)
     }
 }

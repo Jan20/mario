@@ -1,30 +1,50 @@
 import { GLS } from "../mario-services/gl.service";
-import { mat4, mult, translate, rotate, flatten } from "../mario-common/MV";
-import { MovableObject } from "./MoveableObject";
-import { texCoord } from "../mario-common/textures";
+import { mat4, mult, translate, rotate, flatten } from "../mario-common/MV"
+import { MovableObject } from "./MoveableObject"
+import { texCoord } from "../mario-common/textures"
+import { LevelService } from "../mario-services/level.service";
+import { World } from "./world/world.component";
 
-var PROJECTILE_X_VELO = GLS.I().X_VELO_CONSTANT * 12;
+var PROJECTILE_X_VELO = GLS.I().X_VELO_CONSTANT * 12
 
 export class Projectile extends MovableObject{
-    vertices: any[];
-    texCoords: any[];
-    normals: any[];
-    rotationAngle: number;
-    rowsToCheck: any;
-    xBoundLeft: number;
-    xBoundRight: number;
-    constructor(world, pos, rowsToCheck) {
+    
+    ///////////////
+    // Variables //
+    ///////////////
+    private vertices: any[]
+    private texCoords: any[]
+    private normals: any[]
+    private rotationAngle: number
+    private rowsToCheck: number[]
+    private xBoundLeft: number
+    private xBoundRight: number
+
+    //////////////
+    // Services //
+    //////////////
+    private levelService: LevelService
+
+    constructor(
+        
+        world: World, 
+        pos: any, 
+        rowsToCheck: number[],
+        levelService: LevelService,
+
+    ) {
+    
         super(world, pos, [PROJECTILE_X_VELO, 0], 1)
         
-        this.vertices = [];
-        this.texCoords = [];
-        this.normals = [];
-        this.rotationAngle = 0;
-        this.generateVertices(this.vertices, this.texCoords, this.normals);
-        this.rowsToCheck = rowsToCheck;
-        this.xBoundLeft = 0;
-        this.xBoundRight = Math.ceil(GLS.I().STAGES[world.currStageIndex][0].length);
-        this.velocity[0] = (this.world.player.texDir == 0) ? this.velocity[0] : -this.velocity[0];
+        this.vertices = []
+        this.texCoords = []
+        this.normals = []
+        this.rotationAngle = 0
+        this.generateVertices(this.vertices, this.texCoords, this.normals)
+        this.rowsToCheck = rowsToCheck
+        this.xBoundLeft = 0
+        this.xBoundRight = Math.ceil(levelService.getLevel(world.getLevelIndex())[0].length)
+        this.velocity[0] = (this.world.player.texDir == 0) ? this.velocity[0] : -this.velocity[0]
         for (var i = 0; i < this.rowsToCheck.length; i++) {
             // min
             for (var k = Math.floor(this.pos[0]); k >= 0; k--)
@@ -33,14 +53,15 @@ export class Projectile extends MovableObject{
                     break;
                 }
             // max
-            for (var k = Math.floor(this.pos[0]); k < Math.ceil(GLS.I().STAGES[world.currStageIndex][0].length); k++)
+            for (var k = Math.floor(this.pos[0]); k < Math.ceil(levelService.getLevel(world.getLevelIndex())[0].length); k++)
                 if (this.world.stage.stage[14 - (this.rowsToCheck[i])][k] != '.') {
                     this.xBoundRight = k - 1;
                     break;
                 }
         }
     }
-    generateVertices(buffer, texbuffer, normalbuffer) {
+
+    public generateVertices(buffer, texbuffer, normalbuffer) {
         buffer.push([1, 1, 0]);
         buffer.push([0, 1, 0]);
         buffer.push([0, 0, 0]);
@@ -113,7 +134,7 @@ export class Projectile extends MovableObject{
         var vNormal = GLS.I().GL.getAttribLocation(GLS.I().PROGRAM, "vNormal");
         GLS.I().GL.vertexAttribPointer(vNormal, 3, GLS.I().GL.FLOAT, false, 0, 0);
         GLS.I().GL.enableVertexAttribArray(vNormal);
-        GLS.I().GL.bindTexture(GLS.I().GL.TEXTURE_2D, this.world.stageTextures[this.world.currStageIndex].projectile.textures[0]);
+        GLS.I().GL.bindTexture(GLS.I().GL.TEXTURE_2D, this.world.stageTextures[this.world.getLevelIndex()].projectile.textures[0]);
 
         console.log(this.vertices.length)
         GLS.I().GL.drawArrays(GLS.I().GL.TRIANGLES, 0, this.vertices.length);

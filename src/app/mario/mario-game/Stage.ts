@@ -1,7 +1,7 @@
 import { quad } from "../mario-common/webgl-utils";
 import { mat4, flatten } from "../mario-common/MV";
 import { GLS } from "../mario-services/gl.service";
-import { World } from "./World";
+import { World } from "./world/world.component";
 
 export class Stage {
 
@@ -18,8 +18,8 @@ export class Stage {
     public normals 
 
     // public 
-    constructor(world, stage) {
-        // DrawableObject.call(this);
+    constructor(world: World, stage) {
+
         this.stage = stage;
         this.world = world;
         this.finishLine = this.stage[0].length - 1;
@@ -148,7 +148,7 @@ export class Stage {
             var vTexCoord = GLS.I().GL.getAttribLocation(GLS.I().PROGRAM, "vTexCoord");
             GLS.I().GL.vertexAttribPointer(vTexCoord, 2, GLS.I().GL.FLOAT, false, 0, 0);
             GLS.I().GL.enableVertexAttribArray(vTexCoord);
-            GLS.I().GL.bindTexture(GLS.I().GL.TEXTURE_2D, this.world.stageTextures[this.world.currStageIndex].stage.textures[this.texIndexMap[key]]);
+            GLS.I().GL.bindTexture(GLS.I().GL.TEXTURE_2D, this.world.stageTextures[this.world.getLevelIndex()].stage.textures[this.texIndexMap[key]]);
             GLS.I().GL.drawArrays(GLS.I().GL.TRIANGLES, ((xBoundLeft == 0) ? 0 : this.runningSum[key][xBoundLeft - 1]), numVertices);
         }
         GLS.I().GL.enable(GLS.I().GL.BLEND);
