@@ -1,24 +1,23 @@
 import { APP_BASE_HREF } from '@angular/common';
-import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
+import { AnalyticsModule } from './analytics/analytics.module';
 import { AppComponent } from './app.component';
 import { ConfigModule } from './config/config.module';
 import { MaterialModule } from './config/material.module';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MenuModule } from './menu/menu.module'
-import { MarioModule } from './mario/mario.module'
-import { AnalyticsModule } from './analytics/analytics.module'
-import { SurveyModule } from './survey/survey.module'
-import { EvolutionModule } from './evolution/evolution.module'
+import { MarioModule } from './mario/mario.module';
+import { MenuModule } from './menu/menu.module';
+import { SurveyModule } from './survey/survey.module';
 
 @NgModule({
+  
   declarations: [
 
     AppComponent,
     
-  ],
+  ], 
   imports: [
     
     BrowserModule,
@@ -32,9 +31,9 @@ import { EvolutionModule } from './evolution/evolution.module'
     MarioModule,
     AnalyticsModule,
     SurveyModule,
-    EvolutionModule
 
-  ], providers: [
+  ], 
+  providers: [
     
     {provide: APP_BASE_HREF, useValue : '/' }
   

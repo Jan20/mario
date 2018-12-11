@@ -9,12 +9,12 @@ export const environment = {
 
         firebaseConfig: {
 
-                apiKey: "AIzaSyBDtMYpOQADTkrJrQTMmiTFXojxDe3xaHk",
-                authDomain: "mario-001.firebaseapp.com",
-                databaseURL: "https://mario-001.firebaseio.com",
-                projectId: "mario-001",
-                storageBucket: "mario-001.appspot.com",
-                messagingSenderId: "379775307691"
+                apiKey: "AIzaSyBJ_3oRvBLGxuZCJe-oQOQ7tW0OcSoKv0Y",
+                authDomain: "thesis-002.firebaseapp.com",
+                databaseURL: "https://thesis-002.firebaseio.com",
+                projectId: "thesis-002",
+                storageBucket: "thesis-002.appspot.com",
+                messagingSenderId: "973381229555"
                                 
         }
 }

@@ -16,19 +16,13 @@ import { LevelService } from '../../mario-services/level.service';
   styleUrls: ['./world.component.scss']
 })
 export class World implements OnInit {
-  
-  ngOnInit(): void {
-  
-    throw new Error("Method not implemented.");
-  
-  }
 
   ///////////////
   // Variables //
   ///////////////
-  private levelIndex: number
+  public levelIndex: number
   public xBoundLeft: number
-  public xBoundRight: number
+  public xBoundRight: any
   public drawBound: number
   public enemies: Enemy[]
   public deadEnemies: Enemy[]
@@ -43,25 +37,22 @@ export class World implements OnInit {
   public bgMusic: any[]
   public stageTextures: any
 
-  //////////////
-  // Services //
-  //////////////
-
+  //////////////////
+  // Constructors //
+  //////////////////
   public constructor(
       
-    stageSelection: number, 
     sessionService: SessionService,
     private levelService: LevelService    
 
   ) {   
 
-      
       this.xBoundLeft = GLS.I().INITIAL_WORLD_BOUND_LEFT
       this.xBoundRight = GLS.I().INITIAL_WORLD_BOUND_RIGHT
       this.drawBound = GLS.I().DRAW_BOUND
       
       // might pick this index on initial screen
-      this.levelIndex = stageSelection
+      this.levelIndex = 0
       
       // need to do this before constructing the stage
       this.enemies = []
@@ -78,10 +69,10 @@ export class World implements OnInit {
       // Load sounds here so I don't mess up the json magic
       this.marioTheme = new Howl({
       
-          urls: ['../assets/Sound/Mario.mp3'],
-          loop: true,
-          buffer: true,
-          volume: 0.45,
+        urls: ['../assets/Sound/Mario.mp3'],
+        loop: true,
+        buffer: true,
+        volume: 0.45,
       
       })
       
@@ -90,170 +81,188 @@ export class World implements OnInit {
       this.bgMusic.push(this.marioTheme)
 
       this.stageTextures = [
-          // mario = 0
-          {
-              'player': {
-                  'fileNames': [
-                      "/assets/Images/Mario/Char/idle.png",
-                      "/assets/Images/Mario/Char/idleback.png",
-                      "/assets/Images/Mario/Char/walk1.png",
-                      "/assets/Images/Mario/Char/walk1back.png",
-                      "/assets/Images/Mario/Char/walk2.png",
-                      "/assets/Images/Mario/Char/walk2back.png",
-                      "/assets/Images/Mario/Char/walk3.png",
-                      "/assets/Images/Mario/Char/walk3back.png",
-                      "/assets/Images/Mario/Char/walk4.png",
-                      "/assets/Images/Mario/Char/walk4back.png",
-                      "/assets/Images/Mario/Char/walk5.png",
-                      "/assets/Images/Mario/Char/walk5back.png",
-                      "/assets/Images/Mario/Char/walk4.png",
-                      "/assets/Images/Mario/Char/walk4back.png",
-                      "/assets/Images/Mario/Char/jump.png",
-                      "/assets/Images/Mario/Char/jumpback.png"
-                  ],
-                  'textures': []
-              },
-              'enemies': [
-                  {
-                      'fileNames': [
-                          "/assets/Images/Mario/Enemies/Crawler/idle.png",
-                          "/assets/Images/Mario/Enemies/Crawler/idleback.png",
-                          "/assets/Images/Mario/Enemies/Crawler/walk1.png",
-                          "/assets/Images/Mario/Enemies/Crawler/walk1back.png",
-                          "/assets/Images/Mario/Enemies/Crawler/walk2.png",
-                          "/assets/Images/Mario/Enemies/Crawler/walk2back.png",
-                          "/assets/Images/Mario/Enemies/Crawler/walk3.png",
-                          "/assets/Images/Mario/Enemies/Crawler/walk3back.png",
-                      ],
-                      'textures': []
-                  },
-                  {
-                      'fileNames': [
-                          "/assets/Images/Mario/Enemies/Jumper/idle.png",
-                          "/assets/Images/Mario/Enemies/Jumper/idleback.png"
-                      ],
-                      'textures': []
-                  },
-                  {
-                      'fileNames': [
-                          "/assets/Images/Mario/Enemies/Flyer/fly1.png",
-                          "/assets/Images/Mario/Enemies/Flyer/fly1back.png",
-                          "/assets/Images/Mario/Enemies/Flyer/fly2.png",
-                          "/assets/Images/Mario/Enemies/Flyer/fly2back.png",
-                      ],
-                      'textures': []
-                  },
-                  {
-                      'fileNames': [
-                          "/assets/Images/Mario/Enemies/Flyer/fly1.png",
-                          "/assets/Images/Mario/Enemies/Flyer/fly1back.png",
-                          "/assets/Images/Mario/Enemies/Flyer/fly2.png",
-                          "/assets/Images/Mario/Enemies/Flyer/fly2back.png",
-                      ],
-                      'textures': []
-                  }
-              ],
-              'projectile': {
-                  'fileNames': [
-                      "/assets/Images/Mario/projectile.png"
-                  ],
-                  'textures': []
-              },
-              'item': {
-                  'fileNames': [
-                      "/assets/Images/Mario/Power-ups/coin.png",
-                      "/assets/Images/Mario/Power-ups/life.png",
-                      "/assets/Images/Mario/Power-ups/fireball.png",
-                      "/assets/Images/Mario/Power-ups/star.png",
-                      "/assets/Images/Mario/Power-ups/wings.png"
-                  ],
-                  'textures': []
-              },
-              'background': {
-                  'fileNames': [
-                      "/assets/Images/Mario/background.png"
-                  ],
-                  'textures': []
-              },
-              'stage': {
-                  'fileNames': [
-                      "/assets/Images/Mario/Stage/groundblock.png",
-                      "/assets/Images/Mario/Stage/brickblock.png",
-                      "/assets/Images/Mario/Stage/itemblock.png",
-                      "/assets/Images/Mario/Stage/coinblock.png",
-                      "/assets/Images/Mario/Stage/blockblock.png",
-                      "/assets/Images/checkerboard.jpg"
-                  ],
-                  'textures': []
-              }
-          },
           
-      ]
+        // mario = 0
+        {
+            'player': {
+                'fileNames': [
+                    "/assets/Images/Mario/Char/idle.png",
+                    "/assets/Images/Mario/Char/idleback.png",
+                    "/assets/Images/Mario/Char/walk1.png",
+                    "/assets/Images/Mario/Char/walk1back.png",
+                    "/assets/Images/Mario/Char/walk2.png",
+                    "/assets/Images/Mario/Char/walk2back.png",
+                    "/assets/Images/Mario/Char/walk3.png",
+                    "/assets/Images/Mario/Char/walk3back.png",
+                    "/assets/Images/Mario/Char/walk4.png",
+                    "/assets/Images/Mario/Char/walk4back.png",
+                    "/assets/Images/Mario/Char/walk5.png",
+                    "/assets/Images/Mario/Char/walk5back.png",
+                    "/assets/Images/Mario/Char/walk4.png",
+                    "/assets/Images/Mario/Char/walk4back.png",
+                    "/assets/Images/Mario/Char/jump.png",
+                    "/assets/Images/Mario/Char/jumpback.png"
+                ],
+                'textures': []
+            },
+            'enemies': [
+                {
+                    'fileNames': [
+                        "/assets/Images/Mario/Enemies/Crawler/idle.png",
+                        "/assets/Images/Mario/Enemies/Crawler/idleback.png",
+                        "/assets/Images/Mario/Enemies/Crawler/walk1.png",
+                        "/assets/Images/Mario/Enemies/Crawler/walk1back.png",
+                        "/assets/Images/Mario/Enemies/Crawler/walk2.png",
+                        "/assets/Images/Mario/Enemies/Crawler/walk2back.png",
+                        "/assets/Images/Mario/Enemies/Crawler/walk3.png",
+                        "/assets/Images/Mario/Enemies/Crawler/walk3back.png",
+                    ],
+                    'textures': []
+                },
+                {
+                    'fileNames': [
+                        "/assets/Images/Mario/Enemies/Jumper/idle.png",
+                        "/assets/Images/Mario/Enemies/Jumper/idleback.png"
+                    ],
+                    'textures': []
+                },
+                {
+                    'fileNames': [
+                        "/assets/Images/Mario/Enemies/Flyer/fly1.png",
+                        "/assets/Images/Mario/Enemies/Flyer/fly1back.png",
+                        "/assets/Images/Mario/Enemies/Flyer/fly2.png",
+                        "/assets/Images/Mario/Enemies/Flyer/fly2back.png",
+                    ],
+                    'textures': []
+                },
+                {
+                    'fileNames': [
+                        "/assets/Images/Mario/Enemies/Flyer/fly1.png",
+                        "/assets/Images/Mario/Enemies/Flyer/fly1back.png",
+                        "/assets/Images/Mario/Enemies/Flyer/fly2.png",
+                        "/assets/Images/Mario/Enemies/Flyer/fly2back.png",
+                    ],
+                    'textures': []
+                }
+            ],
+            'projectile': {
+                'fileNames': [
+                    "/assets/Images/Mario/projectile.png"
+                ],
+                'textures': []
+            },
+            'item': {
+                'fileNames': [
+                    "/assets/Images/Mario/Power-ups/coin.png",
+                    "/assets/Images/Mario/Power-ups/life.png",
+                    "/assets/Images/Mario/Power-ups/fireball.png",
+                    "/assets/Images/Mario/Power-ups/star.png",
+                    "/assets/Images/Mario/Power-ups/wings.png"
+                ],
+                'textures': []
+            },
+            'background': {
+                'fileNames': [
+                    "/assets/Images/Mario/background.png"
+                ],
+                'textures': []
+            },
+            'stage': {
+                'fileNames': [
+                    "/assets/Images/Mario/Stage/groundblock.png",
+                    "/assets/Images/Mario/Stage/brickblock.png",
+                    "/assets/Images/Mario/Stage/itemblock.png",
+                    "/assets/Images/Mario/Stage/coinblock.png",
+                    "/assets/Images/Mario/Stage/blockblock.png",
+                    "/assets/Images/checkerboard.jpg"
+                ],
+                'textures': []
+            }
+        },
+          
+    ]
       
-      // for moving the player on button presses
-      let world = this
-      
-      document.addEventListener('keydown', function (evt) {
 
-          world.keyMap[evt.keyCode] = true
-          if (evt.keyCode == 37 && !GLS.I().pauseMode) {
-              world.player.texDir = 1
-          }
-          else if (evt.keyCode == 39 && !GLS.I().pauseMode) {
-              world.player.texDir = 0
-              // press 'p' for pause menu
-          }
-          else if (evt.keyCode == 80) {
-              GLS.I().pauseMode = 1
-              pauseGame()
-              // change to continue
-          }
-          else if (evt.keyCode == 38 && GLS.I().pauseMode) {
-              document.getElementById("selectRestart").style.display = "none"
-              document.getElementById("selectContinue").style.display = "inline"
-              GLS.I().continueOrRestart = 0
-              // change to restart
-          }
-          else if (evt.keyCode == 40 && GLS.I().pauseMode) {
-              document.getElementById("selectRestart").style.display = "inline"
-              document.getElementById("selectContinue").style.display = "none"
-              GLS.I().continueOrRestart = 1
-              // select item in pause mode with enter key
-          }
-          else if (evt.keyCode == 13 && GLS.I().pauseMode) {
-              if (GLS.I().continueOrRestart)
-                  location.reload()
-              else
-              continueGame()
-          }
-      }, false)
-      document.addEventListener('keyup', function (evt) {
-          world.keyMap[evt.keyCode] = false
-      }, false)
-      this.loadTextures()
-      this.bgMusic[this.levelIndex].play()
+    // for moving the player on button presses
+    let world = this
+    
+    document.addEventListener('keydown', function (evt) {
+
+        world.keyMap[evt.keyCode] = true
+        if (evt.keyCode == 37 && !GLS.I().pauseMode) {
+            world.player.texDir = 1
+        }
+        else if (evt.keyCode == 39 && !GLS.I().pauseMode) {
+            world.player.texDir = 0
+            // press 'p' for pause menu
+        }
+        else if (evt.keyCode == 80) {
+            GLS.I().pauseMode = 1
+            pauseGame()
+            // change to continue
+        }
+        else if (evt.keyCode == 38 && GLS.I().pauseMode) {
+            document.getElementById("selectRestart").style.display = "none"
+            document.getElementById("selectContinue").style.display = "inline"
+            GLS.I().continueOrRestart = 0
+            // change to restart
+        }
+        else if (evt.keyCode == 40 && GLS.I().pauseMode) {
+            document.getElementById("selectRestart").style.display = "inline"
+            document.getElementById("selectContinue").style.display = "none"
+            GLS.I().continueOrRestart = 1
+            // select item in pause mode with enter key
+        }
+        else if (evt.keyCode == 13 && GLS.I().pauseMode) {
+            if (GLS.I().continueOrRestart)
+                location.reload()
+            else
+            continueGame()
+        }
+    }, false)
+    document.addEventListener('keyup', function (evt) {
+        world.keyMap[evt.keyCode] = false
+    }, false)
+    this.loadTextures()
+    this.bgMusic[this.levelIndex].play()
+
   }
+
+  
+  
+    ///////////////
+    // Functions //
+    ///////////////
+    ngOnInit(): void {
+  
+  
+    }
+
 
   public loadTextures() {
-      for (var i = 0; i < this.stageTextures.length; i++) {
-          for (var key in this.stageTextures[i]) {
-              if (!Array.isArray(this.stageTextures[i][key])) {
-                  loadImages(this.stageTextures[i][key].fileNames, this.stageTextures[i][key].textures);
-              }
-              else {
-                  for (var j = 0; j < this.stageTextures[i][key].length; j++) {
-                      loadImages(this.stageTextures[i][key][j].fileNames, this.stageTextures[i][key][j].textures);
-                  }
-              }
-          }
-      }
-      ;
+    
+    for (var i = 0; i < this.stageTextures.length; i++) {
+        for (var key in this.stageTextures[i]) {
+            if (!Array.isArray(this.stageTextures[i][key])) {
+                loadImages(this.stageTextures[i][key].fileNames, this.stageTextures[i][key].textures);
+            }
+            else {
+                for (var j = 0; j < this.stageTextures[i][key].length; j++) {
+                    loadImages(this.stageTextures[i][key][j].fileNames, this.stageTextures[i][key][j].textures);
+                }
+            }
+        }
+    }
+    ;
   }
-  
-  public draw() {
-      if (this.player.pos[0] > this.stage.finishLine) {
-          finishLevel();
-      }
+
+    public draw() {
+        
+        if (this.player.pos[0] > this.stage.finishLine) {
+    
+            finishLevel();
+    
+        }
       // TODO: only draw what can be seen?
       this.back.draw();
       this.stage.draw();

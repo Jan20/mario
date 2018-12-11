@@ -155,7 +155,7 @@ export class MarioComponent implements OnInit, AfterViewInit  {
         // set initial camera position
         GLS.I().CAMERA_POS = GLS.I().INITIAL_CAMERA_POS.slice(0);
 
-        GLS.I().GAMEWORLD = new World(GLS.I().stage, this.sessionService, this.levelService);
+        GLS.I().GAMEWORLD = new World(this.sessionService, this.levelService);
 
         // for hud initialization
         resetTimer();

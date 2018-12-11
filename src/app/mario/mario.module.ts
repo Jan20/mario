@@ -1,9 +1,9 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MarioComponent } from './mario-component/mario.component'
-import { MarioService } from './mario-services/mario.service'
-import { LevelService } from './mario-services/level.service';
+import { NgModule } from '@angular/core';
+import { MarioComponent } from './mario-component/mario.component';
 import { World } from './mario-game/world/world.component';
+import { LevelService } from './mario-services/level.service';
+import { MarioService } from './mario-services/mario.service';
 
 @NgModule({
   imports: [

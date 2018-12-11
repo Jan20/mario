@@ -1,16 +1,14 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-
-// Firebase
+import { NgModule } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { AngularFireModule } from 'angularfire2';
+import { AngularFireAuthModule } from 'angularfire2/auth';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
-import { AngularFireAuth, AngularFireAuthModule } from 'angularfire2/auth';
 import { AngularFirestoreModule } from 'angularfire2/firestore';
 import { environment } from './environment';
-export const firebaseConfig = environment.firebaseConfig;
 import { ROUTES } from './routing.config';
-import { RouterModule, Routes } from '@angular/router';
+export const firebaseConfig = environment.firebaseConfig;
 
 @NgModule({
   
