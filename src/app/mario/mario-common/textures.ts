@@ -1,4 +1,4 @@
-import { GLS } from '../mario-services/gl.service';
+import { GLS } from '../services/gl.service';
 import { vec2 } from './MV';
 
 export var texCoord = [

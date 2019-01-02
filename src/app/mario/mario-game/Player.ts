@@ -3,15 +3,15 @@ import { Timer } from '../mario-common/timer'
 import { Howl } from '../mario-common/howler'
 import { texCoord } from '../mario-common/textures'
 import { mat4, mult, translate, flatten } from '../mario-common/MV'
-import { GLS } from '../mario-services/gl.service'
+import { GLS } from '../services/gl.service'
 import { gameOver } from './hud'
 import { Projectile } from './Projectile'
 import { PowerUp } from './PowerUp'
 import { Stage } from './Stage'
 import { Injectable } from '@angular/core';
-import { SessionService } from '../../analytics/analytics-services/session.service';
+import { SessionService } from '../../analytics/services/session.service';
 import { World } from './world/world.component';
-import { LevelService } from '../mario-services/level.service';
+import { LevelService } from '../services/level.service';
 
 @Injectable()
 export class Player extends MovableObject{
@@ -53,7 +53,7 @@ export class Player extends MovableObject{
     ) {
         super(world, GLS.I().INITIAL_PLAYER_POS.slice(0), GLS.I().INITIAL_PLAYER_VEL.slice(0), GLS.I().INITIAL_PLAYER_LIVES)
 
-        this.sessionService.createSessionId()
+        this.sessionService.generateSession()
         this.projectileTimer = new Timer()
         this.hasProjectiles = false
         this.texDir = 0
@@ -325,24 +325,27 @@ export class Player extends MovableObject{
         }
 
         // HANDLE Enemy collisions, using world's list of enemies
-        for (var i = 0; i < this.world.enemies.length; i++) {
+        for (let i = 0; i < this.world.enemies.length; i++) {
             
-            var curEnemy = this.world.enemies[i];
+            let currentEnemy = this.world.enemies[i];
+            
             // Bounding boxes intersect
             var adjustedPlayerPos = this.pos[0] + (1 - this.playerWidth) / 2;
-            var adjustedEnemyPos = curEnemy.pos[0] + (1 - curEnemy.enemyWidth) / 2;
-            if ((Math.abs(adjustedPlayerPos - adjustedEnemyPos)) * 2 < (this.playerWidth + curEnemy.enemyWidth) &&
-                (Math.abs(this.pos[1] - curEnemy.pos[1])) * 2 < (this.playerHeight + curEnemy.enemyHeight)) {
+            var adjustedEnemyPos = currentEnemy.pos[0] + (1 - currentEnemy.enemyWidth) / 2;
+            
+            if ((Math.abs(adjustedPlayerPos - adjustedEnemyPos)) * 2 < (this.playerWidth + currentEnemy.enemyWidth) &&
+                (Math.abs(this.pos[1] - currentEnemy.pos[1])) * 2 < (this.playerHeight + currentEnemy.enemyHeight)) {
                 // Need to detect which collision happened, vertical or horizontal
                 var playerLower = this.pos[1];
                 var playerRight = this.pos[0] + this.playerWidth + (1 - this.playerWidth) / 2;
-                var enemyLower = curEnemy.pos[1];
-                var enemyRight = adjustedEnemyPos + curEnemy.enemyWidth + (1 - curEnemy.enemyWidth) / 2;
+                var enemyLower = currentEnemy.pos[1];
+                var enemyRight = adjustedEnemyPos + currentEnemy.enemyWidth + (1 - currentEnemy.enemyWidth) / 2;
                 var bDist = enemyLower - (playerLower + this.playerHeight);
-                var tDist = playerLower - (enemyLower + curEnemy.enemyHeight);
+                var tDist = playerLower - (enemyLower + currentEnemy.enemyHeight);
                 var lDist = playerRight - adjustedEnemyPos;
                 var rDist = enemyRight - this.pos[0];
-                //Top collision, must be moving down
+
+                // Top collision, must be moving down
                 if (bDist < tDist && bDist < lDist && bDist < rDist) // && this.velocity[1] <= 0) // less lenient if velo is included
                 {
                     this.world.score += 100;
@@ -353,23 +356,35 @@ export class Player extends MovableObject{
                     this.enemyKillSound.play();
                     return;
                 }
+
                 else {
                 
-                    this.lives--;
+                    // User looses one life.
+                    this.lives--
+                    currentEnemy.enemyType
+                    console.log('---------------------------------------')
+                    console.log(currentEnemy.enemyType)
+                    console.log('---------------------------------------')
 
-                    const deathsThroughOpponents: number = this.sessionService.getSession().getGameplayData().getDeathsThroughOpponents() + 1
-                    this.sessionService.getSession().getGameplayData().setDeathsThroughOpponents(deathsThroughOpponents)
+                    ////////////////////////////////////////
+                    // TODO: Handle different enemy types //
+                    ////////////////////////////////////////
+                    let defeated_by_opponent_type_1: number = this.sessionService.session.performance.defeated_by_opponent_type_1
 
-                    const totalDeaths = this.sessionService.getSession().getGameplayData().getTotalDeaths() + 1
-                    this.sessionService.getSession().getGameplayData().setTotalDeaths(totalDeaths)
-                    
+                    console.log('---------------------------------------')
+                    console.log(defeated_by_opponent_type_1)
+                    console.log('---------------------------------------')
+
+
+                    this.sessionService.session.performance.defeated_by_opponent_type_1 = defeated_by_opponent_type_1 + 1
+        
                     this.resetToDefault();
                     this.lostLifeSound.play();
                     this.world.getLives();
                     
                     if (this.lives === 0) {
                 
-                        this.sessionService.storeGameplayData()
+                        this.sessionService.storePerformance()
                         gameOver()
 
                     }
@@ -439,13 +454,10 @@ export class Player extends MovableObject{
 
         if (this.pos[1] <= -.5) {
             
-            this.lives--;
+            this.lives--
 
-            const deathsThroughGaps: number = this.sessionService.getSession().getGameplayData().getDeathsThroughGaps() + 1
-            this.sessionService.getSession().getGameplayData().setDeathsThroughGaps(deathsThroughGaps)
-
-            const totalDeaths = this.sessionService.getSession().getGameplayData().getTotalDeaths() + 1
-            this.sessionService.getSession().getGameplayData().setTotalDeaths(totalDeaths)
+            const defeated_by_gaps: number = this.sessionService.session.performance.defeated_by_gaps
+            this.sessionService.session.performance.defeated_by_gaps = defeated_by_gaps + 1
             
             this.resetToDefault();
             this.lostLifeSound.play();
@@ -453,11 +465,11 @@ export class Player extends MovableObject{
             
             if (this.lives === 0) {
 
-                this.sessionService.getSession().getGameplayData().setTotalDeaths(this.sessionService.getSession().getGameplayData().getTotalDeaths() + 1)
-
                 // need this to stop the music from playing twice, doesn't hurt the restart
                 this.pos = GLS.I().INITIAL_PLAYER_POS.slice(0);
                 gameOver()
+                this.sessionService.storePerformance()
+
             
             } else {
              

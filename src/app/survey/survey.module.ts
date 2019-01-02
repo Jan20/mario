@@ -22,6 +22,11 @@ import { MaterialModule } from '../config/material.module'
 
     SurveyService,
 
+  ],
+  exports: [
+
+    MaterialModule
+
   ]
 })
 export class SurveyModule { }

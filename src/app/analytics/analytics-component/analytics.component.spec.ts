@@ -1,6 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AnalyticsComponent } from './analytics.component';
+import { AngularFirestore } from 'angularfire2/firestore';
+import { FirestoreStub } from 'src/app/testing/Firestore-stub';
 
 describe('AnalyticsComponent', () => {
   let component: AnalyticsComponent;
@@ -8,7 +10,12 @@ describe('AnalyticsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AnalyticsComponent ]
+      declarations: [ AnalyticsComponent ],
+      providers: [
+        
+        { provide: AngularFirestore, useValue: FirestoreStub },
+      
+      ]  
     })
     .compileComponents();
   }));

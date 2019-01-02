@@ -1,16 +1,10 @@
-// Custom Components
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { APP_BASE_HREF } from '@angular/common';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
-
-
-// Routing
-import { RouterModule, Routes } from '@angular/router';
-
-// Services
-
-// Custom Components
 import { MenuComponent } from './menu.component';
+import { MaterialModule } from 'src/app/config/material.module';
+import { RouterTestingModule } from '@angular/router/testing';
+import { MenuService } from '../menu-service/menu.service';
 
 describe('MenuComponent', () => {
   let component: MenuComponent;
@@ -22,10 +16,15 @@ describe('MenuComponent', () => {
         MenuComponent,
       ],
       imports: [
+
         FormsModule,
+        MaterialModule,
+        RouterTestingModule,
 
       ],
       providers: [
+        
+        MenuService,
         {provide: APP_BASE_HREF, useValue : '/' }
       ],
     })

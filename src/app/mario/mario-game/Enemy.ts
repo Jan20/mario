@@ -2,7 +2,7 @@ import { MovableObject } from './MoveableObject'
 import { Timer } from '../mario-common/timer'
 import { mult, flatten, mat4, translate } from '../mario-common/MV'
 import { texCoord } from '../mario-common/textures';
-import { GLS } from '../mario-services/gl.service'
+import { GLS } from '../services/gl.service'
 import { World } from './world/world.component';
 
 const ENEMY_XVELO_CONSTANT = .025

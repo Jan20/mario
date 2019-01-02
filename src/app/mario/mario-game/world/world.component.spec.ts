@@ -1,20 +1,28 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { WorldComponent } from './world.component';
+import { World } from './world.component';
+import { AngularFirestore } from 'angularfire2/firestore';
+import { FirestoreStub } from 'src/app/testing/Firestore-stub';
 
-describe('WorldComponent', () => {
-  let component: WorldComponent;
-  let fixture: ComponentFixture<WorldComponent>;
+describe('World', () => {
+  let component: World;
+  let fixture: ComponentFixture<World>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ WorldComponent ]
+      declarations: [ World ],
+      providers: [        
+        
+        { provide: AngularFirestore, useValue: FirestoreStub },
+      
+      ],
+      
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(WorldComponent);
+    fixture = TestBed.createComponent(World);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

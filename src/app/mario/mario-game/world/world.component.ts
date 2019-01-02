@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { Enemy } from '../Enemy'
-import { Player} from '../Player'
-import { Stage } from '../Stage'
-import { Background } from '../Background'
-import { loadImages } from '../../mario-common/textures'
-import { pad, pauseGame, continueGame, finishLevel } from '../hud'
-import { GLS } from '../../mario-services/gl.service'
-import { Howl } from '../../mario-common/howler'
-import { SessionService } from '../../../analytics/analytics-services/session.service';
-import { LevelService } from '../../mario-services/level.service';
+import { SessionService } from '../../../analytics/services/session.service';
+import { Howl } from '../../mario-common/howler';
+import { loadImages } from '../../mario-common/textures';
+import { GLS } from '../../services/gl.service';
+import { LevelService } from '../../services/level.service';
+import { Background } from '../Background';
+import { Enemy } from '../Enemy';
+import { continueGame, finishLevel, pad, pauseGame } from '../hud';
+import { Player } from '../Player';
+import { Stage } from '../Stage';
 
 @Component({
   selector: 'app-world',
@@ -42,7 +42,7 @@ export class World implements OnInit {
   //////////////////
   public constructor(
       
-    sessionService: SessionService,
+    private sessionService: SessionService,
     private levelService: LevelService    
 
   ) {   

@@ -1,5 +1,10 @@
 import { TestBed, async } from '@angular/core/testing';
 import { AppComponent } from './app.component';
+import { MenuModule } from './menu/menu.module';
+import { RouterModule } from '@angular/router';
+import { SurveyModule } from './survey/survey.module';
+import { AngularFirestore } from 'angularfire2/firestore';
+import { FirestoreStub } from './testing/Firestore-stub';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
@@ -7,6 +12,19 @@ describe('AppComponent', () => {
       declarations: [
         AppComponent
       ],
+      imports: [
+
+        MenuModule,
+        RouterModule,
+        SurveyModule,
+
+
+      ],
+      providers: [
+        
+        { provide: AngularFirestore, useValue: FirestoreStub },
+      
+      ]  
     }).compileComponents();
   }));
 
@@ -17,15 +35,11 @@ describe('AppComponent', () => {
   });
 
   it(`should have as title 'Mario'`, () => {
+    
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.debugElement.componentInstance;
     expect(app.title).toEqual('Mario');
+  
   });
 
-  it('should render title in a h1 tag', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    fixture.detectChanges();
-    const compiled = fixture.debugElement.nativeElement;
-    expect(compiled.querySelector('h1').textContent).toContain('Welcome to Mario!');
-  });
 });

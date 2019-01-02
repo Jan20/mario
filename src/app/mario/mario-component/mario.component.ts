@@ -1,16 +1,14 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
-import { HostListener, } from '@angular/core';
-import { resetTimer, myTimer } from '../mario-game/hud'
-import { initShaders } from '../mario-common/InitShaders'
-import { mult, flatten, mat4, translate, vec3 } from '../mario-common/MV'
-import { GLS } from '../mario-services/gl.service'
+import { AfterViewInit, Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
+import { interval } from "rxjs";
+import { SessionService } from '../../analytics/services/session.service';
+import { UserService } from '../../analytics/services/user.service';
+import { initShaders } from '../mario-common/InitShaders';
+import { flatten, mat4, mult, translate, vec3 } from '../mario-common/MV';
 import { WebGLUtils } from '../mario-common/webgl-utils';
-import {interval} from "rxjs";
-import { UserService } from '../../analytics/analytics-services/user.service';
-import { SessionService } from '../../analytics/analytics-services/session.service';
-import { Session } from '../../analytics/analytics-models/session';
+import { myTimer, resetTimer } from '../mario-game/hud';
 import { World } from '../mario-game/world/world.component';
-import { LevelService } from '../mario-services/level.service';
+import { GLS } from '../services/gl.service';
+import { LevelService } from '../services/level.service';
 
 @Component({
   selector: 'app-mario',
@@ -56,7 +54,7 @@ export class MarioComponent implements OnInit, AfterViewInit  {
      */
     async ngOnInit(): Promise<void> {
 
-        this.sessionService.setSession(new Session())
+        // this.sessionService.generateSession()
 
         // document.getElementById("start").style.display = "none";
         // GLS.I().gameScreen = 0;

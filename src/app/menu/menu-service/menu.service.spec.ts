@@ -1,11 +1,16 @@
 import { TestBed, inject } from '@angular/core/testing';
 
 import { MenuService } from './menu.service';
+import { AngularFirestore } from 'angularfire2/firestore';
+import { FirestoreStub } from 'src/app/testing/Firestore-stub';
 
 describe('MenuService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [MenuService]
+      providers: [MenuService ,
+        { provide: AngularFirestore, useValue: FirestoreStub },
+      ],
+      
     });
   });
 

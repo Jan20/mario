@@ -1,6 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SurveyComponent } from './survey.component';
+import { MaterialModule } from 'src/app/config/material.module';
+import { MarioModule } from 'src/app/mario/mario.module';
 
 describe('SurveyComponent', () => {
   let component: SurveyComponent;
@@ -8,7 +10,8 @@ describe('SurveyComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SurveyComponent ]
+      declarations: [ SurveyComponent ],
+      imports: [ MaterialModule, MarioModule]
     })
     .compileComponents();
   }));

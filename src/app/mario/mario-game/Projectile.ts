@@ -1,8 +1,8 @@
-import { GLS } from "../mario-services/gl.service";
+import { GLS } from "../services/gl.service";
 import { mat4, mult, translate, rotate, flatten } from "../mario-common/MV"
 import { MovableObject } from "./MoveableObject"
 import { texCoord } from "../mario-common/textures"
-import { LevelService } from "../mario-services/level.service";
+import { LevelService } from "../services/level.service";
 import { World } from "./world/world.component";
 
 var PROJECTILE_X_VELO = GLS.I().X_VELO_CONSTANT * 12
