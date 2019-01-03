@@ -8,7 +8,6 @@ export const FirestoreStub = {
       set: (_d: any) => new Promise((resolve, _reject) => resolve()),
       get: () => {
 
-
         new Promise(resolve => resolve({}))
   
       }

@@ -24,6 +24,8 @@ describe('Level Test', () => {
 
         const correctObject: string = JSON.stringify({ 
             
+            key: 'level_00',
+            id: 0,
             line_00: ['.', '.', '.', '.'],
             line_01: ['.', '.', '.', '.'],
             line_02: ['.', '.', '.', '.'],
@@ -39,7 +41,7 @@ describe('Level Test', () => {
         
         })
 
-        const objectUnderScrutiny: string = JSON.stringify(level.toObject())
+        const objectUnderScrutiny: string = JSON.stringify(level.toObject('level_00', 0))
 
         expect(objectUnderScrutiny).to.equal(correctObject)
             

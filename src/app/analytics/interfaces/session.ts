@@ -1,4 +1,4 @@
-import Performance from '../analytics-interfaces/performance'
+import Performance from './performance'
 
 export interface Session {
     

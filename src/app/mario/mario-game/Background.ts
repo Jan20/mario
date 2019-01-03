@@ -1,6 +1,6 @@
+import { flatten, mat4, mult, translate } from "../mario-common/MV";
 import { quad } from "../mario-common/webgl-utils";
-import { mat4, mult, translate, flatten } from "../mario-common/MV"
-import { GLS } from "../services/gl.service"
+import { GLS } from "../services/gl.service";
 import { World } from "./world/world.component";
 
 export class Background {

@@ -43,8 +43,9 @@ export class MarioComponent implements OnInit, AfterViewInit  {
 
     ) {
         
-
-    }
+        this.levelService.initialize()
+        this.levelService.fetchLevel('level_01')
+    }   
 
 
     /**

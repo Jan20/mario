@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from 'angularfire2/firestore';
-import { UserService } from './user.service'
-import { resolve } from 'q';
-import { Session } from '../analytics-interfaces/session'
-import { AnalyticsHelper } from '../analytics-misc/analytics-helper'
-import { User } from '../analytics-interfaces/user';
+import { generateKey } from 'src/app/misc/helper';
+import { Session } from '../interfaces/session';
+import { User } from '../interfaces/user';
+import { UserService } from './user.service';
 
 @Injectable({
 
@@ -51,7 +50,7 @@ export class SessionService {
 
     // Writes the current session key to the session object that is going
     // to be stored at Firestore.
-    this.session.key = new AnalyticsHelper().generateKey('session', this.session.id)
+    this.session.key = generateKey('session', this.session.id)
 
     this.session.performance = {
 

@@ -33,14 +33,16 @@
             "name": "Launch Chrome",
             "type": "chrome",
             "request": "launch",
-            "url": "http://localhost:4200/#",
+            "url": "http://localhost",
+            "port": 4200,
             "webRoot": "${workspaceFolder}"
           },
           {
             "name": "Attach Chrome",
             "type": "chrome",
             "request": "attach",
-            "url": "http://localhost:4200/#",
+            "url": "http://localhost",
+            "port": 4200,
             "webRoot": "${workspaceFolder}"
           },
           {

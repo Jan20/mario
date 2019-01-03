@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from 'angularfire2/firestore';
-import { AnalyticsHelper } from '../analytics-misc/analytics-helper';
-import { User } from '../analytics-interfaces/user';
+import { generateKey } from 'src/app/misc/helper';
+import { User } from '../interfaces/user';
 
 @Injectable({
 
@@ -84,17 +84,26 @@ export class UserService {
    */
   private async createUser(): Promise<User> {
 
+    //
     // Fetches the highest existing user id and
     // increases the value by one. This should
     // ensure that a user id is not used twice
     // throughtout the experiment.
+    //
     const id: number = await this.getHighestUserId() + 1
-    const key: string = new AnalyticsHelper().generateKey('user', id)
+    const key: string = generateKey('user', id)
 
+    //
     // Constructs a key value for storing a new
     // user at firestore. The key should look
     // like 'user001'.
-    const user: User = {id: id, key: key}
+    //
+    const user: User = {
+      
+      id: id, 
+      key: key
+    
+    }
 
     // Creates a new entry at Firestore that 
     // corresponds to the newly created user key.
