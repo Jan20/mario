@@ -1,4 +1,4 @@
-export default interface Performance {
+export interface PerformanceInterface {
 
     defeated_by_gaps: number
     defeated_by_opponent_type_1: number

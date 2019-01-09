@@ -26,7 +26,7 @@ export class MenuComponent implements OnInit {
 
   ) {
   
-    this.title = 'Mario 0.3'
+    this.title = 'Experiment'
     this.items = []
     this.items.push(
 

@@ -20,7 +20,7 @@ export class MarioComponent implements OnInit, AfterViewInit  {
     ///////////////
     // Variables //
     ///////////////
-    /**
+    /** 
      * 
      * Gets a HTML canvas element
      *
@@ -44,7 +44,8 @@ export class MarioComponent implements OnInit, AfterViewInit  {
     ) {
         
         this.levelService.initialize()
-        this.levelService.fetchLevel('level_01')
+        this.levelService.fetchLevel('user_042', 'session')
+        
     }   
 
 

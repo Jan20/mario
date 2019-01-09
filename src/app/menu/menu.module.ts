@@ -27,8 +27,8 @@ import { MenuService } from './menu-service/menu.service';
   
     MenuComponent,
     RouterModule,
-    MaterialModule,
-  
+    MaterialModule
+      
   ]
 })
 export class MenuModule { }

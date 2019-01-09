@@ -1,8 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MarioComponent } from './mario.component';
-import { AngularFirestore } from 'angularfire2/firestore';
+import { AngularFirestore } from '@angular/fire/firestore';
 import { MaterialModule } from 'src/app/config/material.module';
-import { FirestoreStub } from 'src/app/testing/Firestore-stub';
+import { FirestoreStub } from 'src/app/misc/firestore.stub';
 
 describe('MarioComponent', () => {
   let component: MarioComponent;

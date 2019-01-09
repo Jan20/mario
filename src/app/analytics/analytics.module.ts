@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common'
 import { UserService } from './services/user.service'
 import { SessionService } from './services/session.service'
 import { AnalyticsComponent } from './analytics-component/analytics.component'
-import { AngularFirestore } from 'angularfire2/firestore'
+import { AngularFirestore } from '@angular/fire/firestore'
 
 @NgModule({
   imports: [

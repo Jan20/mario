@@ -7,6 +7,9 @@
 /tmp
 /out-tsc
 
+# Environments
+/src/environments
+
 # dependencies
 /node_modules
 /functions/node_modules
@@ -41,8 +44,3 @@ testem.log
 /e2e/*.map
 
 # System Files
-.DS_Store
-Thumbs.db
-
-
-

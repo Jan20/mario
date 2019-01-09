@@ -73,7 +73,7 @@ export class World implements OnInit {
         loop: true,
         buffer: true,
         volume: 0.45,
-      
+    
       })
       
       

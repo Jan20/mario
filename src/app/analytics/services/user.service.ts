@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore } from 'angularfire2/firestore';
+import { AngularFirestore } from '@angular/fire/firestore';
 import { generateKey } from 'src/app/misc/helper';
-import { User } from '../interfaces/user';
+import { User } from 'src/app/models/user';
+import { UserInterface } from 'src/app/interfaces/user.interface';
 
 @Injectable({
 
@@ -24,7 +25,7 @@ export class UserService {
   ///////////////
   /**
    * 
-   * Tries to retrieve an userId for a user who
+   * Tries to retrieve an UserInterfaceId for a UserInterface who
    * has already participated in a previous round
    * of the experiment. If this is the case, a
    * reference to the user's firestore id should
@@ -32,24 +33,26 @@ export class UserService {
    * every new user a new id is created. 
    * 
    */
-  public async getCurrentUser(): Promise<User> {
+  public async getCurrentUserKey(): Promise<string> {
     
     //
     // Retrieves a user id from the localStorage.
     // If no 'userId' can be found, the variable
     // should be null.
     //
-    let user: User = {key: localStorage.getItem('user_key')}
+    let userKey: string = localStorage.getItem('user_key')
 
     //
     // If no userId has been stored in the user's 
     // browser, a new user is created at the firestore
     // database and a reference set to the userId variable.
     //
-    if (user.key === undefined || user.key === null) {
+    if (userKey === undefined || userKey === null) {
 
-      user = await this.createUser()
+      const user = await this.createUser()
       
+      userKey = user.key
+
     }
 
     //
@@ -58,20 +61,23 @@ export class UserService {
     // be always the case unless the user's entry has been explicitly
     // deleted from the database or the dataset got somehow corrupted.
     //
-    await this.angularFirestore.doc(`users/${user.key}`).get().toPromise().then(async stored_user => {
+    await this.angularFirestore.doc(`users/${userKey}`).get().toPromise().then(async stored_user => {
 
       if (stored_user.data() === undefined) {
 
-        user = await this.createUser()
+        const user = await this.createUser()
       
+        userKey = user.key
+
       } 
 
     })
 
+
     //
     // Returns a promise resolving the userId variable.
     //
-    return new Promise<User>(async resolve => resolve(user))
+    return new Promise<string>(async resolve => resolve(userKey))
 
   }
 
@@ -98,16 +104,11 @@ export class UserService {
     // user at firestore. The key should look
     // like 'user001'.
     //
-    const user: User = {
-      
-      id: id, 
-      key: key
-    
-    }
+    const user: User = new User(key, id)
 
     // Creates a new entry at Firestore that 
     // corresponds to the newly created user key.
-    await this.angularFirestore.doc(`users/${user.key}`).set(user)
+    await this.angularFirestore.doc(`users/${user.key}`).set(user.toInterface())
 
     // Sets a key-value-pair for the newly created
     // user key at the user's localStorage.
@@ -129,15 +130,23 @@ export class UserService {
     //
     // Sets a default user id.
     //
-    let highest_user_id: number = 0
+    let highestUserId: number = 0
 
     //
     // Iterates through all users from firestore and
     // compares their user ids with the one stored in
     // the highestUserId variable.
     //
-    await this.angularFirestore.collection<User>(`users`).get().toPromise().then(users => {
-      
+    console.log('_________________________________LOOK AT ME _______________________________________________')
+    console.log(this.angularFirestore)
+    console.log(this.angularFirestore.collection(`users`))
+    const test = this.angularFirestore.collection(`users`).get()
+    console.log(test)
+    const df = this.angularFirestore.collection(`sessions`).get()
+    console.log(df)
+    console.log('_________________________________LOOK AT ME _______________________________________________')
+    await this.angularFirestore.collection<UserInterface[]>('users').get().toPromise().then(users => {
+    
       users.docs.forEach(user => {
 
         // If the user's id is higher than
@@ -145,7 +154,7 @@ export class UserService {
         // value of the highestUserId variable 
         // is is replaced by the one stored in
         // the userId variable.
-        user.data().id > highest_user_id ? highest_user_id = user.data().id : null
+        user.data().id > highestUserId ? highestUserId = user.data().id : null
 
       })
 
@@ -153,7 +162,7 @@ export class UserService {
 
     // Resolves promise by returning the highest user id
     // which should always be an number.
-    return new Promise<number>(resolve => resolve(highest_user_id))
+    return new Promise<number>(resolve => resolve(highestUserId))
 
   }
 

@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core';
 import { MarioComponent } from './mario-component/mario.component';
 import { World } from './mario-game/world/world.component';
 import { LevelService } from './services/level.service';
-import { MarioService } from './services/mario.service';
 
 @NgModule({
   imports: [
@@ -19,7 +18,6 @@ import { MarioService } from './services/mario.service';
   ],
   providers: [
 
-    MarioService,
     LevelService,
 
   ],

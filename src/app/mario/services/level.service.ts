@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore } from 'angularfire2/firestore';
+import { AngularFirestore } from '@angular/fire/firestore';
 import { Subject } from 'rxjs';
 import { generateKey } from 'src/app/misc/helper';
-import { LevelList } from 'src/app/misc/level-list';
-import { SerializedLevel } from '../interfaces/serialized-level';
-import { Level } from '../models/level';
+import { LevelList } from 'src/app/misc/level.list';
+import { Level } from '../../models/level';
+import { LevelInterface } from 'src/app/interfaces/level.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -24,7 +24,9 @@ export class LevelService {
 
     private angularFirestore: AngularFirestore,
 
-  ) { }
+  ) { 
+
+  }
 
   ///////////////
   // Functions //
@@ -41,59 +43,24 @@ export class LevelService {
 
   public async storeLevel(level: Level): Promise<void> {
 
-    const serializedLevel: SerializedLevel = level.toObject()
-
-    this.angularFirestore.collection<SerializedLevel>('levels').doc(serializedLevel.key).set(serializedLevel)
+    this.angularFirestore.collection<LevelInterface>('levels').doc(level.key).set(level.toInterface())
 
   }
-
-  public async fetchLevel(key: string): Promise<void> {
-
-    this.angularFirestore.doc<SerializedLevel>(`levels/${key}`).get().toPromise().then(level => {
-      
-      this.currentLevel = level.data.prototype
-      debugger
-    })
-
-  }
-
-
 
   /**
    * 
-   * Returns the highest level id that can be found at firestore.
    * 
+   * 
+   * @param userKey 
+   * @param sessionKey 
    */
-  private async getHighestLevelId(): Promise<number> {
-    
-    //
-    // Sets a default level id.
-    //
-    let highestLevelId: number = 0
+  public async fetchLevel(userKey: string, sessionKey: string): Promise<void> {
 
-    //
-    // Iterates through all levels from firestore and
-    // compares their level ids with the one stored in
-    // the highestlevelId variable.
-    //
-    await this.angularFirestore.collection<any>(`levels`).get().toPromise().then(levels => {
+    this.angularFirestore.doc<LevelInterface>(`users/${userKey}/sessions/${sessionKey}/level`).get().toPromise().then(level => {
       
-      levels.docs.forEach(level => {
-
-        // If the level's id is higher than
-        // the former highest level id, the
-        // value of the highestlevelId variable 
-        // is is replaced by the one stored in
-        // the levelId variable.
-        level.data().id > highestLevelId ? highestLevelId = level.data().id : null
-
-      })
-
+      this.levelSubject.next(Level.fromInterface(level.data.prototype))
+    
     })
-
-    // Resolves promise by returning the highest level id
-    // which should always be an number.
-    return new Promise<number>(resolve => resolve(highestLevelId))
 
   }
 

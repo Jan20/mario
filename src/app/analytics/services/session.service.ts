@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore } from 'angularfire2/firestore';
+import { AngularFirestore } from '@angular/fire/firestore';
 import { generateKey } from 'src/app/misc/helper';
-import { Session } from '../interfaces/session';
-import { User } from '../interfaces/user';
+import { UserInterface } from '../../interfaces/user.interface';
 import { UserService } from './user.service';
+import { Session } from '../../models/session';
+import { Performance } from '../../models/performance';
+import { User } from 'src/app/models/user';
 
 @Injectable({
 
@@ -42,25 +44,27 @@ export class SessionService {
    */
   public async generateSession(): Promise<void> {
 
-    // Initializes a new empty session.
-    this.session = {}
-
+    //
     // Gets the highest previous session ID and increases the number by one.
-    this.session.id = await this.getHighestSessionId() + 1
+    //
+    const id: number = await this.getHighestSessionId() + 1
 
+    //
     // Writes the current session key to the session object that is going
     // to be stored at Firestore.
-    this.session.key = generateKey('session', this.session.id)
+    //
+    const key: string = generateKey('session', id)
 
-    this.session.performance = {
+    //
+    //
+    //
+    const performance: Performance = new Performance(0, 0, 0, 0)
 
-      defeated_by_gaps: 0,
-      defeated_by_opponent_type_1: 0,
-      defeated_by_opponent_type_2: 0,
-      defeated_by_opponent_type_3: 0
+    //
+    // Initializes a new empty session.
+    //
+    this.session = new Session(key, id, performance)
 
-    }
-   
   }
 
   /**
@@ -72,14 +76,20 @@ export class SessionService {
    */
   private async getHighestSessionId(): Promise<number> {
 
+    //
     // Gets the current user's ID.
-    const user: User = await this.userService.getCurrentUser()
+    //
+    const userKey: string = await this.userService.getCurrentUserKey()
     
+    //
     // Stores the temporarily highest session id.
+    //
     let highestSessionId: number = 0
 
+    //
     // Accesses a Firestore database
-    await this.angularFirestore.collection<Session[]>(`users/${user.key}/sessions`).get().toPromise().then(sessions => {
+    //
+    await this.angularFirestore.collection<Session[]>(`users/${userKey}/sessions`).get().toPromise().then(sessions => {
       
       // Itereates through all sessions and compares whether the session's id
       // is heighter than the current highestSessionId. If this is the case,
@@ -98,19 +108,65 @@ export class SessionService {
    * Stores the current session at Firestore.
    * 
    */
-  public async storePerformance(): Promise<any> {
+  public async storePerformance(): Promise<void> {
 
-    console.log('---------------------------------------------------')
-    console.log('storePerformance has been called')
-    console.log('---------------------------------------------------')
-    console.log(this.session.performance)
+    //
     // Gets the userId of the current user Id from UserService
-    const user: User = await this.userService.getCurrentUser()
+    //
+    const userKey: string = await this.userService.getCurrentUserKey()
 
+    //
     // Creates a new session at firestore database.
-    this.angularFirestore.doc(`users/${user.key}/sessions/${this.session.key}`).set({id: this.session.id})
-    this.angularFirestore.doc(`users/${user.key}/sessions/${this.session.key}/data/performance`).set(this.session.performance)
+    // this.angularFirestore.doc(`users/${user.key}/sessions/${this.session.key}`).set({id: this.session.id})
+    // this.angularFirestore.doc(`users/${user.key}/sessions/${this.session.key}/data/performance`).set(this.session.performance)
+    //
+    this.angularFirestore.doc(`users/${userKey}/sessions/${this.session.key}`).set(this.session.toInterface())
 
   }
+
+  /**
+   * 
+   * 
+   * 
+   */
+  public increaseDefeatedByGaps(): void {
+
+    this.session.performance.defeatedByGaps += 1
+
+  }
+
+  /**
+   * 
+   * 
+   * 
+   */
+  public increaseDefeatedByOpponentType1(): void {
+
+    this.session.performance.defeatedByOpponentType1 += 1
+
+  }
+
+  /**
+   * 
+   * 
+   * 
+   */
+  public increaseDefeatedByOpponentType2(): void {
+
+    this.session.performance.defeatedByOpponentType2 += 1
+
+  }
+
+  /**
+   * 
+   * 
+   * 
+   */
+  public increaseDefeatedByOpponentType3(): void {
+
+    this.session.performance.defeatedByOpponentType3 += 1
+
+  }
+
 
 }

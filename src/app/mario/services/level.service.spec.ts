@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
 import { LevelService } from './level.service';
-import { AngularFirestore } from 'angularfire2/firestore';
-import { FirestoreStub } from 'src/app/testing/Firestore-stub';
-import { AngularFireAuthModule } from 'angularfire2/auth';
-import { AngularFireDatabaseModule } from 'angularfire2/database';
-import { AngularFirestoreModule } from 'angularfire2/firestore';
-import { environment } from 'src/app/config/environment';
-import { AngularFireModule } from 'angularfire2';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { FirestoreStub } from 'src/app/misc/firestore.stub';
+import { AngularFireAuthModule } from '@angular/fire/auth';
+import { AngularFireDatabaseModule } from '@angular/fire/database';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
+import { environment } from '../../../environments/environment';
+import { AngularFireModule } from '@angular/fire';
 export const firebaseConfig = environment.firebaseConfig;
 
 describe('LevelService', () => {
@@ -31,8 +31,11 @@ describe('LevelService', () => {
   }));
 
   it('should be created', () => {
-    const service: LevelService = TestBed.get(LevelService);
-    expect(service).toBeTruthy();
-  });
-});
+  
+    const service: LevelService = TestBed.get(LevelService)
+    expect(service).toBeTruthy()
+  
+  })
+
+})
 

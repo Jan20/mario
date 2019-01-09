@@ -369,15 +369,8 @@ export class Player extends MovableObject{
                     ////////////////////////////////////////
                     // TODO: Handle different enemy types //
                     ////////////////////////////////////////
-                    let defeated_by_opponent_type_1: number = this.sessionService.session.performance.defeated_by_opponent_type_1
-
-                    console.log('---------------------------------------')
-                    console.log(defeated_by_opponent_type_1)
-                    console.log('---------------------------------------')
-
-
-                    this.sessionService.session.performance.defeated_by_opponent_type_1 = defeated_by_opponent_type_1 + 1
-        
+                    this.sessionService.increaseDefeatedByOpponentType1()
+                    
                     this.resetToDefault();
                     this.lostLifeSound.play();
                     this.world.getLives();
@@ -456,9 +449,8 @@ export class Player extends MovableObject{
             
             this.lives--
 
-            const defeated_by_gaps: number = this.sessionService.session.performance.defeated_by_gaps
-            this.sessionService.session.performance.defeated_by_gaps = defeated_by_gaps + 1
-            
+            this.sessionService.increaseDefeatedByGaps()
+
             this.resetToDefault();
             this.lostLifeSound.play();
             this.world.getLives();

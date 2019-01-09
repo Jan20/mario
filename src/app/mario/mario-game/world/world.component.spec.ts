@@ -1,8 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { World } from './world.component';
-import { AngularFirestore } from 'angularfire2/firestore';
-import { FirestoreStub } from 'src/app/testing/Firestore-stub';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { FirestoreStub } from 'src/app/misc/firestore.stub';
 
 describe('World', () => {
   let component: World;
