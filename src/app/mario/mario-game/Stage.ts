@@ -18,7 +18,7 @@ export class Stage {
     public normals 
 
     // public 
-    constructor(world: World, stage) {
+    constructor(world: World, stage: string[][]) {
 
         this.stage = stage;
         this.world = world;

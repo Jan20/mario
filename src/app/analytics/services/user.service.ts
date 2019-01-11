@@ -23,6 +23,42 @@ export class UserService {
   ///////////////
   // Functions //
   ///////////////
+  public async getUserKeys(): Promise<string[]> {
+
+    let userKeys: string[] = []
+
+    await this.angularFirestore.collection<UserInterface[]>('users').get().toPromise().then(users => {
+    
+      users.forEach(user => userKeys.push(user.data().key))
+    
+    })
+
+    return new Promise<string[]>(resolve => resolve(userKeys))
+
+  }
+
+  public async deleteUser(userKey: string): Promise<string> {
+
+    this.angularFirestore.doc(`users/${userKey}`).delete()
+
+    return new Promise<string>(resolve => resolve(`User with the Key ${userKey} has been deleted.`))
+
+  }
+
+  public async deleteUsers(): Promise<string> {
+
+    const userKeys: string[] = await this.getUserKeys()
+
+    userKeys.forEach(async userKey => {
+
+      await this.deleteUser(userKey)
+
+    })
+
+    return new Promise<string>(resolve => resolve(`All users have been deleted.`))
+
+  }
+
   /**
    * 
    * Tries to retrieve an UserInterfaceId for a UserInterface who
@@ -137,14 +173,6 @@ export class UserService {
     // compares their user ids with the one stored in
     // the highestUserId variable.
     //
-    console.log('_________________________________LOOK AT ME _______________________________________________')
-    console.log(this.angularFirestore)
-    console.log(this.angularFirestore.collection(`users`))
-    const test = this.angularFirestore.collection(`users`).get()
-    console.log(test)
-    const df = this.angularFirestore.collection(`sessions`).get()
-    console.log(df)
-    console.log('_________________________________LOOK AT ME _______________________________________________')
     await this.angularFirestore.collection<UserInterface[]>('users').get().toPromise().then(users => {
     
       users.docs.forEach(user => {
@@ -160,8 +188,10 @@ export class UserService {
 
     })
 
+    //
     // Resolves promise by returning the highest user id
     // which should always be an number.
+    //
     return new Promise<number>(resolve => resolve(highestUserId))
 
   }

@@ -3,18 +3,20 @@ import { NgModule } from '@angular/core';
 import { MarioComponent } from './mario-component/mario.component';
 import { World } from './mario-game/world/world.component';
 import { LevelService } from './services/level.service';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
-  imports: [
-
-    CommonModule
-  
-  ],
   declarations: [
 
     MarioComponent,
     World
 
+  ],
+  imports: [
+
+    CommonModule,
+    HttpClientModule
+  
   ],
   providers: [
 

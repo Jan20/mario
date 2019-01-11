@@ -362,9 +362,6 @@ export class Player extends MovableObject{
                     // User looses one life.
                     this.lives--
                     currentEnemy.enemyType
-                    console.log('---------------------------------------')
-                    console.log(currentEnemy.enemyType)
-                    console.log('---------------------------------------')
 
                     ////////////////////////////////////////
                     // TODO: Handle different enemy types //

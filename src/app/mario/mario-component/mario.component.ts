@@ -9,6 +9,8 @@ import { myTimer, resetTimer } from '../mario-game/hud';
 import { World } from '../mario-game/world/world.component';
 import { GLS } from '../services/gl.service';
 import { LevelService } from '../services/level.service';
+import { Level } from 'src/app/models/level';
+import { LevelList } from 'src/app/misc/level.list';
 
 @Component({
   selector: 'app-mario',
@@ -42,16 +44,44 @@ export class MarioComponent implements OnInit, AfterViewInit  {
         private levelService: LevelService
 
     ) {
+
         
         this.levelService.initialize()
-        this.levelService.fetchLevel('user_042', 'session')
-        
+
     }   
 
+    async loadLevel(): Promise<any> {
+
+        const userKey: string = await this.userService.getCurrentUserKey()
+
+        const sessionKeys: string[] = await this.sessionService.getSessionKeys(userKey)
+
+        let level: Level
+
+        if (sessionKeys.length === 0 ) {
+
+            var randomNumber = LevelList[Math.floor(Math.random() * LevelList.length)];
+            level = LevelList.getLevel(randomNumber)
+
+        } else {
+
+            /////////////
+            // TODO /////
+            /////////////
+            var randomNumber = LevelList[Math.floor(Math.random() * LevelList.length)];
+            level = LevelList.getLevel(randomNumber)
+
+            // const level: Level = await this.levelService.getLevelFromServer(userKey, 'session_42')
+
+        }
+
+        this.levelService.setLevel(level)
+
+    }
 
     /**
      * 
-     * 
+     *   
      * 
      */
     async ngOnInit(): Promise<void> {
@@ -74,7 +104,7 @@ export class MarioComponent implements OnInit, AfterViewInit  {
      * @param event 
      */
     @HostListener('document:keydown', ['$event'])
-    handleKeyboardEvent(event: KeyboardEvent) { 
+    async handleKeyboardEvent(event: KeyboardEvent) { 
 
         if (event.keyCode == 38 && GLS.I().gameScreen) {
         
@@ -107,13 +137,19 @@ export class MarioComponent implements OnInit, AfterViewInit  {
             
             document.getElementById("start").style.display = "none";
             GLS.I().gameScreen = 0;
-            this.init();
+
+            await this.loadLevel()
+            console.log('Level is going to be initialized')
+
+            await this.init();
         } 
 
     }
     
 
     private init() {
+
+
         GLS.I().lightPosition = vec3(0.0, 15.0, -1.0)
 
         if (!GLS.I().GL) { alert("WebGL isn't available"); }

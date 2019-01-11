@@ -43,7 +43,7 @@ export class Projectile extends MovableObject{
         this.generateVertices(this.vertices, this.texCoords, this.normals)
         this.rowsToCheck = rowsToCheck
         this.xBoundLeft = 0
-        this.xBoundRight = Math.ceil(levelService.getLevel(world.getLevelIndex())[0].length)
+        this.xBoundRight = Math.ceil(levelService.getLevel()[0].length)
         this.velocity[0] = (this.world.player.texDir == 0) ? this.velocity[0] : -this.velocity[0]
         for (var i = 0; i < this.rowsToCheck.length; i++) {
             // min
@@ -53,7 +53,7 @@ export class Projectile extends MovableObject{
                     break;
                 }
             // max
-            for (var k = Math.floor(this.pos[0]); k < Math.ceil(levelService.getLevel(world.getLevelIndex())[0].length); k++)
+            for (var k = Math.floor(this.pos[0]); k < Math.ceil(levelService.getLevel()[0].length); k++)
                 if (this.world.stage.stage[14 - (this.rowsToCheck[i])][k] != '.') {
                     this.xBoundRight = k - 1;
                     break;
@@ -136,7 +136,6 @@ export class Projectile extends MovableObject{
         GLS.I().GL.enableVertexAttribArray(vNormal);
         GLS.I().GL.bindTexture(GLS.I().GL.TEXTURE_2D, this.world.stageTextures[this.world.getLevelIndex()].projectile.textures[0]);
 
-        console.log(this.vertices.length)
         GLS.I().GL.drawArrays(GLS.I().GL.TRIANGLES, 0, this.vertices.length);
     }
 }

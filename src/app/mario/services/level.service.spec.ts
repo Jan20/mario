@@ -8,6 +8,7 @@ import { AngularFireDatabaseModule } from '@angular/fire/database';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { environment } from '../../../environments/environment';
 import { AngularFireModule } from '@angular/fire';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 export const firebaseConfig = environment.firebaseConfig;
 
 describe('LevelService', () => {
@@ -20,11 +21,14 @@ describe('LevelService', () => {
       AngularFirestoreModule.enablePersistence(),
       AngularFireAuthModule,
       AngularFireDatabaseModule,
+      HttpClientModule,
     
     ],
     providers: [
-       
+      
+      HttpClient,
       { provide: AngularFirestore, useValue: FirestoreStub },
+      
     
     ]  
 

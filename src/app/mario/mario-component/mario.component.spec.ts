@@ -3,6 +3,8 @@ import { MarioComponent } from './mario.component';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { MaterialModule } from 'src/app/config/material.module';
 import { FirestoreStub } from 'src/app/misc/firestore.stub';
+import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { LevelService } from '../services/level.service';
 
 describe('MarioComponent', () => {
   let component: MarioComponent;
@@ -13,11 +15,14 @@ describe('MarioComponent', () => {
       declarations: [ MarioComponent ],
       imports: [ 
         
-        MaterialModule
+        MaterialModule,
+        HttpClientModule
       
       ],
       providers: [
         
+        HttpClient,
+        LevelService,
         { provide: AngularFirestore, useValue: FirestoreStub },
       
       ]  

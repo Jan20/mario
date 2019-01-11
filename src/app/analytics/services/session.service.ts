@@ -42,6 +42,25 @@ export class SessionService {
    * 
    * 
    */
+  public async getSessionKeys(userKey: string): Promise<string[]> {
+
+    let sessionKeys: string[] = []
+
+    await this.angularFirestore.collection<Session[]>(`users/${userKey}/sessions`).get().toPromise().then(sessions => {
+
+      sessions.forEach(session => sessionKeys.push(session.data().key))
+
+    })
+
+    return new Promise<string[]>(resolve => resolve(sessionKeys))
+    
+  }
+
+  /**
+   * 
+   * 
+   * 
+   */
   public async generateSession(): Promise<void> {
 
     //
