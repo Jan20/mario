@@ -10,7 +10,6 @@ import { World } from '../mario-game/world/world.component';
 import { GLS } from '../services/gl.service';
 import { LevelService } from '../services/level.service';
 import { Level } from 'src/app/models/level';
-import { LevelList } from 'src/app/misc/level.list';
 import { Session } from 'src/app/models/session';
 
 @Component({
@@ -86,13 +85,18 @@ export class MarioComponent implements OnInit, AfterViewInit  {
         //
         if (sessionKeys.length === 0 ) {
 
-            const randomNumber: number = Math.floor(Math.random() * LevelList.length)
+            const levelKeys: string[] = await this.levelService.getLevelKeysFromInitialLevels()
             
-            level = LevelList.getLevel(randomNumber)
+            const randomNumber: number = Math.floor(Math.random() * levelKeys.length)
+            
+            // const level: Level = await this.levelService.getInitialLevel(levelKeys[randomNumber])
+            const level: Level = await this.levelService.getInitialLevel('level_42')
+
             
             await this.levelService.setLevel(level)
 
             return `Level ${level.key} has been selected.`
+            return `Level has been selected.`
 
         }
 
@@ -102,7 +106,7 @@ export class MarioComponent implements OnInit, AfterViewInit  {
             
             session.status === 'created' ? level = await this.levelService.getLevelFromServer(userKey, sessionKey) : null
             
-            await this.levelService.setLevel(level)
+            // await this.levelService.setLevel(level)
 
             return `Level ${level.key} has been selected.`
 
@@ -179,7 +183,7 @@ export class MarioComponent implements OnInit, AfterViewInit  {
     }
     
 
-    private init() {
+    private async init() {
 
 
         GLS.I().lightPosition = vec3(0.0, 15.0, -1.0)
@@ -223,7 +227,9 @@ export class MarioComponent implements OnInit, AfterViewInit  {
         // set initial camera position
         GLS.I().CAMERA_POS = GLS.I().INITIAL_CAMERA_POS.slice(0);
 
-        GLS.I().GAMEWORLD = new World(this.sessionService, this.levelService);
+        const level = await this.levelService.getLevel()
+
+        GLS.I().GAMEWORLD = new World(level, this.sessionService, this.levelService);
 
         // for hud initialization
         resetTimer();

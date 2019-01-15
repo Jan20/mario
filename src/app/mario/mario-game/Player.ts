@@ -153,7 +153,7 @@ export class Player extends MovableObject{
 
         GLS.I().GL.vertexAttribPointer(vNormal, 3, GLS.I().GL.FLOAT, false, 0, 0)
         GLS.I().GL.enableVertexAttribArray(vNormal)
-        GLS.I().GL.bindTexture(GLS.I().GL.TEXTURE_2D, this.world.stageTextures[this.world.getLevelIndex()].player.textures[this.animIndex()])
+        GLS.I().GL.bindTexture(GLS.I().GL.TEXTURE_2D, this.world.levelTextures.player.textures[this.animIndex()])
         GLS.I().GL.drawArrays(GLS.I().GL.TRIANGLES, 0, this.vertices.length)
 
     }
@@ -179,9 +179,9 @@ export class Player extends MovableObject{
         } else {
 
             this.walktime += this.walkTimer.getElapsedTime() / GLS.I().ANIM_SPEED
-            this.texIndex = Math.floor(this.walktime % this.world.stageTextures[this.world.getLevelIndex()].player.textures.length / 2) * 2
+            this.texIndex = Math.floor(this.walktime % this.world.levelTextures.player.textures.length / 2) * 2
             
-            if (this.texIndex >= this.world.stageTextures[this.world.getLevelIndex()].player.textures.length - 2) {
+            if (this.texIndex >= this.world.levelTextures.player.textures.length - 2) {
             
                 this.texIndex = 2
                 this.walkTimer.reset()
@@ -192,7 +192,7 @@ export class Player extends MovableObject{
         // document.getElementById("2").innerHTML = "walktime: " + this.walktime
         // document.getElementById("3").innerHTML = "texIndex: " + this.texIndex
         if (!this.collisionDown) {
-            this.texIndex = this.world.stageTextures[this.world.getLevelIndex()].player.textures.length - 2
+            this.texIndex = this.world.levelTextures.player.textures.length - 2
             this.walkTimer.reset()
             this.walktime = 0
         }

@@ -130,7 +130,7 @@ export class PowerUp extends MovableObject{
     
         GLS.I().GL.vertexAttribPointer(vNormal, 3, GLS.I().GL.FLOAT, false, 0, 0);
         GLS.I().GL.enableVertexAttribArray(vNormal);
-        GLS.I().GL.bindTexture(GLS.I().GL.TEXTURE_2D, this.world.stageTextures[this.world.currStageIndex].item.textures[this.powerIndex]);
+        GLS.I().GL.bindTexture(GLS.I().GL.TEXTURE_2D, this.world.levelTextures.item.textures[this.powerIndex]);
         GLS.I().GL.drawArrays(GLS.I().GL.TRIANGLES, 0, this.vertices.length);
 
     }

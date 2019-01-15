@@ -104,7 +104,7 @@ export class Enemy extends MovableObject{
         
         this.walkTime += this.enemyWalkTimer.getElapsedTime() / 80
         
-        this.texIndex = Math.floor(this.walkTime % this.world.stageTextures[this.world.getLevelIndex()].enemies[this.enemyIndex].textures.length / 2) * 2
+        this.texIndex = Math.floor(this.walkTime % this.world.levelTextures.enemies[this.enemyIndex].textures.length / 2) * 2
         
         if (this.velocity[0] < 0.0 || this.enemyIndex == 1 || this.enemyIndex == 3)
             this.texIndex++
@@ -235,7 +235,7 @@ export class Enemy extends MovableObject{
         
         GLS.I().GL.vertexAttribPointer(vNormal, 3, GLS.I().GL.FLOAT, false, 0, 0)
         GLS.I().GL.enableVertexAttribArray(vNormal)
-        GLS.I().GL.bindTexture(GLS.I().GL.TEXTURE_2D, this.world.stageTextures[this.world.getLevelIndex()].enemies[this.enemyIndex].textures[this.animIndex()])
+        GLS.I().GL.bindTexture(GLS.I().GL.TEXTURE_2D, this.world.levelTextures.enemies[this.enemyIndex].textures[this.animIndex()])
         GLS.I().GL.drawArrays(GLS.I().GL.TRIANGLES, 0, this.vertices.length)
     }
 }

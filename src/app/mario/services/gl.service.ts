@@ -12,7 +12,7 @@ export class GLS {
     public GAMEWORLD: World
         
     // correct camera view
-    public FOVY = 30;
+    public FOVY = 30
     public ASPECT_RATIO = 1;
 
     public PERSPECTIVE = perspective(this.FOVY, this.ASPECT_RATIO, 0.1, 500);
@@ -65,7 +65,8 @@ export class GLS {
     public X_GROUND_FRICTION = .865;
     public X_AIR_FRICTION = .92;
     public GRAVITY_CONSTANT = -.0075;
-    public JUMP_CONSTANT = .23;
+    // public JUMP_CONSTANT = .23;
+    public JUMP_CONSTANT = .27;
     public WALK_CUTOFF = 0.003;
     public ANIM_SPEED = 80
 

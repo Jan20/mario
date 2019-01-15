@@ -15,7 +15,7 @@ export class Samples {
 
     public static samplePerformance: Performance = new Performance(1, 1, 1, 0)
     
-    public static sampleSession: Session = new Session('session_042', 42, Samples.samplePerformance)
+    public static sampleSession: Session = new Session('session_042', 42, 'created', Samples.samplePerformance)
     
     public static sampleLevel: Level = new Level(
     

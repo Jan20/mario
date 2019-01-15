@@ -8,10 +8,10 @@ export class Stage {
     ///////////////
     // Variables //
     ///////////////
-    public stage
+    public stage: string[][]
     public world: World
-    public finishLine
-    public texIndexMap
+    public finishLine: number
+    public textureIndexMap
     public runningSum 
     public vertices
     public texCoords
@@ -22,10 +22,16 @@ export class Stage {
 
         this.stage = stage;
         this.world = world;
-        this.finishLine = this.stage[0].length - 1;
+
+        //
+        // The finish line is placed at the end of
+        // of a stage. 
+        //
+        this.finishLine = this.stage[0].length - 1
+
         // Enemy Codes (Don't use):
         // H, J, C, V
-        this.texIndexMap = {
+        this.textureIndexMap = {
             
             'X': 0,
             'B': 1,
@@ -40,12 +46,17 @@ export class Stage {
         
         };
         
-        this.runningSum = {};
-        this.vertices = {};
-        this.texCoords = {};
-        this.normals = {};
+        this.runningSum = {}
+        this.vertices = {}
+        this.texCoords = {}
+        this.normals = {}
         
-        for (var key in this.texIndexMap) {
+        //
+        // Initializes a range of arrays intented
+        // to provide WebGL information of what to
+        // draw.
+        // 
+        for (let key in this.textureIndexMap) {
         
             this.runningSum[key] = [0]
             this.vertices[key] = []
@@ -54,29 +65,66 @@ export class Stage {
         
         }
 
+        //
+        // Generates all vertices related to the 
+        // current stage.
+        //
         this.generateVertices()
         
     }
-    generateVertices() {
-        for (var i = 0; i < this.stage[0].length; i++) {
-            for (var j = 0; j < this.stage.length; j++) {
-                var currentSquare = this.stage[j][i];
+
+    private generateVertices(): void {
+        
+        // 
+        // Iterates over every line of the stage's representation.
+        //
+        for (let i = 0; i < this.stage[0].length; i++) {
+        
+            //
+            // Iterates over every character stored within one line.
+            // 
+            for (let j = 0; j < this.stage.length; j++) {
+        
+                //
+                // Stores the character which is stored at the current point.
+                //
+                const square: string = this.stage[j][i]
+            
+                //
+                //
+                //
                 if (i > 0 && j == 0) {
-                    for (var key in this.texIndexMap)
+                    
+                    for (let key in this.textureIndexMap) {
+
                         this.runningSum[key].push(this.runningSum[key][i - 1]);
+
+                    }
                 }
+
+                //
+                //
+                //
                 if (this.stage[j][i] != '.') {
-                    var y = 14 - j;
-                    var x = i;
+                    
+                    const y = 14 - j;
+                    const x = i;
+
                     // front, right, top, left, bottom
-                    quad([x + 1, y + 1, 0], [x + 1, y, 0], [x, y + 1, 0], [x, y, 0], this.vertices[currentSquare], this.texCoords[currentSquare]);
-                    quad([x + 1, y + 1, -3], [x + 1, y, -3], [x + 1, y + 1, 0], [x + 1, y, 0], this.vertices[currentSquare], this.texCoords[currentSquare]);
-                    quad([x + 1, y + 1, -3], [x + 1, y + 1, 0], [x, y + 1, -3], [x, y + 1, 0], this.vertices[currentSquare], this.texCoords[currentSquare]);
-                    quad([x, y + 1, 0], [x, y, 0], [x, y + 1, -3], [x, y, -3], this.vertices[currentSquare], this.texCoords[currentSquare]);
-                    quad([x + 1, y, 0], [x + 1, y, -3], [x, y, 0], [x, y, -3], this.vertices[currentSquare], this.texCoords[currentSquare]);
-                    this.generateNormals(this.normals[currentSquare]);
-                    this.runningSum[currentSquare][i] += 30;
+                    quad([x + 1, y + 1, 0], [x + 1, y, 0], [x, y + 1, 0], [x, y, 0], this.vertices[square], this.texCoords[square]);
+                    quad([x + 1, y + 1, -3], [x + 1, y, -3], [x + 1, y + 1, 0], [x + 1, y, 0], this.vertices[square], this.texCoords[square]);
+                    quad([x + 1, y + 1, -3], [x + 1, y + 1, 0], [x, y + 1, -3], [x, y + 1, 0], this.vertices[square], this.texCoords[square]);
+                    quad([x, y + 1, 0], [x, y, 0], [x, y + 1, -3], [x, y, -3], this.vertices[square], this.texCoords[square]);
+                    quad([x + 1, y, 0], [x + 1, y, -3], [x, y, 0], [x, y, -3], this.vertices[square], this.texCoords[square]);
+                    
+                    this.generateNormals(this.normals[square])
+                    
+                    this.runningSum[square][i] += 30
+                    
                     if (this.stage[j][i] == 'Z') {
+                        console.log('________________HEY HERE I AM_________________')
+                        console.log(i)
+                        console.log(j)
                         this.finishLine = x;
                     }
                 }
@@ -86,6 +134,7 @@ export class Stage {
     }
     
     public generateNormals(nBuffer) {
+        
         // front
         nBuffer.push([0, 0, 1]);
         nBuffer.push([0, 0, 1]);
@@ -93,6 +142,7 @@ export class Stage {
         nBuffer.push([0, 0, 1]);
         nBuffer.push([0, 0, 1]);
         nBuffer.push([0, 0, 1]);
+        
         // right
         nBuffer.push([1, 0, 0]);
         nBuffer.push([1, 0, 0]);
@@ -100,6 +150,7 @@ export class Stage {
         nBuffer.push([1, 0, 0]);
         nBuffer.push([1, 0, 0]);
         nBuffer.push([1, 0, 0]);
+        
         // top
         nBuffer.push([0, 1, 0]);
         nBuffer.push([0, 1, 0]);
@@ -107,6 +158,7 @@ export class Stage {
         nBuffer.push([0, 1, 0]);
         nBuffer.push([0, 1, 0]);
         nBuffer.push([0, 1, 0]);
+        
         // left
         nBuffer.push([-1, 0, 0]);
         nBuffer.push([-1, 0, 0]);
@@ -114,6 +166,7 @@ export class Stage {
         nBuffer.push([-1, 0, 0]);
         nBuffer.push([-1, 0, 0]);
         nBuffer.push([-1, 0, 0]);
+        
         // bottom
         nBuffer.push([0, -1, 0]);
         nBuffer.push([0, -1, 0]);
@@ -122,9 +175,12 @@ export class Stage {
         nBuffer.push([0, -1, 0]);
         nBuffer.push([0, -1, 0]);
     }
+
     draw() {
+    
         GLS.I().GL.disable(GLS.I().GL.BLEND);
-        for (var key in this.texIndexMap) {
+    
+        for (var key in this.textureIndexMap) {
             if (this.vertices[key].length == 0)
                 continue;
             var xBoundLeft = Math.max(Math.floor(this.world.xBoundLeft) - 2, 0);
@@ -148,7 +204,7 @@ export class Stage {
             var vTexCoord = GLS.I().GL.getAttribLocation(GLS.I().PROGRAM, "vTexCoord");
             GLS.I().GL.vertexAttribPointer(vTexCoord, 2, GLS.I().GL.FLOAT, false, 0, 0);
             GLS.I().GL.enableVertexAttribArray(vTexCoord);
-            GLS.I().GL.bindTexture(GLS.I().GL.TEXTURE_2D, this.world.stageTextures[this.world.getLevelIndex()].stage.textures[this.texIndexMap[key]]);
+            GLS.I().GL.bindTexture(GLS.I().GL.TEXTURE_2D, this.world.levelTextures.stage.textures[this.textureIndexMap[key]]);
             GLS.I().GL.drawArrays(GLS.I().GL.TRIANGLES, ((xBoundLeft == 0) ? 0 : this.runningSum[key][xBoundLeft - 1]), numVertices);
         }
         GLS.I().GL.enable(GLS.I().GL.BLEND);

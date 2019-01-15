@@ -134,7 +134,7 @@ export class Projectile extends MovableObject{
         var vNormal = GLS.I().GL.getAttribLocation(GLS.I().PROGRAM, "vNormal");
         GLS.I().GL.vertexAttribPointer(vNormal, 3, GLS.I().GL.FLOAT, false, 0, 0);
         GLS.I().GL.enableVertexAttribArray(vNormal);
-        GLS.I().GL.bindTexture(GLS.I().GL.TEXTURE_2D, this.world.stageTextures[this.world.getLevelIndex()].projectile.textures[0]);
+        GLS.I().GL.bindTexture(GLS.I().GL.TEXTURE_2D, this.world.levelTextures.projectile.textures[0]);
 
         GLS.I().GL.drawArrays(GLS.I().GL.TRIANGLES, 0, this.vertices.length);
     }

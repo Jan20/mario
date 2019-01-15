@@ -1,8 +1,6 @@
 import { TestBed } from '@angular/core/testing';
-
 import { LevelService } from './level.service';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { FirestoreStub } from 'src/app/misc/firestore.stub';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFireDatabaseModule } from '@angular/fire/database';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
