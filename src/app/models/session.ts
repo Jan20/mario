@@ -8,15 +8,17 @@ export class Session {
     ///////////////
     public key: string
     public id: number
+    public status: string
     public performance: Performance
 
     //////////////////
     // Constructors //
     //////////////////
-    public constructor(key: string, id: number, performance: Performance) {
+    public constructor(key: string, id: number, status: string, performance: Performance) {
 
         this.key = key
         this.id = id
+        this.status = status
         this.performance = performance
 
     }
@@ -36,7 +38,7 @@ export class Session {
 
         )
       
-        return new Session(sessionInterface.key, sessionInterface.id, performance)
+        return new Session(sessionInterface.key, sessionInterface.id, sessionInterface.status, performance)
 
     }
     
@@ -46,6 +48,7 @@ export class Session {
 
             'key': this.key,
             'id': this.id,
+            'status': this.status,
             'data': {
 
                 'performance': {

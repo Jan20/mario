@@ -11,6 +11,7 @@
             "name": "Launch Program",
             "program": "${workspaceFolder}/serve",
             "preLaunchTask": "tsc: build - tsconfig.json",
+            "runtimeArgs": ["--disable-web-security"],
             "outFiles": [
                 "${workspaceFolder}/dist/out-tsc/**/*.js"
             ]
@@ -35,30 +36,34 @@
             "request": "launch",
             "url": "http://localhost",
             "port": 4200,
-            "webRoot": "${workspaceFolder}"
+            "runtimeArgs": ["--disable-web-security"],
+            "webRoot": "${workspaceFolder}",
           },
           {
             "name": "Attach Chrome",
             "type": "chrome",
             "request": "attach",
             "url": "http://localhost",
+            "runtimeArgs": ["--disable-web-security"],
             "port": 4200,
-            "webRoot": "${workspaceFolder}"
+            "webRoot": "${workspaceFolder}",
           },
           {
             "name": "Launch Chrome (Test)",
             "type": "chrome",
             "request": "launch",
-            "url": "http://localhost:9876/debug.html",
-            "webRoot": "${workspaceFolder}"
+            "url": "http://localhost:9876/",
+            "runtimeArgs": ["--disable-web-security"],
+            "webRoot": "${workspaceFolder}",
           },
           {
             "name": "Launch Chrome (E2E)",
             "type": "node",
             "request": "launch",
             "program": "${workspaceFolder}/node_modules/protractor/bin/protractor",
+            "runtimeArgs": ["--disable-web-security"],
             "protocol": "inspector",
-            "args": ["${workspaceFolder}/protractor.conf.js"]
-          }
+            "args": ["${workspaceFolder}/protractor.conf.js"],
+        }
     ]
 }

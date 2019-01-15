@@ -227,16 +227,16 @@ export class World implements OnInit {
     this.loadTextures()
     this.bgMusic[this.levelIndex].play()
 
-  }
+    }
 
   
-  
+
     ///////////////
     // Functions //
     ///////////////
     ngOnInit(): void {
-  
-  
+
+
     }
 
 
@@ -268,6 +268,7 @@ export class World implements OnInit {
         
         if (this.player.pos[0] > this.stage.finishLine) {
 
+            
             finishLevel();
 
         }

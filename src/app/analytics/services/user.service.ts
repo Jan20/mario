@@ -23,12 +23,17 @@ export class UserService {
   ///////////////
   // Functions //
   ///////////////
+  /**
+   * 
+   * 
+   * 
+   */
   public async getUserKeys(): Promise<string[]> {
 
     let userKeys: string[] = []
 
     await this.angularFirestore.collection<UserInterface[]>('users').get().toPromise().then(users => {
-    
+
       users.forEach(user => userKeys.push(user.data().key))
     
     })
@@ -37,6 +42,13 @@ export class UserService {
 
   }
 
+  /**
+   * 
+   * 
+   * 
+   * @param userKey 
+   * 
+   */
   public async deleteUser(userKey: string): Promise<string> {
 
     this.angularFirestore.doc(`users/${userKey}`).delete()
@@ -45,7 +57,12 @@ export class UserService {
 
   }
 
-  public async deleteUsers(): Promise<string> {
+  /**
+   * 
+   * 
+   * 
+   */
+  public async deleteAllUsers(): Promise<string> {
 
     const userKeys: string[] = await this.getUserKeys()
 
@@ -54,14 +71,13 @@ export class UserService {
       await this.deleteUser(userKey)
 
     })
-
     return new Promise<string>(resolve => resolve(`All users have been deleted.`))
 
   }
 
   /**
    * 
-   * Tries to retrieve an UserInterfaceId for a UserInterface who
+   * Attempts to receive an user id for an user who
    * has already participated in a previous round
    * of the experiment. If this is the case, a
    * reference to the user's firestore id should
@@ -124,7 +140,7 @@ export class UserService {
    * eventually.
    * 
    */
-  private async createUser(): Promise<User> {
+  public async createUser(): Promise<User> {
 
     //
     // Fetches the highest existing user id and

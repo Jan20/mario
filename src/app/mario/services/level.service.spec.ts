@@ -22,13 +22,13 @@ describe('LevelService', () => {
       AngularFireAuthModule,
       AngularFireDatabaseModule,
       HttpClientModule,
-    
+      AngularFireModule.initializeApp(environment.firebaseConfig)
+
     ],
     providers: [
       
       HttpClient,
-      { provide: AngularFirestore, useValue: FirestoreStub },
-      
+      AngularFirestore
     
     ]  
 

@@ -10,6 +10,8 @@ import { MaterialModule } from './config/material.module';
 import { MarioModule } from './mario/mario.module';
 import { MenuModule } from './menu/menu.module';
 import { SurveyModule } from './survey/survey.module';
+import { TestModule } from './test/test.module';
+import { CloudModule } from './cloud/cloud.module';
 
 @NgModule({
   
@@ -31,10 +33,12 @@ import { SurveyModule } from './survey/survey.module';
     MarioModule,
     AnalyticsModule,
     SurveyModule,
+    CloudModule,
+    TestModule
 
   ], 
   providers: [
-    
+
     {provide: APP_BASE_HREF, useValue : '/' }
   
   ],

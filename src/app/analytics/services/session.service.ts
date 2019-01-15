@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { generateKey } from 'src/app/misc/helper';
-import { UserInterface } from '../../interfaces/user.interface';
 import { UserService } from './user.service';
 import { Session } from '../../models/session';
 import { Performance } from '../../models/performance';
-import { User } from 'src/app/models/user';
+import { SessionInterface } from 'src/app/interfaces/session.interface';
+import { Level } from 'src/app/models/level';
+import { LevelInterface } from 'src/app/interfaces/level.interface';
 
 @Injectable({
 
@@ -59,9 +60,8 @@ export class SessionService {
   /**
    * 
    * 
-   * 
    */
-  public async generateSession(): Promise<void> {
+  public async generateSession(): Promise<string> {
 
     //
     // Gets the highest previous session ID and increases the number by one.
@@ -77,12 +77,22 @@ export class SessionService {
     //
     //
     //
+    const status: string = 'created'
+
+    //
+    //
+    //
     const performance: Performance = new Performance(0, 0, 0, 0)
 
     //
     // Initializes a new empty session.
     //
-    this.session = new Session(key, id, performance)
+    this.session = new Session(key, id, status, performance)
+
+    //
+    // Returns the freshly created session key. 
+    // 
+    return new Promise<string>(resolve => resolve(key))
 
   }
 
@@ -127,7 +137,7 @@ export class SessionService {
    * Stores the current session at Firestore.
    * 
    */
-  public async storePerformance(): Promise<void> {
+  public async storeSession(): Promise<void> {
 
     //
     // Gets the userId of the current user Id from UserService
@@ -135,13 +145,115 @@ export class SessionService {
     const userKey: string = await this.userService.getCurrentUserKey()
 
     //
+    //
+    //
+    this.angularFirestore.doc(`users/${userKey}/sessions/${this.session.key}`).set({
+
+      key: this.session.key,
+      id: this.session.id
+
+    })
+
+    //
+    //
+    //
+    const ref: string = `users/${userKey}/sessions/${this.session.key}/data/performance`
+
+    //
     // Creates a new session at firestore database.
     // this.angularFirestore.doc(`users/${user.key}/sessions/${this.session.key}`).set({id: this.session.id})
     // this.angularFirestore.doc(`users/${user.key}/sessions/${this.session.key}/data/performance`).set(this.session.performance)
     //
-    this.angularFirestore.doc(`users/${userKey}/sessions/${this.session.key}`).set(this.session.toInterface())
+    this.angularFirestore.doc(ref).set(this.session.performance.toInterface())
 
   }
+  
+  /**
+   * 
+   * 
+   * 
+   * 
+   * @param userKey 
+   * @param sessionKey 
+   */
+  public async getSession(userKey: string, sessionKey: string): Promise<Session> {
+
+    //
+    //
+    //
+    let session: Session
+
+    //
+    //
+    //
+    this.angularFirestore.doc<SessionInterface>(`users/${userKey}/sessions/${sessionKey}`).get().toPromise().then(sessionInterface => {
+
+      session = new Session(
+        
+        sessionInterface.data().key,
+        sessionInterface.data().id,
+        sessionInterface.data().status,
+        sessionInterface.data().performance,
+        
+      )
+
+    })
+
+    return new Promise<Session>(resolve => resolve(session))
+
+  }
+
+  /**
+   * 
+   * 
+   * 
+   */
+  public async deleteSession(userKey: string, sessionKey: string): Promise<void> {
+
+    this.angularFirestore.doc(`users/${userKey}/sessions/${sessionKey}`).delete()
+
+  }
+
+  // public async getLevel(userKey: string, sessionKey: string): Promise<Level> {
+
+  //   //
+  //   //
+  //   //
+  //   let level: Level
+
+  //   const ref: string = `users/${userKey}/sessions/${sessionKey}/data/level`
+
+  //   this.angularFirestore.doc<LevelInterface>(ref).get().toPromise().then(levelInterface => {
+
+  //     const representation: string[][] = []
+
+  //     representation.push(
+        
+  //       levelInterface.data().line_00,
+  //       levelInterface.data().line_01,
+  //       levelInterface.data().line_02,
+  //       levelInterface.data().line_03,
+  //       levelInterface.data().line_04,
+  //       levelInterface.data().line_05,
+  //       levelInterface.data().line_06,
+  //       levelInterface.data().line_07,
+  //       levelInterface.data().line_08,
+  //       levelInterface.data().line_09,
+  //       levelInterface.data().line_10,
+  //       levelInterface.data().line_11,
+  //       levelInterface.data().line_12,
+  //       levelInterface.data().line_13,
+  //       levelInterface.data().line_14
+      
+  //     )
+
+  //     level = new Level(levelInterface.data().key, levelInterface.data().id, representation)
+
+  //   })
+
+  //   return new Promise<Level>(resolve => resolve(level))
+
+  // }
 
   /**
    * 

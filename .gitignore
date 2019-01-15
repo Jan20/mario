@@ -8,7 +8,8 @@
 /out-tsc
 
 # Environments
-/src/environments
+/src/environments/environment.prod.ts
+/src/environments/environment.ts
 
 # dependencies
 /node_modules
@@ -44,3 +45,6 @@ testem.log
 /e2e/*.map
 
 # System Files
+
+/""
+""

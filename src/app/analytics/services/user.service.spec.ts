@@ -1,35 +1,34 @@
-import { TestBed } from '@angular/core/testing';
-import { UserService } from './user.service';
-import { AngularFirestore } from '@angular/fire/firestore';
-import { FirestoreStub } from 'src/app/misc/firestore.stub';
-import { SessionService } from './session.service';
+import { TestBed } from '@angular/core/testing'
+import { UserService } from './user.service'
+import { AngularFirestore } from '@angular/fire/firestore'
+import { AngularFireModule } from '@angular/fire'
+import { environment } from 'src/environments/environment'
+import { TestService } from 'src/app/test/services/test.service';
+
 
 describe('UserService', () => {
 
-  beforeEach(() => TestBed.configureTestingModule({
+  beforeEach(() => {
+    TestBed.configureTestingModule({
 
-    providers: [
-    
-      { provide: AngularFirestore, useValue: FirestoreStub }
-    
-    ],
+      imports: [
 
+        AngularFireModule.initializeApp(environment.firebaseConfig)
 
-  }));
+      ],
+      providers: [
 
-  it('deleteAllUsers() should delete all users stored at Firestore', async () => {
+        TestService,
+        UserService,
+        AngularFirestore,
 
-    const userService: UserService = TestBed.get(UserService)
-
-    userService.deleteUsers()
-
-    const result: string[] = await userService.getUserKeys()
-
-    const expectedResult: string[] = [] 
-
-    expect(result).toBe(expectedResult)
-
+      ]
+  
+  
+    })
+  
   })
+
 
   it('should be created', () => {
 
@@ -38,6 +37,21 @@ describe('UserService', () => {
   
   })
 
-  
+  it("getUserKeys() should return ['user_042']", async () => {
+    
+    const testService: TestService = TestBed.get(TestService)
+    const userService: UserService = TestBed.get(UserService)
 
-});
+    await testService.setUp()
+
+    const result: string[] = await userService.getUserKeys()
+
+    const expectedResult: string[] = ['user_042']
+
+    expect(result).toEqual(expectedResult)
+
+    await testService.cleanUp()
+
+  })
+
+})

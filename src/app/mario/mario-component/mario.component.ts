@@ -11,6 +11,7 @@ import { GLS } from '../services/gl.service';
 import { LevelService } from '../services/level.service';
 import { Level } from 'src/app/models/level';
 import { LevelList } from 'src/app/misc/level.list';
+import { Session } from 'src/app/models/session';
 
 @Component({
   selector: 'app-mario',
@@ -45,39 +46,70 @@ export class MarioComponent implements OnInit, AfterViewInit  {
 
     ) {
 
-        
         this.levelService.initialize()
 
     }   
 
-    async loadLevel(): Promise<any> {
+    /**
+     * 
+     * Loads the level for the upcoming session
+     * from a pool of eight levels in total. The
+     * selection for the first level happens 
+     * randomely from all levels. The selection of
+     * levels for all futher sessions takes place in 
+     * the backend in which the opponents of each
+     * further level are choosen according to the
+     * users skill level.
+     * 
+     */
+    async loadLevel(): Promise<string> {
 
+        //
+        // Receives the user key of the current user.
+        //
         const userKey: string = await this.userService.getCurrentUserKey()
 
+        //
+        // Gets the session keys of all previous levels.
+        //
         const sessionKeys: string[] = await this.sessionService.getSessionKeys(userKey)
 
+        //
+        // Defines a new variable intended to store the
+        // level for the current session.
+        // 
         let level: Level
 
+        //
+        // If the user has not finished a single session
+        // yet, a ran
+        //
         if (sessionKeys.length === 0 ) {
 
-            var randomNumber = LevelList[Math.floor(Math.random() * LevelList.length)];
+            const randomNumber: number = Math.floor(Math.random() * LevelList.length)
+            
             level = LevelList.getLevel(randomNumber)
+            
+            await this.levelService.setLevel(level)
 
-        } else {
-
-            /////////////
-            // TODO /////
-            /////////////
-            var randomNumber = LevelList[Math.floor(Math.random() * LevelList.length)];
-            level = LevelList.getLevel(randomNumber)
-
-            // const level: Level = await this.levelService.getLevelFromServer(userKey, 'session_42')
+            return `Level ${level.key} has been selected.`
 
         }
 
-        this.levelService.setLevel(level)
+        sessionKeys.forEach(async (sessionKey: string) => {
+
+            const session: Session = await this.sessionService.getSession(userKey, sessionKey)
+            
+            session.status === 'created' ? level = await this.levelService.getLevelFromServer(userKey, sessionKey) : null
+            
+            await this.levelService.setLevel(level)
+
+            return `Level ${level.key} has been selected.`
+
+        })
 
     }
+
 
     /**
      * 

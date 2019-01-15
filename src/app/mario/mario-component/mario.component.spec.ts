@@ -5,6 +5,8 @@ import { MaterialModule } from 'src/app/config/material.module';
 import { FirestoreStub } from 'src/app/misc/firestore.stub';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { LevelService } from '../services/level.service';
+import { AngularFireModule } from '@angular/fire';
+import { environment } from 'src/environments/environment';
 
 describe('MarioComponent', () => {
   let component: MarioComponent;
@@ -12,18 +14,23 @@ describe('MarioComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ MarioComponent ],
+      declarations: [ 
+        
+        MarioComponent 
+      
+      ],
       imports: [ 
         
         MaterialModule,
-        HttpClientModule
+        HttpClientModule,
+        AngularFireModule.initializeApp(environment.firebaseConfig)
       
       ],
       providers: [
         
         HttpClient,
         LevelService,
-        { provide: AngularFirestore, useValue: FirestoreStub },
+        AngularFirestore
       
       ]  
     })
@@ -39,4 +46,8 @@ describe('MarioComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+
+
+
 });

@@ -374,7 +374,7 @@ export class Player extends MovableObject{
                     
                     if (this.lives === 0) {
                 
-                        this.sessionService.storePerformance()
+                        this.sessionService.storeSession()
                         gameOver()
 
                     }
@@ -457,7 +457,7 @@ export class Player extends MovableObject{
                 // need this to stop the music from playing twice, doesn't hurt the restart
                 this.pos = GLS.I().INITIAL_PLAYER_POS.slice(0);
                 gameOver()
-                this.sessionService.storePerformance()
+                this.sessionService.storeSession()
 
             
             } else {

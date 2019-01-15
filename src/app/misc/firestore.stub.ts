@@ -1,22 +1,35 @@
 import { BehaviorSubject } from "rxjs";
 import { UserInterface } from "../interfaces/user.interface";
 
-const users: UserInterface[] = [
-  {'key': 'user_042', 'id': 42},
-  {'key': 'user_043', 'id': 43},
-  {'key': 'user_044', 'id': 44}
-]
+// const users: UserInterface[][] = [[
+//   { key: 'user_001', id: 1},
+//   { key: 'user_002', id: 2},
+//   { key: 'user_003', id: 3}
+// ]];
+
+import { Observable } from 'rxjs';
+
+const testUsers: UserInterface[][] = [[
+  { key: 'user_001', id: 1},
+  { key: 'user_002', id: 2},
+  { key: 'user_003', id: 3}
+]];
+
+const users = Observable.create(testUsers)
 
 export const FirestoreStub = {
+
+
+
   
-  
-  collection: (name: string) => ({
+  collection: () => ({
     doc: (_id: string) => ({
       valueChanges: () => new BehaviorSubject({ foo: 'bar' }),
       set: (_d: any) => new Promise((resolve, _reject) => resolve()),
       get: () => {
+        console.log('H-______________________safasdf_________________________________________________________________________')
 
-        new Promise(resolve => resolve({'user_key': 'user_042', 'id': 42}))
+        new Promise(resolve => resolve(users))
   
       }
     }),
@@ -26,7 +39,13 @@ export const FirestoreStub = {
 
         then: () => ({
 
-          forEach: () => { return users}
+          forEach: () => { 
+            
+            console.log('H-_______________________________________________________________________________________________')
+
+            return new Promise(resolve => resolve(users))
+            
+          }
 
         })
 
@@ -43,7 +62,12 @@ export const FirestoreStub = {
 
         then: () => ({
 
-          forEach: () => { return users}
+          forEach: () => { 
+            console.log('H-______________________safasdf_____________________________________________fasdfasdfas__________________asdfasd__________')
+
+            return new Promise(resolve => resolve(users))
+
+          }
 
         })
 
