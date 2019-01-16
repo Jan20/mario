@@ -9,14 +9,14 @@ export class Background {
     // Variables //
     ///////////////
     public world: World
-    public vertices: any[]
-    public texCoords: any[]
+    public vertices: any[] 
+    public texCoords: any[] | any[][]
     public normals: any[]
 
     //////////////////
     // Constructors //
     //////////////////
-    public constructor(world) {
+    public constructor(world: World) {
 
         this.world = world
         this.vertices = []
@@ -37,7 +37,7 @@ export class Background {
      * @param vBuffer 
      * @param tBuffer 
      */
-    public generateVertices(vBuffer, tBuffer): void {
+    public generateVertices(vBuffer: any, tBuffer: any): void {
 
         quad([16, 16, -3], [16, -1, -3], [-1, 16, -3], [-1, -1, -3], vBuffer, tBuffer)
 
@@ -48,7 +48,7 @@ export class Background {
      * @param nBuffer 
      * 
      */
-    public generateNormals(nBuffer): void {
+    public generateNormals(nBuffer: number[][]): void {
 
         for (var i = 0; i < 6; i++){
 

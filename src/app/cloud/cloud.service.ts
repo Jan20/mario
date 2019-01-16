@@ -35,13 +35,13 @@ export class CloudService {
 
   }
 
-  public async evolveLevel(userKey: string, sessionKey: string, levelKey: string): Promise<any> {
+  public async evolveLevel(userKey: string): Promise<any> {
 
     const url: string = `${environment.cloudFunctions.backend}/evolution_cloud_function`
     let result: any
 
-    let params: HttpParams = new HttpParams().set('user_key', userKey).set('session_key', sessionKey).set('level_key', levelKey)
-
+    let params: HttpParams = new HttpParams().set('user_key', userKey)
+    
     await this.http.get(url, { params: params, responseType: 'text'}).toPromise().then(resturnValue => result = resturnValue)
     return new Promise<any>(resolve => resolve(result))
 

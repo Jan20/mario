@@ -21,21 +21,21 @@ export class World implements OnInit {
     ///////////////
     // Variables //
     ///////////////
-    public levelIndex: number
     public xBoundLeft: number
-    public xBoundRight: any
+    public xBoundRight: number
     public drawBound: number
     public enemies: Enemy[] = []
     public deadEnemies: Enemy[] = []
-    public items: any[] = []
-    public projectiles: any[] = []
+    public items  = []
+    public projectiles  = []
     public score: number
-    public keyMap: any[] = []
+    public keyMap = []
     public player: Player
     public stage: Stage
-    public back: Background
-    public marioTheme: any
+    public background: Background
+    public marioTheme: any 
     public bgMusic: any[]
+
     public levelTextures: any
     public level: string[][]
 
@@ -50,17 +50,11 @@ export class World implements OnInit {
 
     ) {
 
-        console.log(level.representation)
         this.level = level.representation
 
         this.xBoundLeft = GLS.I().INITIAL_WORLD_BOUND_LEFT
         this.xBoundRight = GLS.I().INITIAL_WORLD_BOUND_RIGHT
         this.drawBound = GLS.I().DRAW_BOUND
-
-        //
-        // might pick this index on initial screen
-        //
-        this.levelIndex = 0
 
         //
         // need to do this before constructing the stage
@@ -72,14 +66,14 @@ export class World implements OnInit {
         this.stage = new Stage(this, level.representation)
 
 
-        this.back = new Background(this)
+        this.background = new Background(this)
 
         //
         // Load sounds here so I don't mess up the json magic
         //
         this.marioTheme = new Howl({
 
-            urls: ['.asdf'],
+            urls: ['assets/Sound/Mario.mp3'],
             loop: true,
             buffer: true,
             volume: 0.45,
@@ -88,6 +82,7 @@ export class World implements OnInit {
 
         this.bgMusic = []
         this.bgMusic.push(this.marioTheme)
+
 
         this.levelTextures =
         
@@ -229,7 +224,7 @@ export class World implements OnInit {
             world.keyMap[evt.keyCode] = false
         }, false)
         this.loadTextures()
-        this.bgMusic[this.levelIndex].play()
+        this.bgMusic[0].play()
 
     }
 
@@ -272,18 +267,31 @@ export class World implements OnInit {
 
     }
 
-    public draw() {
+    public draw(): void {
 
+        //
+        // Returns true if the player has reached
+        // the end of the level.
+        //
         if (this.player.pos[0] > this.stage.finishLine) {
 
-
+            //
+            // Stores all collected gameplay information
+            // of the current session at Firestore.
+            //
+            this.sessionService.storeSession()
+            
+            //
+            // Displays a gratulations screen.
+            // 
             finishLevel();
 
         }
-        ///////////////////////////////////////
-        // TODO: only draw what can be seen? //
-        ///////////////////////////////////////
-        this.back.draw();
+        
+        //
+        //
+        //
+        this.background.draw();
         this.stage.draw();
         this.player.draw();
 
@@ -362,7 +370,7 @@ export class World implements OnInit {
      */
     public getWorldLevel(): void {
 
-        document.getElementById("worldLevel").innerHTML = (this.levelIndex + 1).toString()
+        document.getElementById("worldLevel").innerHTML = (0 + 1).toString()
         return
 
     }
@@ -426,32 +434,6 @@ export class World implements OnInit {
         }
     }
 
-    /////////////
-    // Getters //
-    /////////////
-    /**
-     * 
-     * 
-     * 
-     */
-    public getLevelIndex(): number {
 
-        return this.levelIndex
 
-    }
-
-    /////////////
-    // Setters //
-    /////////////
-    /**
-     * 
-     * 
-     * 
-     * @param levelIndex 
-     */
-    public setLevelIndex(levelIndex: number): void {
-
-        this.levelIndex = levelIndex
-
-    }
 }

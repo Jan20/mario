@@ -70,8 +70,12 @@ export function finishLevel() {
     GLS.I().gameOver = 1;
     
     document.addEventListener('keydown', function(evt) {
+    
         if ((evt.keyCode == 13 || evt.keyCode == 32) && gameOver) {
+    
             location.reload();
+    
         }
+    
     }, false);
 }

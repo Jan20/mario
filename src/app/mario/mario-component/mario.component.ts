@@ -89,25 +89,43 @@ export class MarioComponent implements OnInit, AfterViewInit  {
             
             const randomNumber: number = Math.floor(Math.random() * levelKeys.length)
             
-            // const level: Level = await this.levelService.getInitialLevel(levelKeys[randomNumber])
-            const level: Level = await this.levelService.getInitialLevel('level_42')
+            const level: Level = await this.levelService.getInitialLevel(levelKeys[randomNumber])
+            // const level: Level = await this.levelService.getInitialLevel('level_42')
 
-            
+            //
+            // Sets the choosen level to the level service.
+            //
+            console.log(level)
             await this.levelService.setLevel(level)
 
             return `Level ${level.key} has been selected.`
-            return `Level has been selected.`
 
         }
 
-        sessionKeys.forEach(async (sessionKey: string) => {
+        //
+        // If the user has already finished a previous level,
+        // a new session with an evolved level has been created
+        // within the service-side backend. Hence, iterating over
+        // all session keys should yield one session with the
+        // status 'created'.
+        //
+        sessionKeys.forEach(async sessionKey => {
 
+            //
+            // Retrieves a session from Firestore.
+            //
             const session: Session = await this.sessionService.getSession(userKey, sessionKey)
             
+            //
+            // If the current session has been created but not yet
+            // finished, the level for that specific session is loaded
+            // from Firestore.
+            //
             session.status === 'created' ? level = await this.levelService.getLevelFromServer(userKey, sessionKey) : null
             
-            // await this.levelService.setLevel(level)
-
+            //
+            // Returns a response referring to the key of the selected level.
+            //
             return `Level ${level.key} has been selected.`
 
         })

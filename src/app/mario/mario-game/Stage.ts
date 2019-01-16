@@ -11,11 +11,11 @@ export class Stage {
     public stage: string[][]
     public world: World
     public finishLine: number
-    public textureIndexMap
-    public runningSum 
-    public vertices
-    public texCoords
-    public normals 
+    public textureIndexMap: { [x: string]: string | number; X?: number; B?: number; Y?: number; L?: number; P?: number; F?: number; G?: number; S?: number; D?: number; Z?: number; }
+    public runningSum: { [x: string]: number[]; } 
+    public vertices: { [x: string]: any; }
+    public texCoords: { [x: string]: any; }
+    public normals: { [x: string]: any; } 
 
     // public 
     constructor(world: World, stage: string[][]) {
@@ -133,7 +133,7 @@ export class Stage {
         }
     }
     
-    public generateNormals(nBuffer) {
+    public generateNormals(nBuffer: number[][]) {
         
         // front
         nBuffer.push([0, 0, 1]);

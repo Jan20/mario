@@ -5,8 +5,7 @@ import { UserService } from './user.service';
 import { Session } from '../../models/session';
 import { Performance } from '../../models/performance';
 import { SessionInterface } from 'src/app/interfaces/session.interface';
-import { Level } from 'src/app/models/level';
-import { LevelInterface } from 'src/app/interfaces/level.interface';
+import { CloudService } from 'src/app/cloud/cloud.service';
 
 @Injectable({
 
@@ -32,6 +31,7 @@ export class SessionService {
 
     private angularFirestore: AngularFirestore,
     private userService: UserService,
+    private cloudService: CloudService,
 
   ) {}
 
@@ -147,10 +147,11 @@ export class SessionService {
     //
     //
     //
-    this.angularFirestore.doc(`users/${userKey}/sessions/${this.session.key}`).set({
+    await this.angularFirestore.doc(`users/${userKey}/sessions/${this.session.key}`).set({
 
       key: this.session.key,
-      id: this.session.id
+      id: this.session.id,
+      status: 'done'
 
     })
 
@@ -164,7 +165,9 @@ export class SessionService {
     // this.angularFirestore.doc(`users/${user.key}/sessions/${this.session.key}`).set({id: this.session.id})
     // this.angularFirestore.doc(`users/${user.key}/sessions/${this.session.key}/data/performance`).set(this.session.performance)
     //
-    this.angularFirestore.doc(ref).set(this.session.performance.toInterface())
+    await this.angularFirestore.doc(ref).set(this.session.performance.toInterface())
+
+    this.cloudService.evolveLevel(userKey)
 
   }
   

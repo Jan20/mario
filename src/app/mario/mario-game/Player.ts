@@ -72,9 +72,9 @@ export class Player extends MovableObject{
         this.playerHeight = .5
         this.playerWidth = .5
         this.bounds = []
-        this.enemyKillSound = new Audio('../assets/Sound/Stomp.mp3')
-        this.coinSound = new Audio('../assets/Sound/Coin.mp3')
-        
+        this.enemyKillSound = new Audio('assets/Sound/Stomp.mp3')
+        this.coinSound = new Audio('assets/Sound/Coin.mp3')
+
         this.lostLifeSound = new Howl({
         
             urls: ['../assets/Sound/LostLife.mp3'],
@@ -82,13 +82,13 @@ export class Player extends MovableObject{
         
             onplay: () => {
             
-                world.bgMusic[world.getLevelIndex()].pause()
+                world.bgMusic[0].pause()
             
             },
         
             onend: () => {
             
-                world.bgMusic[world.getLevelIndex()].play()
+                world.bgMusic[0].play()
             }
         
         })
@@ -160,15 +160,6 @@ export class Player extends MovableObject{
     
     public animIndex(): number {
 
-        if (this.world.getLevelIndex() == 2 || this.world.getLevelIndex() == 1) {
-
-            GLS.I().ANIM_SPEED = 40
-
-        } else {
-
-            GLS.I().ANIM_SPEED = 80
-
-        }
         
         if (Math.abs(this.velocity[0]) < GLS.I().WALK_CUTOFF) {
         
@@ -454,7 +445,6 @@ export class Player extends MovableObject{
             
             if (this.lives === 0) {
 
-                // need this to stop the music from playing twice, doesn't hurt the restart
                 this.pos = GLS.I().INITIAL_PLAYER_POS.slice(0);
                 gameOver()
                 this.sessionService.storeSession()
