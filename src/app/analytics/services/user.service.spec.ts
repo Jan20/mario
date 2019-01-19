@@ -4,7 +4,7 @@ import { AngularFirestore } from '@angular/fire/firestore'
 import { AngularFireModule } from '@angular/fire'
 import { environment } from 'src/environments/environment'
 import { TestService } from 'src/app/test/services/test.service';
-
+import { HttpClient, HttpHandler } from '@angular/common/http';
 
 describe('UserService', () => {
 
@@ -13,7 +13,8 @@ describe('UserService', () => {
 
       imports: [
 
-        AngularFireModule.initializeApp(environment.firebaseConfig)
+        AngularFireModule.initializeApp(environment.firebaseConfig),
+
 
       ],
       providers: [
@@ -21,7 +22,9 @@ describe('UserService', () => {
         TestService,
         UserService,
         AngularFirestore,
-
+        HttpClient,
+        HttpHandler,
+        
       ]
   
   

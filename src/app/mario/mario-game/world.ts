@@ -1,22 +1,17 @@
 import { Component, OnInit } from '@angular/core';
-import { SessionService } from '../../../analytics/services/session.service';
-import { Howl } from '../../mario-common/howler';
-import { loadImages } from '../../mario-common/textures';
-import { GLS } from '../../services/gl.service';
-import { LevelService } from '../../services/level.service';
-import { Background } from '../Background';
-import { Enemy } from '../Enemy';
-import { continueGame, finishLevel, pad, pauseGame } from '../hud';
-import { Player } from '../Player';
-import { Stage } from '../Stage';
+import { SessionService } from '../../analytics/services/session.service';
+import { Howl } from '../mario-common/howler';
+import { loadImages } from '../mario-common/textures';
+import { GLS } from '../services/gl.service';
+import { LevelService } from '../services/level.service';
+import { Background } from './Background';
+import { Enemy } from './Enemy';
+import {  finishLevel, pad } from './hud';
+import { Player } from './Player';
+import { Stage } from './Stage';
 import { Level } from 'src/app/models/level';
 
-@Component({
-    selector: 'app-world',
-    templateUrl: './world.component.html',
-    styleUrls: ['./world.component.scss']
-})
-export class World implements OnInit {
+export class World {
 
     ///////////////
     // Variables //
@@ -38,18 +33,14 @@ export class World implements OnInit {
 
     public levelTextures: any
     public level: string[][]
+    public sessionService: SessionService
 
     //////////////////
     // Constructors //
     //////////////////
-    public constructor(
+    public constructor(level: Level, sessionService: SessionService, levelService: LevelService) {
 
-        level: Level,
-        private sessionService: SessionService,
-        private levelService: LevelService,
-
-    ) {
-
+        this.sessionService = sessionService
         this.level = level.representation
 
         this.xBoundLeft = GLS.I().INITIAL_WORLD_BOUND_LEFT
@@ -189,36 +180,14 @@ export class World implements OnInit {
         document.addEventListener('keydown', function (evt) {
 
             world.keyMap[evt.keyCode] = true
-            if (evt.keyCode == 37 && !GLS.I().pauseMode) {
+            if (evt.keyCode == 37) {
                 world.player.texDir = 1
             }
-            else if (evt.keyCode == 39 && !GLS.I().pauseMode) {
+            else if (evt.keyCode == 39) {
                 world.player.texDir = 0
-                // press 'p' for pause menu
             }
-            else if (evt.keyCode == 80) {
-                GLS.I().pauseMode = 1
-                pauseGame()
-                // change to continue
-            }
-            else if (evt.keyCode == 38 && GLS.I().pauseMode) {
-                document.getElementById("selectRestart").style.display = "none"
-                document.getElementById("selectContinue").style.display = "inline"
-                GLS.I().continueOrRestart = 0
-                // change to restart
-            }
-            else if (evt.keyCode == 40 && GLS.I().pauseMode) {
-                document.getElementById("selectRestart").style.display = "inline"
-                document.getElementById("selectContinue").style.display = "none"
-                GLS.I().continueOrRestart = 1
-                // select item in pause mode with enter key
-            }
-            else if (evt.keyCode == 13 && GLS.I().pauseMode) {
-                if (GLS.I().continueOrRestart)
-                    location.reload()
-                else
-                    continueGame()
-            }
+
+         
         }, false)
         document.addEventListener('keyup', function (evt) {
             world.keyMap[evt.keyCode] = false
@@ -269,21 +238,17 @@ export class World implements OnInit {
 
     public draw(): void {
 
-        //
         // Returns true if the player has reached
         // the end of the level.
-        //
         if (this.player.pos[0] > this.stage.finishLine) {
 
-            //
             // Stores all collected gameplay information
             // of the current session at Firestore.
-            //
             this.sessionService.storeSession()
             
             //
             // Displays a gratulations screen.
-            // 
+            //
             finishLevel();
 
         }

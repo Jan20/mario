@@ -1,21 +1,24 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Subject } from 'rxjs';
-import { LevelList } from 'src/app/misc/level.list';
 import { Level } from '../../models/level';
 import { LevelInterface } from 'src/app/interfaces/level.interface';
-import { HttpClient } from '@angular/common/http';
-import { async } from 'q';
+import { SessionService } from 'src/app/analytics/services/session.service';
+import { UserService } from 'src/app/analytics/services/user.service';
+import { Session } from 'src/app/models/session';
 
 @Injectable({
+
   providedIn: 'root'
+
 })
 export class LevelService {
 
   ///////////////
   // Variables //
   ///////////////
-  public levelSubject: Subject<Level> = new Subject<Level>()
+
+  // Variable intented to store the service's current level.
   private level: Level
 
   //////////////////
@@ -24,7 +27,8 @@ export class LevelService {
   constructor(
 
     private angularFirestore: AngularFirestore,
-    private http: HttpClient,
+    private userService: UserService,
+    private sessionService: SessionService,
 
   ) { 
 
@@ -33,140 +37,171 @@ export class LevelService {
   ///////////////
   // Functions //
   ///////////////
-  public async initialize(): Promise<void> {
 
- 
-  }
-
-  
-  public storeLevelToSession(userKey: string, sessionKey: string, level: Level): void {
-
-    this.angularFirestore.doc<LevelInterface>(`users/${userKey}/sessions/${sessionKey}/data/level`).set(level.toInterface())
-
-  }
-
+  /**
+   * 
+   * @param userKey 
+   * @param sessionKey 
+   */
   public async getLevelFromServer(userKey: string, sessionKey: string): Promise<Level> {
 
-    let levelInterface: LevelInterface
+    let level: Level
 
-    await this.angularFirestore.doc<LevelInterface>(`users/${userKey}/sessions/${sessionKey}/data/level`).get().toPromise().then(level => {
+    const ref: string = `users/${userKey}/sessions/${sessionKey}/data/level`
+    
+    await this.angularFirestore.doc(ref).get().toPromise().then(result => level = Level.fromDocumentSnapshot(result))
 
-      levelInterface = {
-
-        key: level.data()['key'],
-        id: level.data()['id'],
-        line_00: level.data()['line_00'].split(''),
-        line_01: level.data()['line_01'].split(''),
-        line_02: level.data()['line_02'].split(''),
-        line_03: level.data()['line_03'].split(''),
-        line_04: level.data()['line_04'].split(''),
-        line_05: level.data()['line_05'].split(''),
-        line_06: level.data()['line_06'].split(''),
-        line_07: level.data()['line_07'].split(''),
-        line_08: level.data()['line_08'].split(''),
-        line_09: level.data()['line_09'].split(''),
-        line_10: level.data()['line_10'].split(''),
-        line_11: level.data()['line_11'].split(''),
-        line_12: level.data()['line_12'].split(''),
-        line_13: level.data()['line_13'].split(''),
-        line_14: level.data()['line_14'].split('')
-
-      }
-
-    })
-
-    return new Promise<Level>(resolve => resolve(Level.fromInterface(levelInterface)))
+    return new Promise<Level>(resolve => resolve(level))
 
   }
 
   public async getInitialLevel(levelKey: string): Promise<Level> {
 
-    let levelInterface: LevelInterface
+    let level: Level
 
-    await this.angularFirestore.doc<LevelInterface>(`levels/${levelKey}`).get().toPromise().then(level => {
+    await this.angularFirestore.doc<LevelInterface>(`levels/${levelKey}`).get().toPromise().then(result => level = Level.fromDocumentSnapshot(result))
 
-      levelInterface = {
-
-        key: level.data()['key'],
-        id: level.data()['id'],
-        line_00: level.data()['line_00'].split(''),
-        line_01: level.data()['line_01'].split(''),
-        line_02: level.data()['line_02'].split(''),
-        line_03: level.data()['line_03'].split(''),
-        line_04: level.data()['line_04'].split(''),
-        line_05: level.data()['line_05'].split(''),
-        line_06: level.data()['line_06'].split(''),
-        line_07: level.data()['line_07'].split(''),
-        line_08: level.data()['line_08'].split(''),
-        line_09: level.data()['line_09'].split(''),
-        line_10: level.data()['line_10'].split(''),
-        line_11: level.data()['line_11'].split(''),
-        line_12: level.data()['line_12'].split(''),
-        line_13: level.data()['line_13'].split(''),
-        line_14: level.data()['line_14'].split('')
-
-      }
-
-    })
-
-    return new Promise<Level>(resolve => resolve(Level.fromInterface(levelInterface)))
-
+    return new Promise<Level>(resolve => resolve(level))
 
   }
 
   /**
    * 
-   * 
+   * Retrievs the level keys from all defaul levels.
    * 
    */
   public async getLevelKeysFromInitialLevels(): Promise<string[]> {
 
+    // String array intended to store the keys of the deault levels.
     let levelKeys: string[] = []
 
-    await this.angularFirestore.collection<LevelInterface[]>(`levels`).get().toPromise().then(levels => {
+    // Retrieves all default levels from Firestore.
+    await this.angularFirestore.collection(`levels`).get().toPromise().then(levels => {
 
-      levels.forEach(level => {
-
-        levelKeys.push(level.data()['key'])
-
-      })
+      // Iterates over all default levels an writes their keys to the
+      // level key array.
+      levels.forEach(level => levelKeys.push(level.data()['key']))
 
     })
 
+    // Returns a promise referring to the level key array.
     return new Promise<string[]>(resolve => resolve(levelKeys))
 
   }
 
-  public evolve(): void {
+  /**
+   * 
+   * Loads the level for the upcoming session from a pool of 
+   * eight levels in total. The selection for the first level 
+   * happens randomely from all levels. The selection of levels 
+   * for all futher sessions takes place in the backend in which 
+   * the opponents of each further level are choosen according 
+   * to the users skill level.
+   * 
+   */
+  private async loadLevel(): Promise<Level> {
 
-    // this.http.get('https://us-central1-thesis-test-002.cloudfunctions.net/function-3')
+    // Receives the user key of the current user.
+    const userKey: string = await this.userService.getCurrentUserKey()
+
+    // Receives the session keys of all previously stored sessions.
+    const sessionKeys: string[] = await this.sessionService.getSessionKeys(userKey)
+
+    // Defines a new variable intended to store the
+    // level for the current session.
+    let level: Level
+
+    // Block should be executed if the user has not finished
+    // a single session yet.
+    if (sessionKeys.length === 0) {
+
+      // Creates a new session.
+      const session: Session = await this.sessionService.generateSession()
+
+      // Writes the newly created session to the session service.
+      this.sessionService.setSession(session)
+
+      // Retrieves the level keys of all default levels.
+      const levelKeys: string[] = await this.getLevelKeysFromInitialLevels()
+      
+      // Retrieves the index of a random level.
+      const randomIndex: number = Math.floor(Math.random() * levelKeys.length)
+      
+      // Selects a random level from the list of default levels.
+      level = await this.getInitialLevel(levelKeys[randomIndex])
+
+      // Writes the newly created level to the session service.
+      this.sessionService.setLevel(level)
+    
+    } else {
+
+      // If the user has already finished a previous level,
+      // a new session with an evolved level has been created
+      // within the service-side backend. Hence, iterating over
+      // all session keys should yield one session with the
+      // status 'created'.
+      const i: number = sessionKeys.length - 1
+
+      // Retrieves a session from Firestore.
+      const session: Session = await this.sessionService.getSession(userKey, sessionKeys[i])
+
+      // If the current session has been created but not yet
+      // finished, the level for that specific session is loaded
+      // from Firestore.
+      if (session.status === 'created') {
+
+        // Retrieves the level stored under current session from Firestore.
+        level = await this.getLevelFromServer(userKey, sessionKeys[i])
+
+        // Write the session to the session service.
+        this.sessionService.setSession(session)
+
+        // Write the freshly fetched level to the session service.
+        this.sessionService.setLevel(level)
+
+      }
+
+    }
+
+    // Returns a promise referring to the level defined above.
+    return new Promise<Level>(resolve => resolve(level))
 
   }
 
   /////////////
   // Getters //
   /////////////
+  /**
+   * 
+   * Returns the service's current level.
+   * 
+   */
   public async getLevel(): Promise<Level> {
 
-    if (this.level === undefined) {
+    // If no level has been defined yet, a new level should be loaded.
+    this.level === undefined ? this.level = await this.loadLevel() : null
+    // this.level === undefined ? this.level = await this.getLevelFromServer('user_001', 'session_002') : null
 
-      this.level = await this.getInitialLevel('level_01')
 
-    }
 
-    return this.level
+    // Returns a promise referrin to the service's current level.
+    return new Promise<Level>(resolve => resolve(this.level))
 
   }
 
   /////////////
   // Setters //
   /////////////
+  /**
+   * 
+   * Sets the service's current level to a new one.
+   * 
+   * @param level: A new instance of class Level.
+   * 
+   */
   public setLevel(level: Level): void { 
     
-    console.log(level)
     this.level = level
-    this.levelSubject.next(level)
   
   }
-
 }

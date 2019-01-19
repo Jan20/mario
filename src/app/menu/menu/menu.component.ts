@@ -26,7 +26,7 @@ export class MenuComponent implements OnInit {
 
   ) {
   
-    this.title = 'Experiment'
+    this.title = ''
     this.items = []
     this.items.push(
 
@@ -35,7 +35,8 @@ export class MenuComponent implements OnInit {
 
     )
 
-    this.user = new MenuItem('User', 'account_circle', '/user')
+    this.user = new MenuItem('User', 'flag', '/user')
+    this.user = new MenuItem('User', 'flag', '/user')
     
   
 

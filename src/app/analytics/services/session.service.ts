@@ -6,6 +6,10 @@ import { Session } from '../../models/session';
 import { Performance } from '../../models/performance';
 import { SessionInterface } from 'src/app/interfaces/session.interface';
 import { CloudService } from 'src/app/cloud/cloud.service';
+import { debug } from 'util';
+import { PerformanceInterface } from 'src/app/interfaces/performance.interface';
+import { Level } from 'src/app/models/level';
+import { Subject } from 'rxjs';
 
 @Injectable({
 
@@ -17,12 +21,16 @@ export class SessionService {
   ///////////////
   // Variabels //
   ///////////////
-  /**
-   * 
-   * Refers to an object of class Session
-   * 
-   */
-  public session: Session
+
+  // Holds a Session object.
+  private session: Session
+
+  // Holds a Level object
+  private level: Level
+
+  private consecutiveSessions: string[] = []
+
+  public sessionSubject: Subject<string> = new Subject<string>()
 
   //////////////////
   // Constructors //
@@ -40,59 +48,52 @@ export class SessionService {
   ///////////////
   /**
    * 
-   * 
+   * Retrieves the keys of all sessions stored
+   * for a given user.
    * 
    */
   public async getSessionKeys(userKey: string): Promise<string[]> {
 
+    // Defines a string array intended to stored all session keys.
     let sessionKeys: string[] = []
 
-    await this.angularFirestore.collection<Session[]>(`users/${userKey}/sessions`).get().toPromise().then(sessions => {
+    // Retrieves all sessions for a given user from Firestore.
+    await this.angularFirestore.collection(`users/${userKey}/sessions`).get().toPromise().then(sessions => {
 
+      // Pushes all session keys to the sessionKey array.
       sessions.forEach(session => sessionKeys.push(session.data().key))
 
     })
 
+    // Returns a promise referring to the session keys arrays
     return new Promise<string[]>(resolve => resolve(sessionKeys))
     
   }
 
   /**
    * 
+   * Genereates a new session object.
    * 
    */
-  public async generateSession(): Promise<string> {
+  public async generateSession(): Promise<Session> {
 
-    //
-    // Gets the highest previous session ID and increases the number by one.
-    //
-    const id: number = await this.getHighestSessionId() + 1
+    // Gets the current user's Id.
+    const userKey: string = await this.userService.getCurrentUserKey()
 
-    //
-    // Writes the current session key to the session object that is going
-    // to be stored at Firestore.
-    //
+    // Gets the highest session Id for the given user and increases the number by one.
+    const id: number = await this.getHighestSessionId(userKey) + 1
+
+    // Creates a session key for the current session based on the previously defined id.
     const key: string = generateKey('session', id)
 
-    //
-    //
-    //
-    const status: string = 'created'
-
-    //
-    //
-    //
+    // Creates a new Performance object which values are initialized with zeros.
     const performance: Performance = new Performance(0, 0, 0, 0)
 
-    //
-    // Initializes a new empty session.
-    //
-    this.session = new Session(key, id, status, performance)
+    // Initializes a new session object.
+    const session: Session = new Session(key, id, 'created', performance)
 
-    //
-    // Returns the freshly created session key. 
-    // 
-    return new Promise<string>(resolve => resolve(key))
+    // Returns a promise referring to the freshly created session.
+    return new Promise<Session>(resolve => resolve(session))
 
   }
 
@@ -103,27 +104,23 @@ export class SessionService {
    * with the highest Id.
    * 
    */
-  private async getHighestSessionId(): Promise<number> {
-
-    //
-    // Gets the current user's ID.
-    //
-    const userKey: string = await this.userService.getCurrentUserKey()
+  private async getHighestSessionId(userKey: string): Promise<number> {
     
-    //
-    // Stores the temporarily highest session id.
-    //
+    // Variable intended to store the highest session id.
     let highestSessionId: number = 0
 
-    //
-    // Accesses a Firestore database
-    //
-    await this.angularFirestore.collection<Session[]>(`users/${userKey}/sessions`).get().toPromise().then(sessions => {
+    // Retrieves all sessions for the given user.
+    await this.angularFirestore.collection(`users/${userKey}/sessions`).get().toPromise().then(sessions => {
       
-      // Itereates through all sessions and compares whether the session's id
-      // is heighter than the current highestSessionId. If this is the case,
-      // the value of highestSessionId is replaced by the session's id.
-      sessions.docs.forEach(session => session.data().id > highestSessionId ? highestSessionId = session.data().id : null)
+      // Itereates over all sessions
+      sessions.docs.forEach(session => {
+        
+        // Compares whether the id of the current session is higher than previously
+        // stored highest session id. When this is the session id stored within the
+        // 'highestSessionId" variable is replaced by the id of the current session.
+        session.data()['id'] > highestSessionId ? highestSessionId = session.data()['id'] : null
+      
+      })
 
     })
 
@@ -134,46 +131,35 @@ export class SessionService {
 
   /**
    * 
-   * Stores the current session at Firestore.
+   * Stores the current session persistently and calls
+   * the project's backend in order to present the user
+   * a level with a 
    * 
    */
   public async storeSession(): Promise<void> {
 
-    //
     // Gets the userId of the current user Id from UserService
-    //
     const userKey: string = await this.userService.getCurrentUserKey()
 
-    //
-    //
-    //
-    await this.angularFirestore.doc(`users/${userKey}/sessions/${this.session.key}`).set({
+    // Firestore document references.
+    const ref: string = `users/${userKey}/sessions/${this.session.key}`
 
-      key: this.session.key,
-      id: this.session.id,
-      status: 'done'
+    // Retrieves the level of the current session.
+    const level: Level = this.getLevel()
 
-    })
+    // Stores the current session at Firestore.
+    await this.angularFirestore.doc(ref).set({key: this.session.key, id: this.session.id, status: 'finished'})
+    await this.angularFirestore.doc(ref+`/data/performance`).set(this.session.performance.toInterface())
+    await this.angularFirestore.doc(ref+`/data/level`).set(level.toInterface())
 
-    //
-    //
-    //
-    const ref: string = `users/${userKey}/sessions/${this.session.key}/data/performance`
+    // Calls the backend in order to 
+    await this.cloudService.evolveLevel(userKey)
 
-    //
-    // Creates a new session at firestore database.
-    // this.angularFirestore.doc(`users/${user.key}/sessions/${this.session.key}`).set({id: this.session.id})
-    // this.angularFirestore.doc(`users/${user.key}/sessions/${this.session.key}/data/performance`).set(this.session.performance)
-    //
-    await this.angularFirestore.doc(ref).set(this.session.performance.toInterface())
-
-    this.cloudService.evolveLevel(userKey)
+    this.sessionSubject.next('stored')
 
   }
   
   /**
-   * 
-   * 
    * 
    * 
    * @param userKey 
@@ -185,19 +171,51 @@ export class SessionService {
     //
     //
     let session: Session
+    let performance: Performance
 
     //
     //
     //
-    this.angularFirestore.doc<SessionInterface>(`users/${userKey}/sessions/${sessionKey}`).get().toPromise().then(sessionInterface => {
+    const performanceReference: string = `users/${userKey}/sessions/${sessionKey}/data/performance`
+
+    await this.angularFirestore.doc(performanceReference).get().toPromise().then(performanceInterface => {
+      
+      if (performanceInterface.data() != undefined) {
+
+        performance = new Performance(
+     
+          performanceInterface.data()['defeated_by_gaps'],
+          performanceInterface.data()['defeated_by_opponent_type_1'],
+          performanceInterface.data()['defeated_by_opponent_type_2'],
+          performanceInterface.data()['defeated_by_opponent_type_3']    
+  
+        )
+
+      } else {
+
+        performance = new Performance(0, 0, 0, 0)
+      
+      }
+      
+    })
+
+    //
+    //
+    //
+    const sessionReference = `users/${userKey}/sessions/${sessionKey}`
+
+    //
+    //
+    //
+    await this.angularFirestore.doc(sessionReference).get().toPromise().then(sessionInterface => {
 
       session = new Session(
         
-        sessionInterface.data().key,
-        sessionInterface.data().id,
-        sessionInterface.data().status,
-        sessionInterface.data().performance,
-        
+        sessionInterface.data()['key'],
+        sessionInterface.data()['id'],
+        sessionInterface.data()['status'],
+        performance
+
       )
 
     })
@@ -213,51 +231,52 @@ export class SessionService {
    */
   public async deleteSession(userKey: string, sessionKey: string): Promise<void> {
 
-    this.angularFirestore.doc(`users/${userKey}/sessions/${sessionKey}`).delete()
+    await this.angularFirestore.doc(`users/${userKey}/sessions/${sessionKey}`).delete()
 
   }
 
-  // public async getLevel(userKey: string, sessionKey: string): Promise<Level> {
+    
+  /////////////
+  // Getters //
+  /////////////
+  /**
+   * 
+   * Returns the session's level.
+   * 
+   */
+  public getLevel(): Level {
 
-  //   //
-  //   //
-  //   //
-  //   let level: Level
+    return this.level
 
-  //   const ref: string = `users/${userKey}/sessions/${sessionKey}/data/level`
+  }
 
-  //   this.angularFirestore.doc<LevelInterface>(ref).get().toPromise().then(levelInterface => {
+  /////////////
+  // Setters //
+  /////////////
+  /**
+   * 
+   * Sets a 
+   * 
+   * @param session: A new object of class Session
+   * 
+   */
+  public setSession(session: Session): void { 
+    
+    this.session = session 
+  
+  }
 
-  //     const representation: string[][] = []
 
-  //     representation.push(
-        
-  //       levelInterface.data().line_00,
-  //       levelInterface.data().line_01,
-  //       levelInterface.data().line_02,
-  //       levelInterface.data().line_03,
-  //       levelInterface.data().line_04,
-  //       levelInterface.data().line_05,
-  //       levelInterface.data().line_06,
-  //       levelInterface.data().line_07,
-  //       levelInterface.data().line_08,
-  //       levelInterface.data().line_09,
-  //       levelInterface.data().line_10,
-  //       levelInterface.data().line_11,
-  //       levelInterface.data().line_12,
-  //       levelInterface.data().line_13,
-  //       levelInterface.data().line_14
-      
-  //     )
+  public setLevel(level: Level): void {
 
-  //     level = new Level(levelInterface.data().key, levelInterface.data().id, representation)
+    this.level = level
 
-  //   })
+  }
 
-  //   return new Promise<Level>(resolve => resolve(level))
 
-  // }
-
+  //////////////////////
+  // Helper Functions //
+  //////////////////////
   /**
    * 
    * 
@@ -274,10 +293,10 @@ export class SessionService {
    * 
    * 
    */
-  public increaseDefeatedByOpponentType1(): void {
-
-    this.session.performance.defeatedByOpponentType1 += 1
-
+  public increaseDefeatedByOpponentType1(): void { 
+    
+    this.session.performance.defeatedByOpponentType1 += 1 
+  
   }
 
   /**

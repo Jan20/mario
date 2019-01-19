@@ -23,25 +23,57 @@ export class Level {
     ///////////////
     // Functions //
     ///////////////
+    public static fromDocumentSnapshot(result: firebase.firestore.DocumentSnapshot): Level {
+        
+        return new Level(
+
+            result.data().key,
+            result.data().id,
+            [
+              Array.from(result.data().line_00),
+              Array.from(result.data().line_01),
+              Array.from(result.data().line_02),
+              Array.from(result.data().line_03),
+              Array.from(result.data().line_04),
+              Array.from(result.data().line_05),
+              Array.from(result.data().line_06),
+              Array.from(result.data().line_07),
+              Array.from(result.data().line_08),
+              Array.from(result.data().line_09),
+              Array.from(result.data().line_10),
+              Array.from(result.data().line_11),
+              Array.from(result.data().line_12),
+              Array.from(result.data().line_13),
+              Array.from(result.data().line_14)
+            ]
+    
+        )
+    }
+
+
     public static fromInterface(levelInterface: LevelInterface): Level {
       
+        console.log('fromInterface')
+        console.log(levelInterface)
+        console.log(Array.from(levelInterface.line_00))
+
         const representation: string[][] = [
             
-            levelInterface.line_00,
-            levelInterface.line_01,
-            levelInterface.line_02,
-            levelInterface.line_03,
-            levelInterface.line_04,
-            levelInterface.line_05,
-            levelInterface.line_06,
-            levelInterface.line_07,
-            levelInterface.line_08,
-            levelInterface.line_09,
-            levelInterface.line_10,
-            levelInterface.line_11,
-            levelInterface.line_12,
-            levelInterface.line_13,
-            levelInterface.line_14,
+            Array.from(levelInterface.line_00),
+            Array.from(levelInterface.line_01),
+            Array.from(levelInterface.line_02),
+            Array.from(levelInterface.line_03),
+            Array.from(levelInterface.line_04),
+            Array.from(levelInterface.line_05),
+            Array.from(levelInterface.line_06),
+            Array.from(levelInterface.line_07),
+            Array.from(levelInterface.line_08),
+            Array.from(levelInterface.line_09),
+            Array.from(levelInterface.line_10),
+            Array.from(levelInterface.line_11),
+            Array.from(levelInterface.line_12),
+            Array.from(levelInterface.line_13),
+            Array.from(levelInterface.line_14),
         
         ]
 
@@ -55,22 +87,21 @@ export class Level {
 
             'key': this.key,
             'id': this.id,
-            'line_00': this.representation[0],
-            'line_01': this.representation[1],
-            'line_02': this.representation[2],
-            'line_03': this.representation[3],
-            'line_04': this.representation[4],
-            'line_05': this.representation[5],
-            'line_06': this.representation[6],
-            'line_07': this.representation[7],
-            'line_08': this.representation[8],
-            'line_09': this.representation[9],
-            'line_10': this.representation[10],
-            'line_11': this.representation[11],
-            'line_12': this.representation[12],
-            'line_13': this.representation[13],
-            'line_14': this.representation[14]
-
+            'line_00': this.representation[0].join(''),
+            'line_01': this.representation[1].join(''),
+            'line_02': this.representation[2].join(''),
+            'line_03': this.representation[3].join(''),
+            'line_04': this.representation[4].join(''),
+            'line_05': this.representation[5].join(''),
+            'line_06': this.representation[6].join(''),
+            'line_07': this.representation[7].join(''),
+            'line_08': this.representation[8].join(''),
+            'line_09': this.representation[9].join(''),
+            'line_10': this.representation[10].join(''),
+            'line_11': this.representation[11].join(''),
+            'line_12': this.representation[12].join(''),
+            'line_13': this.representation[13].join(''),
+            'line_14': this.representation[14].join(''),
         }
 
         return levelInterface

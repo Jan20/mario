@@ -3,7 +3,7 @@ import { Timer } from '../mario-common/timer'
 import { mult, flatten, mat4, translate } from '../mario-common/MV'
 import { texCoord } from '../mario-common/textures';
 import { GLS } from '../services/gl.service'
-import { World } from './world/world.component';
+import { World } from './world';
 
 const ENEMY_XVELO_CONSTANT = .025
 const ENEMY_GRAVITY_CONSTANT = -.0075
@@ -203,11 +203,9 @@ export class Enemy extends MovableObject{
 
     public draw(): void {
 
-        if (!GLS.I().pauseMode) {
 
             this.move()
 
-        }
 
         var ctm = mat4()
         

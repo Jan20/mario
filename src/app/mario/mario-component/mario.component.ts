@@ -6,7 +6,7 @@ import { initShaders } from '../mario-common/InitShaders';
 import { flatten, mat4, mult, translate, vec3 } from '../mario-common/MV';
 import { WebGLUtils } from '../mario-common/webgl-utils';
 import { myTimer, resetTimer } from '../mario-game/hud';
-import { World } from '../mario-game/world/world.component';
+import { World } from '../mario-game/world';
 import { GLS } from '../services/gl.service';
 import { LevelService } from '../services/level.service';
 import { Level } from 'src/app/models/level';
@@ -28,6 +28,7 @@ export class MarioComponent implements OnInit, AfterViewInit  {
      *
      */
     @ViewChild('canvas') canvas: ElementRef
+    public isStored: boolean
 
     //////////////////
     // Constructors //
@@ -39,170 +40,90 @@ export class MarioComponent implements OnInit, AfterViewInit  {
      */
     public constructor(
 
-        private userService: UserService,
         private sessionService: SessionService,
         private levelService: LevelService
 
     ) {
 
-        this.levelService.initialize()
+        this.sessionService.sessionSubject.subscribe(status => {
 
-    }   
-
-    /**
-     * 
-     * Loads the level for the upcoming session
-     * from a pool of eight levels in total. The
-     * selection for the first level happens 
-     * randomely from all levels. The selection of
-     * levels for all futher sessions takes place in 
-     * the backend in which the opponents of each
-     * further level are choosen according to the
-     * users skill level.
-     * 
-     */
-    async loadLevel(): Promise<string> {
-
-        //
-        // Receives the user key of the current user.
-        //
-        const userKey: string = await this.userService.getCurrentUserKey()
-
-        //
-        // Gets the session keys of all previous levels.
-        //
-        const sessionKeys: string[] = await this.sessionService.getSessionKeys(userKey)
-
-        //
-        // Defines a new variable intended to store the
-        // level for the current session.
-        // 
-        let level: Level
-
-        //
-        // If the user has not finished a single session
-        // yet, a ran
-        //
-        if (sessionKeys.length === 0 ) {
-
-            const levelKeys: string[] = await this.levelService.getLevelKeysFromInitialLevels()
-            
-            const randomNumber: number = Math.floor(Math.random() * levelKeys.length)
-            
-            const level: Level = await this.levelService.getInitialLevel(levelKeys[randomNumber])
-            // const level: Level = await this.levelService.getInitialLevel('level_42')
-
-            //
-            // Sets the choosen level to the level service.
-            //
-            console.log(level)
-            await this.levelService.setLevel(level)
-
-            return `Level ${level.key} has been selected.`
-
-        }
-
-        //
-        // If the user has already finished a previous level,
-        // a new session with an evolved level has been created
-        // within the service-side backend. Hence, iterating over
-        // all session keys should yield one session with the
-        // status 'created'.
-        //
-        sessionKeys.forEach(async sessionKey => {
-
-            //
-            // Retrieves a session from Firestore.
-            //
-            const session: Session = await this.sessionService.getSession(userKey, sessionKey)
-            
-            //
-            // If the current session has been created but not yet
-            // finished, the level for that specific session is loaded
-            // from Firestore.
-            //
-            session.status === 'created' ? level = await this.levelService.getLevelFromServer(userKey, sessionKey) : null
-            
-            //
-            // Returns a response referring to the key of the selected level.
-            //
-            return `Level ${level.key} has been selected.`
+            status === 'stored' ? this.isStored = true : this.isStored = false
 
         })
 
-    }
 
+    }   
 
-    /**
-     * 
-     *   
-     * 
-     */
-    async ngOnInit(): Promise<void> {
-
-        // this.sessionService.generateSession()
-
-        // document.getElementById("start").style.display = "none";
-        // GLS.I().gameScreen = 0;
-        // this.init();
-    }
-
-    public TITLE_MAP = {
-
-        0: 'Mario',
     
+
+    async ngOnInit(): Promise<void> {}
+
+    public startLevel() {
+
+        this.test()
+
     }
 
+    private async test(): Promise<void> {
+
+        document.getElementById("start").style.display = "none";
+        GLS.I().gameScreen = 0;
+
+        console.log('Level is going to be initialized')
+        const level: Level = await this.levelService.getLevel()
+        console.log(level)
+        this.init(level)
+
+    }
+
+    // /**
+    //  * 
+    //  * @param event 
+    //  */
+    // @HostListener('document:keydown', ['$event'])
+    // async handleKeyboardEvent(event: KeyboardEvent) { 
+    //     location.reload();
+
+    //    if (event.key === 'Enter') {
+            
+    //         document.getElementById("start").style.display = "none";
+    //         GLS.I().gameScreen = 0;
+
+    //         console.log('Level is going to be initialized')
+    //         const level: Level = await this.levelService.getLevel()
+    //         console.log(level)
+    //         this.init(level)
+
+    //     } 
+
+    // }
+
+
+    
     /**
      * 
      * @param event 
+     *
      */
     @HostListener('document:keydown', ['$event'])
-    async handleKeyboardEvent(event: KeyboardEvent) { 
+    async handleKey(event: KeyboardEvent) { 
 
-        if (event.keyCode == 38 && GLS.I().gameScreen) {
-        
-            if (GLS.I().stage-1 >= 0) {
-        
-                let current = document.getElementById(GLS.I().stage.toString())
-                let previous = document.getElementById((GLS.I().stage-1).toString())
+       if (event.key === 'Enter' && this.isStored === true && GLS.I().gameScreen) {
+            location.reload();
 
-                previous.style.display = "inline";
-                current.style.display = "none";
-                GLS.I().stage -= 1;
-                document.getElementById("stage-title").innerHTML = this.TITLE_MAP[GLS.I().stage];
-            }
-
-        } else if (event.keyCode == 40 && GLS.I().gameScreen) {
-            
-            if (GLS.I().stage+1 <= 3) {
-            
-                var current = document.getElementById(GLS.I().stage.toString());
-                var next = document.getElementById((GLS.I().stage+1).toString());
-                next.style.display = "inline";
-                current.style.display = "none";
-                GLS.I().stage += 1;
-                document.getElementById("stage-title").innerHTML = this.TITLE_MAP[GLS.I().stage];
-
-            }
-        
-            // select stage to play
-        } else if ((event.keyCode == 13 || event.keyCode == 32) && GLS.I().gameScreen) {
-            
             document.getElementById("start").style.display = "none";
             GLS.I().gameScreen = 0;
 
-            await this.loadLevel()
             console.log('Level is going to be initialized')
+            const level: Level = await this.levelService.getLevel()
+            console.log(level)
+            this.init(level)
 
-            await this.init();
         } 
 
     }
-    
 
-    private async init() {
-
+    private async init(level: Level) {
 
         GLS.I().lightPosition = vec3(0.0, 15.0, -1.0)
 
@@ -218,7 +139,6 @@ export class MarioComponent implements OnInit, AfterViewInit  {
         GLS.I().GL.enable(GLS.I().GL.DEPTH_TEST);
         GLS.I().GL.enable(GLS.I().GL.BLEND);
         GLS.I().GL.blendFunc( GLS.I().GL.SRC_ALPHA,  GLS.I().GL.ONE_MINUS_SRC_ALPHA);
-        //GL.blendFuncSeparate(GL.ONE_MINUS_DST_COLOR, GL.SRC_COLOR, GL.SRC_ALPHA, GL.CONSTANT_SRC_ALPHA);
 
         //
         //  Load shaders and initialize attribute buffers
@@ -245,7 +165,7 @@ export class MarioComponent implements OnInit, AfterViewInit  {
         // set initial camera position
         GLS.I().CAMERA_POS = GLS.I().INITIAL_CAMERA_POS.slice(0);
 
-        const level = await this.levelService.getLevel()
+        // const level = await this.levelService.getLevel()
 
         GLS.I().GAMEWORLD = new World(level, this.sessionService, this.levelService);
 

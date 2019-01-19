@@ -29,7 +29,8 @@ export class TestService {
     await this.angularFirestore.doc(`users/${Samples.sampleUser.key}/sessions/${Samples.sampleSession.key}`).set({
 
       key: Samples.sampleSession.key,
-      id: Samples.sampleSession.id
+      id: Samples.sampleSession.id,
+      status: Samples.sampleSession.status,
 
     })
 

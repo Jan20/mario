@@ -2,7 +2,8 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AnalyticsComponent } from './analytics.component';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { FirestoreStub } from 'src/app/misc/firestore.stub';
+import { AngularFireModule } from '@angular/fire';
+import { environment } from 'src/environments/environment';
 
 describe('AnalyticsComponent', () => {
   let component: AnalyticsComponent;
@@ -11,9 +12,16 @@ describe('AnalyticsComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ AnalyticsComponent ],
+
+      imports: [
+
+        AngularFireModule.initializeApp(environment.firebaseConfig)
+
+      ],
+
       providers: [
         
-        { provide: AngularFirestore, useValue: FirestoreStub },
+        AngularFirestore
       
       ]  
     })

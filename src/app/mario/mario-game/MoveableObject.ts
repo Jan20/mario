@@ -1,4 +1,4 @@
-import { World } from "./world/world.component";
+import { World } from "./world";
 
 /* MovableObject class
 - goomba, koopa, enemies, Player, anything that moves/has lives
@@ -20,7 +20,7 @@ export class MovableObject {
 	//////////////////
 	// Constructors //
 	//////////////////
-	public constructor(world, pos, velocity, lives) {
+	public constructor(world: World, pos, velocity, lives) {
 	
 		this.world = world
 		this.pos = pos

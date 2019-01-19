@@ -1,7 +1,7 @@
 // below defines your custom color to build a theme palette from
 $mat-white: (
 
-    50: #ffffff,
+    50: rgba(255, 3, 255, 0),
     100: #ffcdd2,
     200: #ef9a9a,
     300: #e57373,
@@ -17,7 +17,7 @@ $mat-white: (
     A700: #d50000,
   
     contrast: (
-      50: grey,
+      50: rgba(255, 3, 255, 0),
       100: grey,
       200: grey,
       300: grey,

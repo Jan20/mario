@@ -1,11 +1,12 @@
 import { TestBed } from '@angular/core/testing';
-
 import { SessionService } from './session.service';
 import { AngularFireModule } from '@angular/fire';
 import { environment } from 'src/environments/environment';
 import { TestService } from 'src/app/test/services/test.service';
 import { AngularFirestore } from '@angular/fire/firestore';
+import { HttpClient, HttpHandler } from '@angular/common/http';
 import { Samples } from 'src/app/misc/samples';
+import { Session } from 'src/app/models/session';
 
 describe('SessionService', () => {
 
@@ -20,6 +21,8 @@ describe('SessionService', () => {
 
       AngularFirestore,
       TestService,
+      HttpClient,
+      HttpHandler,
 
     ],
 
@@ -44,20 +47,22 @@ describe('SessionService', () => {
   })
   
 
-  it("generateSession() should return 'session_001'.", async () => {
-    
+  // it("generateSession() should return 'session˚
+
+  it("getSession() should return 'session", async () => {
+
     const testService: TestService = TestBed.get(TestService)
     const sessionService: SessionService = TestBed.get(SessionService)
 
     await testService.setUp()
-    
 
-    const result: string = await sessionService.generateSession()
-    const expectedResult: string = 'session_001'
+    const result: Session = await sessionService.getSession(Samples.sampleUser.key, Samples.sampleSession.key)
+    const expectedResult: Session = Samples.sampleSession
 
-    expect(result).toEqual(expectedResult)
+    expect(result.toInterface()).toEqual(expectedResult.toInterface())
 
     await testService.cleanUp()
+
 
   })
 

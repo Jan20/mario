@@ -4,7 +4,8 @@ import { MenuModule } from './menu/menu.module';
 import { RouterModule } from '@angular/router';
 import { SurveyModule } from './survey/survey.module';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { FirestoreStub } from './misc/firestore.stub';
+import { AngularFireModule } from '@angular/fire';
+import { environment } from 'src/environments/environment';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
@@ -17,12 +18,12 @@ describe('AppComponent', () => {
         MenuModule,
         RouterModule,
         SurveyModule,
-
+        AngularFireModule.initializeApp(environment.firebaseConfig)
 
       ],
       providers: [
         
-        { provide: AngularFirestore, useValue: FirestoreStub },
+        AngularFirestore
       
       ]  
     }).compileComponents();

@@ -10,7 +10,7 @@ import { PowerUp } from './PowerUp'
 import { Stage } from './Stage'
 import { Injectable } from '@angular/core';
 import { SessionService } from '../../analytics/services/session.service';
-import { World } from './world/world.component';
+import { World } from './world';
 import { LevelService } from '../services/level.service';
 
 @Injectable()
@@ -51,9 +51,9 @@ export class Player extends MovableObject{
         private levelService: LevelService,
         
     ) {
+
         super(world, GLS.I().INITIAL_PLAYER_POS.slice(0), GLS.I().INITIAL_PLAYER_VEL.slice(0), GLS.I().INITIAL_PLAYER_LIVES)
 
-        this.sessionService.generateSession()
         this.projectileTimer = new Timer()
         this.hasProjectiles = false
         this.texDir = 0
@@ -121,11 +121,10 @@ export class Player extends MovableObject{
     
     draw() {
         
-        if (!GLS.I().pauseMode) {
 
             this.move()
 
-        }
+        
         
         let ctm = mat4()
 
@@ -220,7 +219,7 @@ export class Player extends MovableObject{
         
             this.velocity[1] < 0 ? this.velocity[1] = 0 : null
 
-            if ((keyMap[38]) && !this.collisionUp && !GLS.I().pauseMode) {
+            if ((keyMap[38]) && !this.collisionUp) {
 
                 this.velocity[1] = GLS.I().JUMP_CONSTANT
 
@@ -248,14 +247,14 @@ export class Player extends MovableObject{
 
         // Set X velocity and handle friction
         // 'leftArrow' 
-        if (keyMap[37] && !GLS.I().pauseMode) {
+        if (keyMap[37]) {
 
             this.velocity[0] += -GLS.I().X_VELO_CONSTANT
 
         }
 
         // 'rightArrow' 
-        if (keyMap[39] && !GLS.I().pauseMode)
+        if (keyMap[39])
             this.velocity[0] += GLS.I().X_VELO_CONSTANT
         this.velocity[0] *= GLS.I().X_GROUND_FRICTION
         // HANDLE STAGE COLLISIONS, using boundary positions

@@ -20,7 +20,16 @@ export class CloudService {
 
     const params: HttpParams = new HttpParams().set('user_key', userKey);
   
-    await this.http.get(url, { params: params, responseType: 'text'}).toPromise().then(resturnValue => result = resturnValue)
+    await this.http.get(url, { params: params, responseType: 'text'}).toPromise().then(resturnValue => {
+
+      result = resturnValue
+    
+    }).catch(error => {
+
+      result = `An unexpected error has occurred: ${error}`
+
+    })
+    
     return new Promise<any>(resolve => resolve(result))
 
   }
@@ -30,7 +39,16 @@ export class CloudService {
     const url: string = `${environment.cloudFunctions.backend}/cluster_cloud_function`
     let result: any
     
-    await this.http.get(url, {responseType: 'text'}).toPromise().then(resturnValue => result = resturnValue)
+    await this.http.get(url, {responseType: 'text'}).toPromise().then(resturnValue => {
+
+      result = resturnValue
+    
+    }).catch(error => {
+
+      result = `An unexpected error has occurred: ${error}`
+
+    })
+
     return new Promise<any>(resolve => resolve(result))
 
   }
@@ -42,7 +60,16 @@ export class CloudService {
 
     let params: HttpParams = new HttpParams().set('user_key', userKey)
     
-    await this.http.get(url, { params: params, responseType: 'text'}).toPromise().then(resturnValue => result = resturnValue)
+    await this.http.get(url, { params: params, responseType: 'text'}).toPromise().then(resturnValue => {
+      
+      result = resturnValue
+    
+    }).catch(error => {
+
+      result = `An unexpected error has occurred: ${error}`
+
+    })
+
     return new Promise<any>(resolve => resolve(result))
 
   }

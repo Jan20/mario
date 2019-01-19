@@ -99,10 +99,9 @@ export class PowerUp extends MovableObject{
 
     draw() {
     
-        if (!GLS.I().pauseMode) {
     
             this.move();
-        }
+    
     
         var ctm = mat4();
     

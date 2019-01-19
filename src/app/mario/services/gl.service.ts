@@ -1,6 +1,6 @@
 import { perspective, radians, vec3 } from "../mario-common/MV";
 import { Injectable } from '@angular/core';
-import { World } from "../mario-game/world/world.component";
+import { World } from "../mario-game/world";
 
 export class GLS {
 
@@ -45,7 +45,6 @@ export class GLS {
     /////////////////////////////
     // World Related Constants //
     /////////////////////////////
-    public pauseMode: number = 0;
     public continueOrRestart: number = 0; // continue = 0; restart = 1;
     public INITIAL_WORLD_BOUND_LEFT: number = 0;
     public INITIAL_WORLD_BOUND_RIGHT: number = 14;

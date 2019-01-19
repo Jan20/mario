@@ -3,18 +3,21 @@ import { AngularFireModule } from '@angular/fire';
 import { environment } from 'src/environments/environment';
 import { TestService } from 'src/app/test/services/test.service';
 import { AngularFirestore } from '@angular/fire/firestore';
+import { HttpClient, HttpHandler } from '@angular/common/http';
 
 describe('TestService', () => {
   beforeEach(() => TestBed.configureTestingModule({
     
     imports: [
 
-      AngularFireModule.initializeApp(environment.firebaseConfig)
+      AngularFireModule.initializeApp(environment.firebaseConfig),
 
     ],
     providers: [
 
-      AngularFirestore      
+      AngularFirestore,      
+      HttpClient,
+      HttpHandler,
     
     ],
 

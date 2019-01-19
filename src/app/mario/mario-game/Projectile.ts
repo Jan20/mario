@@ -3,7 +3,7 @@ import { mat4, mult, translate, rotate, flatten } from "../mario-common/MV"
 import { MovableObject } from "./MoveableObject"
 import { texCoord } from "../mario-common/textures"
 import { LevelService } from "../services/level.service";
-import { World } from "./world/world.component";
+import { World } from "./world";
 
 var PROJECTILE_X_VELO = GLS.I().X_VELO_CONSTANT * 12
 
@@ -108,9 +108,8 @@ export class Projectile extends MovableObject{
         }
     }
     draw() {
-        if (!GLS.I().pauseMode) {
             this.move();
-        }
+        
         var ctm = mat4();
         ctm = mult(ctm, translate([0, 0, 0.5]));
         ctm = mult(ctm, translate(this.pos));

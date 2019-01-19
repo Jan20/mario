@@ -1,4 +1,4 @@
-import { TestBed, async } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 
 import { CloudService } from './cloud.service';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
@@ -6,11 +6,12 @@ import { TestService } from '../test/services/test.service';
 import { AngularFireModule } from '@angular/fire';
 import { environment } from 'src/environments/environment';
 import { AngularFirestore } from '@angular/fire/firestore';
+import { Samples } from '../misc/samples';
 
 describe('CloudService', () => {
   beforeEach(() => {
 
-    jasmine.DEFAULT_TIMEOUT_INTERVAL = 20000
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000
 
     TestBed.configureTestingModule({
 
@@ -29,7 +30,7 @@ describe('CloudService', () => {
 
     ]
     })
-  })
+  }) 
   
   it('should be created', () => {
 
@@ -69,20 +70,20 @@ describe('CloudService', () => {
  
   })
 
-  it('evolveLevel() should return "Level level_01 has been evolved."', async () => {
+  it('evolveLevel() should return "Session session_43 has been evolved."', async () => {
 
     const testService: TestService = TestBed.get(TestService);
     const cloudService: CloudService = TestBed.get(CloudService);
 
     await testService.setUp()
     
-    const result: string = await cloudService.evolveLevel('user_042', 'session_042', 'level_01')
-    const expectedResult: string = 'Level level_01 has been evolved.'
+    const result: string = await cloudService.evolveLevel(Samples.sampleUser.key)
+    const expectedResult: string = 'Session session_043 has been created.'
 
     expect(result).toEqual(expectedResult)
 
     await testService.cleanUp()
  
   })
-
+ 
 })

@@ -38,19 +38,6 @@ export function pad ( num ) {
 		return num;
 };
 
-export function pauseGame() {
-    var pauseMenu = document.getElementById("pause");
-    pauseMenu.style.display = "block";
-    clearTimeout(timer);
-};
-
-export function continueGame() {
-	var pauseMenu = document.getElementById("pause");
-	pauseMenu.style.display = "none";
-	startTime = new Date().getTime();
-	myTimer();
-	GLS.I().pauseMode = 0;
-};
 
 export function gameOver() {
     var gg = document.getElementById("gg");

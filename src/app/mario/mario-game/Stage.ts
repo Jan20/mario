@@ -1,7 +1,7 @@
 import { quad } from "../mario-common/webgl-utils";
 import { mat4, flatten } from "../mario-common/MV";
 import { GLS } from "../services/gl.service";
-import { World } from "./world/world.component";
+import { World } from "./world";
 
 export class Stage {
 
@@ -122,10 +122,9 @@ export class Stage {
                     this.runningSum[square][i] += 30
                     
                     if (this.stage[j][i] == 'Z') {
-                        console.log('________________HEY HERE I AM_________________')
-                        console.log(i)
-                        console.log(j)
+
                         this.finishLine = x;
+
                     }
                 }
             }
