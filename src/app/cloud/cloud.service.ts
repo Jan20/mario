@@ -15,7 +15,7 @@ export class CloudService {
 
   public async normalizeUserData(userKey: string): Promise<any> {
     
-    const url: string = `${environment.cloudFunctions.backend}/normalization_cloud_function`
+    const url: string = `${environment.cloudBackend.backend}/normalization_cloud_function`
     let result: any
 
     const params: HttpParams = new HttpParams().set('user_key', userKey);
@@ -36,7 +36,7 @@ export class CloudService {
   
   public async createClusters(): Promise<any> {
 
-    const url: string = `${environment.cloudFunctions.backend}/cluster_cloud_function`
+    const url: string = `${environment.cloudBackend.backend}/cluster_cloud_function`
     let result: any
     
     await this.http.get(url, {responseType: 'text'}).toPromise().then(resturnValue => {
@@ -55,12 +55,12 @@ export class CloudService {
 
   public async evolveLevel(userKey: string): Promise<any> {
 
-    const url: string = `${environment.cloudFunctions.backend}/evolution_cloud_function`
+    const url: string = `${environment.cloudBackend.backend}/evolution_cloud_function`
     let result: any
 
     let params: HttpParams = new HttpParams().set('user_key', userKey)
     
-    await this.http.get(url, { params: params, responseType: 'text'}).toPromise().then(resturnValue => {
+    await this.http.get(url, {params: params, responseType: 'text'}).toPromise().then(resturnValue => {
       
       result = resturnValue
     

@@ -1,4 +1,3 @@
-import { Component, OnInit } from '@angular/core';
 import { SessionService } from '../../analytics/services/session.service';
 import { Howl } from '../mario-common/howler';
 import { loadImages } from '../mario-common/textures';
@@ -6,7 +5,6 @@ import { GLS } from '../services/gl.service';
 import { LevelService } from '../services/level.service';
 import { Background } from './Background';
 import { Enemy } from './Enemy';
-import {  finishLevel, pad } from './hud';
 import { Player } from './Player';
 import { Stage } from './Stage';
 import { Level } from 'src/app/models/level';
@@ -23,7 +21,6 @@ export class World {
     public deadEnemies: Enemy[] = []
     public items  = []
     public projectiles  = []
-    public score: number
     public keyMap = []
     public player: Player
     public stage: Stage
@@ -52,7 +49,6 @@ export class World {
         //
         this.enemies
         this.generateEnemies()
-        this.score = 0
         this.player = new Player(this, sessionService, levelService)
         this.stage = new Stage(this, level.representation)
 
@@ -215,7 +211,6 @@ export class World {
      */
     public loadTextures(): void {
 
-
         for (let key in this.levelTextures) {
 
             if (!Array.isArray(this.levelTextures[key])) {
@@ -242,15 +237,12 @@ export class World {
         // the end of the level.
         if (this.player.pos[0] > this.stage.finishLine) {
 
+            this.sessionService.setProgress(200)
+
             // Stores all collected gameplay information
             // of the current session at Firestore.
-            this.sessionService.storeSession()
-            
-            //
-            // Displays a gratulations screen.
-            //
-            finishLevel();
-
+            this.sessionService.storeSession('completed')
+            this.player.pos[0] = 0
         }
         
         //
@@ -267,6 +259,7 @@ export class World {
             if (this.enemies[i].pos[0] + 1 > this.xBoundLeft && this.enemies[i].pos[0] - 1 < this.xBoundRight)
                 this.enemies[i].draw();
         }
+
         for (var i = 0; i < this.items.length; i++) {
             if (this.items[i].lives == 0) {
                 this.items.splice(i, 1);
@@ -275,6 +268,7 @@ export class World {
             else
                 this.items[i].draw();
         }
+
         for (var i = 0; i < this.projectiles.length; i++) {
             if (this.projectiles[i].lives == 0) {
                 this.projectiles.splice(i, 1);
@@ -283,14 +277,17 @@ export class World {
             else
                 this.projectiles[i].draw();
         }
+
         // Update drawing boundaries based on player pos
         // Also need to adjust the CAMERA_POS variable from webgl js
         // Adjust Screen Right
         var playerEdgeDist = this.player.pos[0] - (this.xBoundRight - this.drawBound);
+        
         if (playerEdgeDist > 0) {
             this.xBoundRight += playerEdgeDist;
             this.xBoundLeft += playerEdgeDist;
         }
+        
         // Adjust Screen Left, only after it has moved right
         if (this.xBoundLeft > 0) {
             var playerEdgeDist = (this.xBoundLeft + this.drawBound) - this.player.pos[0];
@@ -299,44 +296,10 @@ export class World {
                 this.xBoundLeft -= playerEdgeDist;
             }
         }
+
         // set camera pos
         GLS.I().CAMERA_POS[0] = -((GLS.I().INITIAL_WORLD_BOUND_RIGHT + 1 - GLS.I().INITIAL_WORLD_BOUND_LEFT) / 2 + this.xBoundRight - GLS.I().INITIAL_WORLD_BOUND_RIGHT);
         GLS.I().lightPosition[0] = this.xBoundRight;
-
-    }
-
-    /**
-     * 
-     * 
-     * 
-     */
-    public getScore(): void {
-
-        document.getElementById("score").innerHTML = pad(this.score)
-        return
-
-    }
-
-    /**
-     * 
-     * 
-     */
-    public getLives(): void {
-
-        document.getElementById("lives").innerHTML = this.player.lives
-        return
-
-    }
-
-    /**
-     * 
-     * 
-     * 
-     */
-    public getWorldLevel(): void {
-
-        document.getElementById("worldLevel").innerHTML = (0 + 1).toString()
-        return
 
     }
 
@@ -357,31 +320,46 @@ export class World {
                 // A = aerial
 
                 // Assume these are all placed smartly, too much unnecessary checking otherwise
-                var stage = this.level
-                var currentSquare = stage[j][i];
+                let stage = this.level
+                let currentSquare = stage[j][i];
+                
                 if (currentSquare == 'C') {
+                
                     // with probability, set enemy to 'A' (smart)
                     if (Math.random() < 1) {
+                    
                         currentSquare = 'A'
+                    
                     }
+                    
                     stage[j][i] = '.'
+                    
                     // get movement bounds based on stage
-                    var xMin = 0;
-                    var xMax = Math.ceil(this.level[0].length);
+                    
+                    let xMin = 0;
+                    let xMax = Math.ceil(this.level[0].length);
                     //min
-                    for (var k = i - 1; k >= 0; k--)
+                    for (let k = i - 1; k >= 0; k--){
+                        
                         if (stage[j][k] != '.' || stage[j + 1][k] == '.') {
                             xMin = k + 1;
                             break;
                         }
+                    }
+                    
                     // max
-                    for (var k = i + 1; k < Math.ceil(this.level[0].length); k++)
+                    for (var k = i + 1; k < Math.ceil(this.level[0].length); k++){
+
                         if (stage[j][k] != '.' || stage[j + 1][k] == '.') {
                             xMax = k - 1;
                             break;
                         }
+                    
+                    }
+                        
                     this.enemies.push(new Enemy(this, [i, 14 - j, GLS.I().ENEMY_ALPHA_DEPTH += .00001], xMin, xMax, 14 - j, 14 - j, currentSquare));
                     stage[j][i] = '.';
+                
                 }
                 else if (currentSquare == 'J') {
                     this.enemies.push(new Enemy(this, [i, 14 - j, GLS.I().ENEMY_ALPHA_DEPTH += .00001], i, i, 14 - j, (14 - j) + 2, currentSquare));

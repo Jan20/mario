@@ -1,15 +1,13 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { generateKey } from 'src/app/misc/helper';
+import { Helper } from 'src/app/misc/helper';
 import { UserService } from './user.service';
 import { Session } from '../../models/session';
 import { Performance } from '../../models/performance';
-import { SessionInterface } from 'src/app/interfaces/session.interface';
 import { CloudService } from 'src/app/cloud/cloud.service';
-import { debug } from 'util';
-import { PerformanceInterface } from 'src/app/interfaces/performance.interface';
 import { Level } from 'src/app/models/level';
 import { Subject } from 'rxjs';
+import { interval } from "rxjs";
 
 @Injectable({
 
@@ -27,10 +25,17 @@ export class SessionService {
 
   // Holds a Level object
   private level: Level
+  private lives = 4
 
   private consecutiveSessions: string[] = []
 
   public sessionSubject: Subject<string> = new Subject<string>()
+  public statusSubject: Subject<string> = new Subject<string>()
+
+
+  public timeSubject: Subject<string> = new Subject<string>()
+  public scoreSubject: Subject<string> = new Subject<string>()
+  public lifeSubject: Subject<number> = new Subject<number>()
 
   //////////////////
   // Constructors //
@@ -41,15 +46,21 @@ export class SessionService {
     private userService: UserService,
     private cloudService: CloudService,
 
-  ) {}
+  ) {
+
+    this.statusSubject.next('ready')
+
+  }
 
   ///////////////
   // Functions //
   ///////////////
+  
   /**
-   * 
-   * Retrieves the keys of all sessions stored
-   * for a given user.
+   *
+   * Retrieves all session keys for a given user.
+   *
+   * @param userKey: A valid user key such as 'user_042'.
    * 
    */
   public async getSessionKeys(userKey: string): Promise<string[]> {
@@ -84,10 +95,10 @@ export class SessionService {
     const id: number = await this.getHighestSessionId(userKey) + 1
 
     // Creates a session key for the current session based on the previously defined id.
-    const key: string = generateKey('session', id)
+    const key: string = Helper.generateKey('session', id)
 
     // Creates a new Performance object which values are initialized with zeros.
-    const performance: Performance = new Performance(0, 0, 0, 0)
+    const performance: Performance = new Performance(0, 0, 0, 0, 0, 0, 0, 100)
 
     // Initializes a new session object.
     const session: Session = new Session(key, id, 'created', performance)
@@ -104,7 +115,7 @@ export class SessionService {
    * with the highest Id.
    * 
    */
-  private async getHighestSessionId(userKey: string): Promise<number> {
+  public async getHighestSessionId(userKey: string): Promise<number> {
     
     // Variable intended to store the highest session id.
     let highestSessionId: number = 0
@@ -136,7 +147,10 @@ export class SessionService {
    * a level with a 
    * 
    */
-  public async storeSession(): Promise<void> {
+  public async storeSession(result: string): Promise<void> {
+
+    console.log(this.session)
+    this.statusSubject.next(result)
 
     // Gets the userId of the current user Id from UserService
     const userKey: string = await this.userService.getCurrentUserKey()
@@ -146,11 +160,11 @@ export class SessionService {
 
     // Retrieves the level of the current session.
     const level: Level = this.getLevel()
-
+    
     // Stores the current session at Firestore.
     await this.angularFirestore.doc(ref).set({key: this.session.key, id: this.session.id, status: 'finished'})
-    await this.angularFirestore.doc(ref+`/data/performance`).set(this.session.performance.toInterface())
-    await this.angularFirestore.doc(ref+`/data/level`).set(level.toInterface())
+    await this.angularFirestore.doc(`${ref}/data/performance`).set(this.session.performance.toInterface())
+    await this.angularFirestore.doc(`${ref}/data/level`).set(level.toInterface())
 
     // Calls the backend in order to 
     await this.cloudService.evolveLevel(userKey)
@@ -187,13 +201,17 @@ export class SessionService {
           performanceInterface.data()['defeated_by_gaps'],
           performanceInterface.data()['defeated_by_opponent_type_1'],
           performanceInterface.data()['defeated_by_opponent_type_2'],
-          performanceInterface.data()['defeated_by_opponent_type_3']    
-  
+          performanceInterface.data()['defeated_by_opponent_type_3'],
+          performanceInterface.data()['score'],
+          performanceInterface.data()['time'],
+          performanceInterface.data()['progess'],
+          performanceInterface.data()['difficulty'],
+
         )
 
       } else {
 
-        performance = new Performance(0, 0, 0, 0)
+        performance = new Performance(0, 0, 0, 0, 0, 0, 0, 100)
       
       }
       
@@ -235,6 +253,37 @@ export class SessionService {
 
   }
 
+
+private startTime = new Date().getTime();
+private timeElapsed = 0;
+
+public myTimer(): void {
+    
+  interval(1000).subscribe( () => {
+          
+    const timeNow = new Date().getTime()
+
+    this.timeElapsed += Math.floor((timeNow - this.startTime)/1000)
+    
+    this.session.performance.time = this.timeElapsed
+
+    this.timeSubject.next(Helper.buildSixDigitNumber(this.timeElapsed))
+
+    this.startTime = timeNow
+    
+  })
+
+}
+
+
+public resetTimer(): void {
+  
+  this.startTime = new Date().getTime();
+	this.timeElapsed = 0;
+
+}
+
+
     
   /////////////
   // Getters //
@@ -273,51 +322,64 @@ export class SessionService {
 
   }
 
+  public getLives(): number {
+
+    return this.lives
+
+  }
+
 
   //////////////////////
   // Helper Functions //
   //////////////////////
-  /**
-   * 
-   * 
-   * 
-   */
   public increaseDefeatedByGaps(): void {
 
     this.session.performance.defeatedByGaps += 1
 
   }
 
-  /**
-   * 
-   * 
-   * 
-   */
   public increaseDefeatedByOpponentType1(): void { 
     
     this.session.performance.defeatedByOpponentType1 += 1 
   
   }
 
-  /**
-   * 
-   * 
-   * 
-   */
   public increaseDefeatedByOpponentType2(): void {
 
     this.session.performance.defeatedByOpponentType2 += 1
 
   }
 
-  /**
-   * 
-   * 
-   * 
-   */
   public increaseDefeatedByOpponentType3(): void {
 
     this.session.performance.defeatedByOpponentType3 += 1
+
+  }
+
+  public increaseScore(value: number): void {
+
+    this.session.performance.score += value
+    this.scoreSubject.next(Helper.buildSixDigitNumber(this.session.performance.score))
+    
+  }
+
+  public setProgress(progress: number): void {
+
+    this.session.performance.progress = progress
+
+  }
+
+  public increaseLives(): void {
+
+    this.lives += 1
+    this.lifeSubject.next(this.lives)
+    
+  }
+
+  public decreaseLives(): void {
+
+    this.lives -= 1
+    this.lifeSubject.next(this.lives)
 
   }
 

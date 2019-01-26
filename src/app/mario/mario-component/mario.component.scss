@@ -9,49 +9,22 @@
     position: absolute;
 }
 
-#page-wrap {
+.container {
 
+    margin-top: 50px;
     position:relative; 
     margin: 0px auto; 
-    margin-top: 50px;
     width:512px
 
 }
 
-#start {
-    position: absolute; 
-    top: 0; 
-    z-index: 10; 
-    width: 512px; 
-    height: 512px; 
+.menu {
+
+    margin-top: 50px;
+    width: 512px;
+    height: 512px;
+    border-radius: 10px;
     background-image: url('/assets/background.png'); 
-    text-align: center; 
-    font-family: Mario;
-}
-
-#gg {
-
-    
-    position: absolute; 
-    top: 0; 
-    z-index: 10; 
-    width: 512px; 
-    height: 512px; 
-    background-image: url('/assets/background.png'); 
-    text-align: center; 
-    display: none;
-
-}
-
-#done {
-    position: absolute; 
-    top: 0; 
-    z-index: 10; 
-    width: 512px; 
-    height: 512px; 
-    background-image: url('/assets/background.png'); 
-    text-align: center; 
-    display: none;
 }
 
 .center {
@@ -63,26 +36,59 @@
 
 .canvas {
 
+    margin-top: 50px;
     width: 512px;
     border-radius: 10px;
+    background-image: url('/assets/background.png'); 
 
 }
 
+
+
 h1 {
-    
+    padding-top: 200px; 
     color: white; 
-    margin-top: 200px; 
     font-family: Mario; 
     font-size: 30px;
-
+    text-align: center;
+    cursor: pointer; 
 }
 
 
-h1 {
+h2 {
     
+    cursor: pointer; 
     color: white; 
-    margin-top: 200px; 
+    margin-top: 50px; 
     font-family: Mario; 
+    font-size: 20px;
+    text-align: center;
+
+}
+
+.ui {
+
+    font-family: Mario;
+    position: absolute;
+    z-index: 1; 
+    width:500px; 
+    height:20px; 
+    color: white; 
+
+}
+
+.ui-element {
+
+    margin-top: 60px;
+    margin-left: 10px;
+    width:156px; 
+    float:left;
+    text-align: center;
+}
+
+.mario {
+
+    font-family: Mario;
     font-size: 20px;
 
 }

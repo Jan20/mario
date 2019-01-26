@@ -29,20 +29,20 @@ export class Stage {
         //
         this.finishLine = this.stage[0].length - 1
 
-        // Enemy Codes (Don't use):
+        // Enemy Codes
         // H, J, C, V
         this.textureIndexMap = {
             
-            'X': 0,
-            'B': 1,
-            'Y': 2,
-            'L': 2,
-            'P': 2,
-            'F': 2,
-            'G': 2,
-            'S': 3,
-            'D': 4,
-            'Z': 5,
+            'X': 0, // Ground
+            'B': 1, // Brick
+            'Y': 2, // Coin
+            'L': 2, // Life
+            'P': 2, // Fireball
+            'F': 2, // Star
+            'G': 2, // Wing
+            'S': 3, // Brick
+            'D': 4, // Brick 2
+            'Z': 5, // Finish Line
         
         };
         
@@ -51,11 +51,9 @@ export class Stage {
         this.texCoords = {}
         this.normals = {}
         
-        //
         // Initializes a range of arrays intented
         // to provide WebGL information of what to
         // draw.
-        // 
         for (let key in this.textureIndexMap) {
         
             this.runningSum[key] = [0]

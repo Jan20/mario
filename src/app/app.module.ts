@@ -12,6 +12,7 @@ import { MenuModule } from './menu/menu.module';
 import { SurveyModule } from './survey/survey.module';
 import { TestModule } from './test/test.module';
 import { CloudModule } from './cloud/cloud.module';
+import { AngularFirestore } from '@angular/fire/firestore';
 
 @NgModule({
   
@@ -38,7 +39,8 @@ import { CloudModule } from './cloud/cloud.module';
 
   ], 
   providers: [
-
+    
+    AngularFirestore,
     {provide: APP_BASE_HREF, useValue : '/' }
   
   ],

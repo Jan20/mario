@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { MarioComponent } from './mario-component/mario.component';
 import { LevelService } from './services/level.service';
 import { HttpClientModule } from '@angular/common/http';
+import { MaterialModule } from '../config/material.module';
 
 @NgModule({
   declarations: [
@@ -13,7 +14,8 @@ import { HttpClientModule } from '@angular/common/http';
   imports: [
 
     CommonModule,
-    HttpClientModule
+    HttpClientModule,
+    MaterialModule
   
   ],
   providers: [
@@ -23,7 +25,9 @@ import { HttpClientModule } from '@angular/common/http';
   ],
   exports: [
 
-    MarioComponent
+    MarioComponent,
+    MaterialModule
+
 
   ]
 })

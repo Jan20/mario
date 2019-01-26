@@ -28,11 +28,9 @@ export class LevelService {
 
     private angularFirestore: AngularFirestore,
     private userService: UserService,
-    private sessionService: SessionService,
+    private sessionService: SessionService
 
-  ) { 
-
-  }
+  ) {}
 
   ///////////////
   // Functions //
@@ -40,27 +38,63 @@ export class LevelService {
 
   /**
    * 
-   * @param userKey 
-   * @param sessionKey 
+   * Retrieves the level for the current session from Firestore.
+   * 
+   * @param userKey: Valid user key like 'user_042'.
+   * @param sessionKey: Valid session key like 'session_042'.
    */
   public async getLevelFromServer(userKey: string, sessionKey: string): Promise<Level> {
 
+    // Variable intended to store a level object.
     let level: Level
 
+    // Defines a reference to the Firestore location at which
+    // the desired level can be found. 
     const ref: string = `users/${userKey}/sessions/${sessionKey}/data/level`
     
-    await this.angularFirestore.doc(ref).get().toPromise().then(result => level = Level.fromDocumentSnapshot(result))
+    // Retrieves a level from Firestore.
+    await this.angularFirestore.doc(ref).get().toPromise().then(result => {
+      
+      // Creates a level object from the result coming from Firestore.
+      level = Level.fromDocumentSnapshot(result)
+    
+    })
 
+    // Returns a promise that is resolved as soon as a level has been
+    // successfully retrieved from Firestore.
     return new Promise<Level>(resolve => resolve(level))
 
   }
 
-  public async getInitialLevel(levelKey: string): Promise<Level> {
+  /**
+   * 
+   * Retrieves an initial level from Firestore.
+   * 
+   */
+  public async getInitialLevel(): Promise<Level> {
 
+    // Retrieves the level keys of all default levels.
+    const levelKeys: string[] = await this.getLevelKeysFromInitialLevels()
+    
+    // Retrieves the index of a random level.
+    const randomIndex: number = Math.floor(Math.random() * levelKeys.length)
+
+    // Choose a random level key.
+    const levelKey = levelKeys[randomIndex]
+    
+    // Defines a variable intended to hold the randomly selected level.
     let level: Level
 
-    await this.angularFirestore.doc<LevelInterface>(`levels/${levelKey}`).get().toPromise().then(result => level = Level.fromDocumentSnapshot(result))
+    // Retrieves an initial level from Firestore.
+    await this.angularFirestore.doc(`levels/${levelKey}`).get().toPromise().then(result => {
 
+      // Creates a new level object.
+      level = Level.fromDocumentSnapshot(result)
+
+    })
+
+    // Returns a promise that should be resolved as soon as a random
+    // level is selected.
     return new Promise<Level>(resolve => resolve(level))
 
   }
@@ -121,14 +155,8 @@ export class LevelService {
       // Writes the newly created session to the session service.
       this.sessionService.setSession(session)
 
-      // Retrieves the level keys of all default levels.
-      const levelKeys: string[] = await this.getLevelKeysFromInitialLevels()
-      
-      // Retrieves the index of a random level.
-      const randomIndex: number = Math.floor(Math.random() * levelKeys.length)
-      
       // Selects a random level from the list of default levels.
-      level = await this.getInitialLevel(levelKeys[randomIndex])
+      level = await this.getInitialLevel()
 
       // Writes the newly created level to the session service.
       this.sessionService.setLevel(level)
@@ -171,6 +199,7 @@ export class LevelService {
   /////////////
   // Getters //
   /////////////
+
   /**
    * 
    * Returns the service's current level.
@@ -180,9 +209,6 @@ export class LevelService {
 
     // If no level has been defined yet, a new level should be loaded.
     this.level === undefined ? this.level = await this.loadLevel() : null
-    // this.level === undefined ? this.level = await this.getLevelFromServer('user_001', 'session_002') : null
-
-
 
     // Returns a promise referrin to the service's current level.
     return new Promise<Level>(resolve => resolve(this.level))

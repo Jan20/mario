@@ -1,4 +1,3 @@
-import { SessionInterface } from "../interfaces/session.interface";
 import { Performance } from '../models/performance'
 
 export class Session {
@@ -23,47 +22,15 @@ export class Session {
 
     }
 
-    ///////////////
-    // Functions //
-    ///////////////
-    public static fromInterface(sessionInterface: SessionInterface): Session {
+    public toInterface(): object {
 
-        const performance: Performance = new Performance(
+        return {
 
-            sessionInterface.data.performance.defeated_by_gaps,
-            sessionInterface.data.performance.defeated_by_opponent_type_1,
-            sessionInterface.data.performance.defeated_by_opponent_type_2,
-            sessionInterface.data.performance.defeated_by_opponent_type_3
+            "key": this.key,
+            "id": this.id,
+            "status": this.status
 
-
-        )
-      
-        return new Session(sessionInterface.key, sessionInterface.id, sessionInterface.status, performance)
-
-    }
-    
-    public toInterface(): SessionInterface {
-
-        const sessionInterface: SessionInterface = {
-
-            'key': this.key,
-            'id': this.id,
-            'status': this.status,
-            'data': {
-
-                'performance': {
-
-                    'defeated_by_gaps': this.performance.defeatedByGaps,
-                    'defeated_by_opponent_type_1': this.performance.defeatedByOpponentType1,
-                    'defeated_by_opponent_type_2': this.performance.defeatedByOpponentType2,
-                    'defeated_by_opponent_type_3': this.performance.defeatedByOpponentType3
-    
-                }    
-            
-            }
         }
-
-        return sessionInterface
 
     }
     

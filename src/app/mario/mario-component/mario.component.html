@@ -1,50 +1,43 @@
 <div class='background'>
 
-<!-- Center the page -->
-<div id="page-wrap"> 
-    <!-- START MENU -->
-    <div id="start">
+    <div class="container"> 
+    
+        <div class='menu' *ngIf='status === "ready"'>
+            <h1 (click)="startNewLevel()">Start Level</h1>
+        </div>
 
-        <h1 (click)="startLevel()">Start Level</h1>
+        <div class='menu' *ngIf='status === "lost"'>
+            <h1>Thank you for having tried the level.</h1>
+            <h2 *ngIf='isStored === true' (click)='startNewLevel()'>Try another one!</h2>
+        </div>
 
+        <div class='menu' *ngIf='status === "completed"'>
+            <h1>Level Completed!</h1>
+            <h2 *ngIf='isStored === true' (click)='startNewLevel()'>Progress to the next Level</h2>
+        </div>
+
+        <div *ngIf='status === "running"' class='ui'>
+
+            <div class='ui-element'>
+                <span class='mario'>Time: </span>
+                <span class='mario'>{{time}}</span>
+            </div>
+
+            <div class='ui-element'>
+                <span class='mario'>Score: </span>
+                <span class='mario'>{{score}}</span>
+            </div>
+            
+            <div class='ui-element'>
+                <span class='mario'>Lives: </span>
+                <span class='mario'>{{lives}}</span>
+            </div>
+
+        </div>
     </div>
 
-        <!-- HUD -->
-    <div id="hud">
-        <div style="position: absolute; left: 50px; top: 20px; width:200px; height:100px;  color: white; font-family: Mario">
-            <p>score
-            <span id="score" style="font-family: Arcade; font-size: 25px;"></span>
-        </div>
-        <div style="position: absolute; z-index: 1; left: 175px; top: 20px; width:100px; height:20px; color: white; font-family: Mario">
-            <p>lives
-            <span id="lives" style="font-family: Arcade; font-size: 25px;"></span>
-        </div>
-        <div style="position: absolute; z-index: 1; left: 285px; top: 20px; width:100px; height:20px; color: white; font-family: Mario">
-            <p>world
-            <span id="worldLevel" style="font-family: Arcade; font-size: 25px;"></span>
-        </div>
-        <div style="position: absolute; z-index: 1; left: 400px; top: 20px; width:100px; height:20px; color: white; font-family: Mario">
-            <p>time
-            <span id="time" style="font-family: Arcade; font-size: 25px;"></span>
-        </div>
+    <div class='center'>
+        <canvas [style.visibility]="status === 'running' ? 'visible' : 'hidden'" #canvas class='canvas' width="1000" height="1000"></canvas>
     </div>
-
-
-    <div id="gg">
-        <h1>Level hasn't been cleared.</h1>
-        <h2 *ngIf='isStored === true'>Progress to the next Level</h2>
-    </div>
-
-    <div id="done">
-        <h1>Level Completed!</h1>
-        <h2 *ngIf='isStored === true'>Progress to the next Level</h2>
-    </div>
-
-</div>
-
-<div class='center'>
-    <canvas #canvas class='canvas' width="1000" height="1000">Oops ... your browser doesn't support the HTML5 canvas element</canvas>
-</div>
-
 
 </div>

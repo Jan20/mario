@@ -4,6 +4,8 @@ import { MovableObject } from "./MoveableObject"
 import { texCoord } from "../mario-common/textures"
 import { LevelService } from "../services/level.service";
 import { World } from "./world";
+import { SessionService } from "src/app/analytics/services/session.service";
+import { Level } from "src/app/models/level";
 
 var PROJECTILE_X_VELO = GLS.I().X_VELO_CONSTANT * 12
 
@@ -23,14 +25,14 @@ export class Projectile extends MovableObject{
     //////////////
     // Services //
     //////////////
-    private levelService: LevelService
 
     constructor(
         
         world: World, 
         pos: any, 
         rowsToCheck: number[],
-        levelService: LevelService,
+        private levelService: LevelService,
+        private sessionService: SessionService,
 
     ) {
     
@@ -43,25 +45,45 @@ export class Projectile extends MovableObject{
         this.generateVertices(this.vertices, this.texCoords, this.normals)
         this.rowsToCheck = rowsToCheck
         this.xBoundLeft = 0
-        this.xBoundRight = Math.ceil(levelService.getLevel()[0].length)
+
+        this.init()
+        
+    }
+
+    public async init(): Promise<void> {
+
+        const level: Level = await this.levelService.getLevel()
+
+        this.xBoundRight = Math.ceil(level.representation[0].length)
+
         this.velocity[0] = (this.world.player.texDir == 0) ? this.velocity[0] : -this.velocity[0]
-        for (var i = 0; i < this.rowsToCheck.length; i++) {
+        
+        for (let i = 0; i < this.rowsToCheck.length; i++) {
+            
             // min
-            for (var k = Math.floor(this.pos[0]); k >= 0; k--)
+            for (let k = Math.floor(this.pos[0]); k >= 0; k--) {
+
                 if (this.world.stage.stage[14 - (this.rowsToCheck[i])][k] != '.') {
-                    this.xBoundLeft = k + 1;
-                    break;
+                
+                    this.xBoundLeft = k + 1
+                    break
+                
                 }
-            // max
-            for (var k = Math.floor(this.pos[0]); k < Math.ceil(levelService.getLevel()[0].length); k++)
+
+            }
+                
+                // max
+            for (let k = Math.floor(this.pos[0]); k < Math.ceil(level.representation[0].length); k++)
                 if (this.world.stage.stage[14 - (this.rowsToCheck[i])][k] != '.') {
                     this.xBoundRight = k - 1;
                     break;
                 }
         }
+
     }
 
-    public generateVertices(buffer, texbuffer, normalbuffer) {
+    public generateVertices(buffer, texbuffer, normalbuffer): void {
+        
         buffer.push([1, 1, 0]);
         buffer.push([0, 1, 0]);
         buffer.push([0, 0, 0]);
@@ -80,15 +102,22 @@ export class Projectile extends MovableObject{
         normalbuffer.push([0, 0, 1]);
         normalbuffer.push([0, 0, 1]);
         normalbuffer.push([0, 0, 1]);
+    
     }
-    move() {
+    
+    public move(): void {
+        
         this.pos[0] += this.velocity[0];
+        
         if (this.pos[0] >= this.xBoundRight || this.pos[0] <= this.xBoundLeft) {
             this.lives = 0;
         }
+        
         // HANDLE Enemy collisions, using world's list of enemies
-        for (var i = 0; i < this.world.enemies.length; i++) {
-            var curEnemy = this.world.enemies[i];
+        for (let i = 0; i < this.world.enemies.length; i++) {
+            
+            const curEnemy = this.world.enemies[i];
+            
             if (!(curEnemy.pos[0] + 1 > this.xBoundLeft && curEnemy.pos[0] - 1 < this.xBoundRight))
                 continue;
             // Bounding boxes intersect
@@ -97,8 +126,7 @@ export class Projectile extends MovableObject{
                 (Math.abs(this.pos[1] - curEnemy.pos[1])) * 2 < (.5 + curEnemy.enemyHeight)) {
                 // Need to detect which collision happened, vertical or horizontal
                 this.lives = 0;
-                this.world.score += 100;
-                this.world.getScore();
+                this.sessionService.increaseScore(100)
                 var enemyKillSound = new Audio('../Sound/Stomp.mp3');
                 enemyKillSound.play();
                 this.world.deadEnemies.push(this.world.enemies[i]);
@@ -107,8 +135,10 @@ export class Projectile extends MovableObject{
             }
         }
     }
-    draw() {
-            this.move();
+
+    public draw(): void {
+        
+        this.move();
         
         var ctm = mat4();
         ctm = mult(ctm, translate([0, 0, 0.5]));

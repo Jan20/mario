@@ -203,9 +203,7 @@ export class Enemy extends MovableObject{
 
     public draw(): void {
 
-
-            this.move()
-
+        this.move()
 
         var ctm = mat4()
         

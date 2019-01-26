@@ -73,8 +73,6 @@ export class GLS {
     ////////////
     // WEB GL //
     ////////////
-    public gameScreen: number = 1;
-    public gameOver: number = 0;
     public stage: number = 0;
     public shininess: number =  50
 

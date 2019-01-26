@@ -4,5 +4,9 @@ export interface PerformanceInterface {
     defeated_by_opponent_type_1: number
     defeated_by_opponent_type_2: number
     defeated_by_opponent_type_3: number
+    score: number
+    time: number
+    progress: number
+    difficulty: number
 
 }

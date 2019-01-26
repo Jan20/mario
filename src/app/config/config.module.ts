@@ -8,14 +8,13 @@ import { AngularFireDatabaseModule } from '@angular/fire/database';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { environment } from '../../environments/environment';
 import { ROUTES } from './routing.config';
-export const firebaseConfig = environment.firebaseConfig;
 
 @NgModule({
   
   imports: [
   
     CommonModule,
-    AngularFireModule.initializeApp(firebaseConfig),
+    AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFirestoreModule.enablePersistence(),
     AngularFireAuthModule,
     AngularFireDatabaseModule,

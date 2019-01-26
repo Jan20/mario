@@ -4,7 +4,6 @@ import { Howl } from '../mario-common/howler'
 import { texCoord } from '../mario-common/textures'
 import { mat4, mult, translate, flatten } from '../mario-common/MV'
 import { GLS } from '../services/gl.service'
-import { gameOver } from './hud'
 import { Projectile } from './Projectile'
 import { PowerUp } from './PowerUp'
 import { Stage } from './Stage'
@@ -30,7 +29,6 @@ export class Player extends MovableObject{
     public walktime: number
     public collisionUp: boolean
     public collisionDown: boolean
-    public lives: any
     public collisionLeft: boolean
     public collisionRight: boolean
     public playerHeight: number
@@ -52,7 +50,7 @@ export class Player extends MovableObject{
         
     ) {
 
-        super(world, GLS.I().INITIAL_PLAYER_POS.slice(0), GLS.I().INITIAL_PLAYER_VEL.slice(0), GLS.I().INITIAL_PLAYER_LIVES)
+        super(world, GLS.I().INITIAL_PLAYER_POS.slice(0), GLS.I().INITIAL_PLAYER_VEL.slice(0), 3)
 
         this.projectileTimer = new Timer()
         this.hasProjectiles = false
@@ -121,10 +119,7 @@ export class Player extends MovableObject{
     
     draw() {
         
-
-            this.move()
-
-        
+        this.move()
         
         let ctm = mat4()
 
@@ -202,8 +197,17 @@ export class Player extends MovableObject{
         if (keyMap[32] && this.pos[1] < 14) {
         
             if (this.hasProjectiles && ((this.projectileTimer.getNowTime() - this.projectileTimer.prevTime) >= 600)) {
+                
                 this.projectileTimer.reset()
-                this.world.projectiles.push(new Projectile(this.world, this.pos.slice(0), this.getRowsToCheck(), this.levelService))
+                this.world.projectiles.push(new Projectile(
+                    
+                    this.world, 
+                    this.pos.slice(0), 
+                    this.getRowsToCheck(), 
+                    this.levelService,
+                    this.sessionService    
+                ))
+
                 this.fireballSound = new Audio('../Sound/Fireball.wav')
                 this.fireballSound.play()
             }
@@ -281,23 +285,31 @@ export class Player extends MovableObject{
             var blockX = this.pos[0] + 0.5;
             var blockY = this.pos[1] + 1;
             var blockCollide = this.getStage(blockX, blockY);
-            for (var i = 0; i < rowsToCheck.length; i++) {
+            
+            for (let i = 0; i < rowsToCheck.length; i++) {
+                
                 blockCollide = this.getStage(blockX, rowsToCheck[i] + 1);
+                
                 if (isBlock(blockCollide)) {
+                    
                     if (blockCollide == 'S') {
-                        this.world.score += 150;
+                    
+                        this.sessionService.increaseScore(150)
                         this.coinSound = new Audio('../Sound/Coin.mp3');
                         this.coinSound.play();
-                    }
-                    else {
+                    
+                    } else {
+                    
                         this.powerUpAppearsSound = new Audio('../Sound/PowerUpAppears.wav');
                         this.powerUpAppearsSound.play();
+                    
                     }
+
                     this.world.items.push(new PowerUp(this.world, [Math.floor(blockX) + 0.25, Math.floor(blockY), 0], Math.floor(blockY + 1), blockCollide));
                     this.world.stage.stage[14 - Math.floor(blockY)][Math.floor(blockX)] = 'B';
                     this.world.stage = new Stage(this.world, this.world.stage.stage);
-                    this.world.score += 100;
-                    this.world.getScore()
+                    this.sessionService.increaseScore(100)
+
                 }
             }
         
@@ -336,21 +348,24 @@ export class Player extends MovableObject{
                 var rDist = enemyRight - this.pos[0];
 
                 // Top collision, must be moving down
-                if (bDist < tDist && bDist < lDist && bDist < rDist) // && this.velocity[1] <= 0) // less lenient if velo is included
-                {
-                    this.world.score += 100;
-                    this.world.getScore();
+                // && this.velocity[1] <= 0) // less lenient if velo is included
+                
+                // Defeating an enemy.
+                if (bDist < tDist && bDist < lDist && bDist < rDist) {
+
+                    this.sessionService.increaseScore(100)
                     this.velocity[1] = GLS.I().JUMP_CONSTANT;
                     this.world.deadEnemies.push(this.world.enemies[i]);
                     this.world.enemies.splice(i, 1);
                     this.enemyKillSound.play();
                     return;
+                
                 }
 
                 else {
                 
                     // User looses one life.
-                    this.lives--
+                    this.sessionService.decreaseLives()
                     currentEnemy.enemyType
 
                     ////////////////////////////////////////
@@ -360,12 +375,11 @@ export class Player extends MovableObject{
                     
                     this.resetToDefault();
                     this.lostLifeSound.play();
-                    this.world.getLives();
                     
-                    if (this.lives === 0) {
+                    if (this.sessionService.getLives() === 0) {
                 
-                        this.sessionService.storeSession()
-                        gameOver()
+                        this.sessionService.setProgress(playerRight)
+                        this.sessionService.storeSession('lost')
 
                     }
 
@@ -382,17 +396,19 @@ export class Player extends MovableObject{
 
         // handle power up collision
         for (var i = 0; i < this.world.items.length; i++) {
+            
             var curItem = this.world.items[i];
             var adjustedPlayerPos = this.pos[0] + (1 - this.playerWidth) / 2;
             var adjustedItemPos = curItem.pos[0] + (1 - curItem.powerWidth) / 2;
+            
             if ((Math.abs(adjustedPlayerPos - adjustedItemPos)) * 2 < (this.playerWidth + curItem.powerWidth) &&
                 (Math.abs(this.pos[1] - curItem.pos[1])) * 2 < (this.playerHeight + curItem.powerHeight)) {
+                
                 switch (curItem.powerType) {
                     case 'L':
                         this.lifeSound = new Audio('../Sound/1-up.wav');
                         this.lifeSound.play();
-                        this.world.player.lives++;
-                        this.world.getLives();
+                        this.sessionService.increaseLives()
                         break;
                     case 'P':
                         this.powerUpSound = new Audio('../Sound/PowerUp.wav');
@@ -418,35 +434,21 @@ export class Player extends MovableObject{
                 curItem.lives = 0;
             }
         }
-        /*case 'L':
-            this.world.player.lives++;
-            this.world.getLives();
-            break;
-        case 'P':
-            break
-        case 'F':
-            X_VELO_CONSTANT = .045;
-            break;
-        case 'G':
-            GRAVITY_CONSTANT = -.0055;
-            break;*/
+        
         // handle off stage death
-
         if (this.pos[1] <= -.5) {
             
-            this.lives--
-
+            this.sessionService.decreaseLives()
             this.sessionService.increaseDefeatedByGaps()
 
             this.resetToDefault();
             this.lostLifeSound.play();
-            this.world.getLives();
             
-            if (this.lives === 0) {
+            if (this.sessionService.getLives() === 0) {
 
                 this.pos = GLS.I().INITIAL_PLAYER_POS.slice(0);
-                gameOver()
-                this.sessionService.storeSession()
+                this.sessionService.setProgress(playerRight)
+                this.sessionService.storeSession('lost')
 
             
             } else {

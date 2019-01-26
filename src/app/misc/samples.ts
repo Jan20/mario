@@ -11,11 +11,34 @@ import { LevelInterface } from "../interfaces/level.interface";
 */
 export class Samples {
 
-    public static sampleUser: User = new User('user_042',42)
+    public static sampleUser: User = new User(
+        
+        'user_042',
+        42
+        
+    )
 
-    public static samplePerformance: Performance = new Performance(1, 1, 1, 0)
+    public static samplePerformance: Performance = new Performance(
+        
+        1, 
+        1, 
+        1, 
+        0, 
+        0,
+        0,
+        0,
+        0
     
-    public static sampleSession: Session = new Session('session_042', 42, 'created', Samples.samplePerformance)
+    )
+    
+    public static sampleSession: Session = new Session(
+        
+        'session_042', 
+        42, 
+        'created', 
+        Samples.samplePerformance
+        
+    )
     
     public static sampleLevel: Level = new Level(
     

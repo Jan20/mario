@@ -66,6 +66,21 @@ describe('SessionService', () => {
 
   })
 
+  it("getHighestSessionId() should return '42'", async () => {
+
+    const testService: TestService = TestBed.get(TestService)
+    const sessionService: SessionService = TestBed.get(SessionService)
+
+    await testService.setUp()
+
+    const result: number = await sessionService.getHighestSessionId(Samples.sampleUser.key)
+
+    expect(result).toEqual(42)
+
+    await testService.cleanUp()
+
+  })
+
   it('should be created', () => {
 
     const service: SessionService = TestBed.get(SessionService)

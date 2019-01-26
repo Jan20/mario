@@ -7,7 +7,6 @@ import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { environment } from '../../../environments/environment';
 import { AngularFireModule } from '@angular/fire';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-export const firebaseConfig = environment.firebaseConfig;
 
 describe('LevelService', () => {
   
@@ -15,7 +14,6 @@ describe('LevelService', () => {
 
     imports: [
 
-      AngularFireModule.initializeApp(firebaseConfig),
       AngularFirestoreModule.enablePersistence(),
       AngularFireAuthModule,
       AngularFireDatabaseModule,

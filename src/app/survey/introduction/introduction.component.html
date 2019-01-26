@@ -1,18 +1,16 @@
 <div class='background'>
 
 <div class='content' *ngIf='getStatus() != "running"'>
-  
-  <h1>Introduction Online Experiment</h1>
+<!--   
+  <h1>Introduction</h1>
 
+  <p></p> -->
+
+  <h1>The Game</h1>
   <p>
-    Ajusting the difficutly to a dirrent playing styles poses an important challenge in designing video games. 
-    The experiment consists of a Jump-and-Run game similar to Super Mario Bros and a short questionare after every level.
-    Please feel free to play as many levels as you want and answer a small questionare attached after finshing a level.  
-  </p>
-
-  <h2>The Game</h2>
-  <p>The goal of each level is to reach its end as quickly as possible while trying to collect as many coins as possible.
-    
+    The goal of each level is to reach its end as quickly as possible while trying to collect as many coins as possible. 
+    While progressing through the levels you will encounter a ranch of opponents. Either avoid them by jumping over them
+    or you can destroy them by jumping right on top of them.
   </p>
   
   <h2>Controls</h2>
@@ -32,7 +30,7 @@
   </div>
   <div class='container'>
     <mat-icon>space_bar</mat-icon>
-    <div class='description'>Space: Shoot a fireball (only available after collecting fireball-power-up)</div>
+    <div class='description'>Space: Shoot a fireball (only available after collecting a power-up)</div>
   </div>
 
   <button mat-raised-button color="primary" (click)='startExperiment()'>Start Experiment</button>
