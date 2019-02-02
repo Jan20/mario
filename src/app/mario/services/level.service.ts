@@ -6,6 +6,7 @@ import { LevelInterface } from 'src/app/interfaces/level.interface';
 import { SessionService } from 'src/app/analytics/services/session.service';
 import { UserService } from 'src/app/analytics/services/user.service';
 import { Session } from 'src/app/models/session';
+import { CloudService } from 'src/app/cloud/cloud.service';
 
 @Injectable({
 
@@ -28,7 +29,8 @@ export class LevelService {
 
     private angularFirestore: AngularFirestore,
     private userService: UserService,
-    private sessionService: SessionService
+    private sessionService: SessionService,
+    private cloudService: CloudService,
 
   ) {}
 
@@ -126,16 +128,16 @@ export class LevelService {
   /**
    * 
    * Loads the level for the upcoming session from a pool of 
-   * eight levels in total. The selection for the first level 
-   * happens randomely from all levels. The selection of levels 
-   * for all futher sessions takes place in the backend in which 
+   * eight levels in total. The first session's level is selected
+   * randomly from a collection of eight initial levels. The selection 
+   * of levels for all futher sessions takes place in the backend in which 
    * the opponents of each further level are choosen according 
    * to the users skill level.
    * 
    */
   private async loadLevel(): Promise<Level> {
 
-    // Receives the user key of the current user.
+    // Receives the current user's user key.
     const userKey: string = await this.userService.getCurrentUserKey()
 
     // Receives the session keys of all previously stored sessions.
@@ -149,43 +151,46 @@ export class LevelService {
     // a single session yet.
     if (sessionKeys.length === 0) {
 
-      // Creates a new session.
-      const session: Session = await this.sessionService.generateSession()
-
-      // Writes the newly created session to the session service.
-      this.sessionService.setSession(session)
-
-      // Selects a random level from the list of default levels.
-      level = await this.getInitialLevel()
-
-      // Writes the newly created level to the session service.
-      this.sessionService.setLevel(level)
+      // Loads an initial level.
+      level = await this.loadInitialLevel()
     
     } else {
 
-      // If the user has already finished a previous level,
-      // a new session with an evolved level has been created
-      // within the service-side backend. Hence, iterating over
-      // all session keys should yield one session with the
-      // status 'created'.
+      // If the user has already finished a level before,
+      // a session with an evolved level should have been created
+      // within the service-side backend. Hence sessions are stored
+      // in order from the first to the last one, choosing the last
+      // session in the collection should yield a freshly created one.
       const i: number = sessionKeys.length - 1
 
-      // Retrieves a session from Firestore.
+      // Retrieves the last session stored at Firestore.
       const session: Session = await this.sessionService.getSession(userKey, sessionKeys[i])
+
+      console.log(session)
 
       // If the current session has been created but not yet
       // finished, the level for that specific session is loaded
-      // from Firestore.
+      // from the Firstore.
       if (session.status === 'created') {
 
         // Retrieves the level stored under current session from Firestore.
         level = await this.getLevelFromServer(userKey, sessionKeys[i])
-
+        console.log(level)
         // Write the session to the session service.
         this.sessionService.setSession(session)
 
         // Write the freshly fetched level to the session service.
         this.sessionService.setLevel(level)
+
+      }
+
+      if (session.status === 'finished') {
+
+        console.log('I am called')
+        await this.cloudService.evolveLevel(userKey)
+
+        // Retrieves the level stored under current session from Firestore.
+        level = await this.getLevelFromServer(userKey, sessionKeys[i + 1])
 
       }
 
@@ -195,6 +200,31 @@ export class LevelService {
     return new Promise<Level>(resolve => resolve(level))
 
   }
+
+  /**
+   * 
+   * Auxiliary function to load an initial level that is invoked
+   * when the user has not completed a single session yet.
+   * 
+   */
+  private async loadInitialLevel(): Promise<Level> {
+
+    // Creates a new session.
+    const session: Session = await this.sessionService.generateSession()
+
+    // Writes the newly created session to the session service.
+    this.sessionService.setSession(session)
+
+    // Selects a random level from the list of default levels.
+    const level: Level = await this.getInitialLevel()
+
+    // Writes the newly created level to the session service.
+    this.sessionService.setLevel(level)
+
+    // Returns a promise referring to the level defined above.
+    return new Promise<Level>(resolve => resolve(level))
+
+  } 
 
   /////////////
   // Getters //
@@ -208,7 +238,7 @@ export class LevelService {
   public async getLevel(): Promise<Level> {
 
     // If no level has been defined yet, a new level should be loaded.
-    this.level === undefined ? this.level = await this.loadLevel() : null
+    this.level === undefined ? this.level = await this.loadLevel(): null
 
     // Returns a promise referrin to the service's current level.
     return new Promise<Level>(resolve => resolve(this.level))

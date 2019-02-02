@@ -3,6 +3,7 @@ import { Performance } from '../models/performance'
 import { Level } from "../models/level";
 import { Session } from "../models/session";
 import { LevelInterface } from "../interfaces/level.interface";
+import { firestore } from "firebase";
 
 /**
 *
@@ -36,7 +37,8 @@ export class Samples {
         'session_042', 
         42, 
         'created', 
-        Samples.samplePerformance
+        firestore.Timestamp.fromDate(new Date()),
+        Samples.samplePerformance,
         
     )
     

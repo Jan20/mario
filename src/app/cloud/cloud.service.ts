@@ -7,59 +7,49 @@ import { environment } from 'src/environments/environment';
 })
 export class CloudService {
 
+  //////////////////
+  // Constructors //
+  //////////////////
+
+  /**
+   * 
+   *  Default constructor.
+   * 
+   * @param http: Injects a http client for enabling backend calls.
+   * 
+   */
   constructor(
 
     private http: HttpClient,
 
   ) {}
 
-  public async normalizeUserData(userKey: string): Promise<any> {
-    
-    const url: string = `${environment.cloudBackend.backend}/normalization_cloud_function`
-    let result: any
 
-    const params: HttpParams = new HttpParams().set('user_key', userKey);
-  
-    await this.http.get(url, { params: params, responseType: 'text'}).toPromise().then(resturnValue => {
+  ///////////////
+  // Functions //
+  ///////////////
 
-      result = resturnValue
-    
-    }).catch(error => {
-
-      result = `An unexpected error has occurred: ${error}`
-
-    })
-    
-    return new Promise<any>(resolve => resolve(result))
-
-  }
-  
-  public async createClusters(): Promise<any> {
-
-    const url: string = `${environment.cloudBackend.backend}/cluster_cloud_function`
-    let result: any
-    
-    await this.http.get(url, {responseType: 'text'}).toPromise().then(resturnValue => {
-
-      result = resturnValue
-    
-    }).catch(error => {
-
-      result = `An unexpected error has occurred: ${error}`
-
-    })
-
-    return new Promise<any>(resolve => resolve(result))
-
-  }
-
+  /**
+   * 
+   * 
+   * 
+   * @param userKey 
+   * 
+   */
   public async evolveLevel(userKey: string): Promise<any> {
 
+    // Defines a URL via which the opponent generation
+    // process is invoked at the backend.
     const url: string = `${environment.cloudBackend.backend}/evolution_cloud_function`
+    
+    // Variable intended to store the backend's respond.
     let result: any
 
-    let params: HttpParams = new HttpParams().set('user_key', userKey)
+    // Defines a set of parameters which are send to the
+    // backend server.
+    const params: HttpParams = new HttpParams().set('user_key', userKey)
     
+    // Sends a http request to the backend.
     await this.http.get(url, {params: params, responseType: 'text'}).toPromise().then(resturnValue => {
       
       result = resturnValue
@@ -70,6 +60,8 @@ export class CloudService {
 
     })
 
+    // Returns a promise which is resolved as soon as 
+    // the backend sends a respond.
     return new Promise<any>(resolve => resolve(result))
 
   }

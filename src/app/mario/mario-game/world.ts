@@ -1,5 +1,4 @@
 import { SessionService } from '../../analytics/services/session.service';
-import { Howl } from '../mario-common/howler';
 import { loadImages } from '../mario-common/textures';
 import { GLS } from '../services/gl.service';
 import { LevelService } from '../services/level.service';
@@ -8,6 +7,7 @@ import { Enemy } from './Enemy';
 import { Player } from './Player';
 import { Stage } from './Stage';
 import { Level } from 'src/app/models/level';
+import { AudioService } from '../audio/audio.service';
 
 export class World {
 
@@ -25,8 +25,6 @@ export class World {
     public player: Player
     public stage: Stage
     public background: Background
-    public marioTheme: any 
-    public bgMusic: any[]
 
     public levelTextures: any
     public level: string[][]
@@ -35,7 +33,14 @@ export class World {
     //////////////////
     // Constructors //
     //////////////////
-    public constructor(level: Level, sessionService: SessionService, levelService: LevelService) {
+    public constructor(
+        
+        level: Level, 
+        sessionService: SessionService, 
+        levelService: LevelService,
+        audioService: AudioService
+        
+    ) {
 
         this.sessionService = sessionService
         this.level = level.representation
@@ -49,27 +54,11 @@ export class World {
         //
         this.enemies
         this.generateEnemies()
-        this.player = new Player(this, sessionService, levelService)
+        this.player = new Player(this, sessionService, levelService, audioService)
         this.stage = new Stage(this, level.representation)
 
 
         this.background = new Background(this)
-
-        //
-        // Load sounds here so I don't mess up the json magic
-        //
-        this.marioTheme = new Howl({
-
-            urls: ['assets/Sound/Mario.mp3'],
-            loop: true,
-            buffer: true,
-            volume: 0.45,
-
-        })
-
-        this.bgMusic = []
-        this.bgMusic.push(this.marioTheme)
-
 
         this.levelTextures =
         
@@ -189,7 +178,6 @@ export class World {
             world.keyMap[evt.keyCode] = false
         }, false)
         this.loadTextures()
-        this.bgMusic[0].play()
 
     }
 
@@ -202,7 +190,6 @@ export class World {
 
 
     }
-
 
     /**
      * 

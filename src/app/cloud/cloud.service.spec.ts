@@ -39,36 +39,36 @@ describe('CloudService', () => {
   
   });
 
-  it('normalizeUser() should return "Performance of user user_042 has been normalized."', async () => {
+  // it('normalizeUser() should return "Performance of user user_042 has been normalized."', async () => {
 
-    const testService: TestService = TestBed.get(TestService);
-    const cloudService: CloudService = TestBed.get(CloudService);
+  //   const testService: TestService = TestBed.get(TestService);
+  //   const cloudService: CloudService = TestBed.get(CloudService);
 
-    const result: string = await cloudService.normalizeUserData('user_042')
-    const expectedResult: string = 'Performance of user user_042 has been normalized.'
+  //   const result: string = await cloudService.normalizeUserData('user_042')
+  //   const expectedResult: string = 'Performance of user user_042 has been normalized.'
 
-    expect(result).toEqual(expectedResult)
+  //   expect(result).toEqual(expectedResult)
 
-    await testService.cleanUp()
+  //   await testService.cleanUp()
  
-  })
+  // })
 
-  it('createClusters() should return "Clusters have been created."', async () => {
+  // it('createClusters() should return "Clusters have been created."', async () => {
 
-    const testService: TestService = TestBed.get(TestService);
-    const cloudService: CloudService = TestBed.get(CloudService);
+  //   const testService: TestService = TestBed.get(TestService);
+  //   const cloudService: CloudService = TestBed.get(CloudService);
 
-    await testService.setUp()
-    await cloudService.normalizeUserData('user_042')
+  //   await testService.setUp()
+  //   await cloudService.normalizeUserData('user_042')
     
-    const result: string = await cloudService.createClusters()
-    const expectedResult: string = 'Clusters have been created.'
+  //   const result: string = await cloudService.createClusters()
+  //   const expectedResult: string = 'Clusters have been created.'
 
-    expect(result).toEqual(expectedResult)
+  //   expect(result).toEqual(expectedResult)
 
-    await testService.cleanUp()
+  //   await testService.cleanUp()
  
-  })
+  // })
 
   it('evolveLevel() should return "Session session_43 has been evolved."', async () => {
 

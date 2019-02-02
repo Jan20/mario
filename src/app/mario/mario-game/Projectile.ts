@@ -6,6 +6,7 @@ import { LevelService } from "../services/level.service";
 import { World } from "./world";
 import { SessionService } from "src/app/analytics/services/session.service";
 import { Level } from "src/app/models/level";
+import { AudioService } from "../audio/audio.service";
 
 var PROJECTILE_X_VELO = GLS.I().X_VELO_CONSTANT * 12
 
@@ -33,6 +34,7 @@ export class Projectile extends MovableObject{
         rowsToCheck: number[],
         private levelService: LevelService,
         private sessionService: SessionService,
+        private audioService: AudioService
 
     ) {
     
@@ -127,8 +129,7 @@ export class Projectile extends MovableObject{
                 // Need to detect which collision happened, vertical or horizontal
                 this.lives = 0;
                 this.sessionService.increaseScore(100)
-                var enemyKillSound = new Audio('../Sound/Stomp.mp3');
-                enemyKillSound.play();
+                this.audioService.playStomp()
                 this.world.deadEnemies.push(this.world.enemies[i]);
                 this.world.enemies.splice(i, 1);
                 i--;

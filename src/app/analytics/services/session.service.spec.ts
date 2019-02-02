@@ -47,8 +47,6 @@ describe('SessionService', () => {
   })
   
 
-  // it("generateSession() should return 'session˚
-
   it("getSession() should return 'session", async () => {
 
     const testService: TestService = TestBed.get(TestService)

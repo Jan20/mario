@@ -17,7 +17,6 @@ import { IntroductionComponent } from './introduction/introduction.component'
   declarations: [
     
     SurveyComponent,
-    
     IntroductionComponent,
   
   ],

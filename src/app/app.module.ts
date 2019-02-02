@@ -8,7 +8,6 @@ import { AppComponent } from './app.component';
 import { ConfigModule } from './config/config.module';
 import { MaterialModule } from './config/material.module';
 import { MarioModule } from './mario/mario.module';
-import { MenuModule } from './menu/menu.module';
 import { SurveyModule } from './survey/survey.module';
 import { TestModule } from './test/test.module';
 import { CloudModule } from './cloud/cloud.module';
@@ -30,14 +29,13 @@ import { AngularFirestore } from '@angular/fire/firestore';
     ReactiveFormsModule,
     BrowserAnimationsModule,
     ConfigModule,
-    MenuModule,
     MarioModule,
     AnalyticsModule,
     SurveyModule,
     CloudModule,
     TestModule
 
-  ], 
+  ],
   providers: [
     
     AngularFirestore,

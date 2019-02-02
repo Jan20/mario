@@ -88,12 +88,12 @@ export class UserService {
 
   /**
    * 
-   * Attempts to receive an user id for an user who
+   * Attempts to receive a user id for an user who
    * has already participated in a previous round
    * of the experiment. If this is the case, a
-   * reference to the user's firestore id should
-   * be found in the localStorage. However, for
-   * every new user a new id is created. 
+   * reference to the user's user key should
+   * be found in the browser's local storage. 
+   * However, for every new user, a new id is created. 
    * 
    */
   public async getCurrentUserKey(): Promise<string> {

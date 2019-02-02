@@ -30,7 +30,8 @@ export class SurveyComponent implements OnInit {
 
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) { 
-    if (event.keyCode === 13 || event.keyCode === 32 ) {
+    
+    if (event.key === 'Enter' || event.key === 'Space' ) {
 
       this.surveyService.startExperiment()
 

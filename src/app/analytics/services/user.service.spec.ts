@@ -40,6 +40,25 @@ describe('UserService', () => {
   
   })
 
+
+  it("getUserKeys() should return ['user_042']", async () => {
+    
+    const testService: TestService = TestBed.get(TestService)
+    const userService: UserService = TestBed.get(UserService)
+
+    await testService.setUp()
+
+    const result: string[] = await userService.getUserKeys()
+
+    const expectedResult: string[] = ['user_042']
+
+    expect(result).toEqual(expectedResult)
+
+    await testService.cleanUp()
+
+  })
+
+
   it("getUserKeys() should return ['user_042']", async () => {
     
     const testService: TestService = TestBed.get(TestService)

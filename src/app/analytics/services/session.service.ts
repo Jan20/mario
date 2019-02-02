@@ -8,6 +8,8 @@ import { CloudService } from 'src/app/cloud/cloud.service';
 import { Level } from 'src/app/models/level';
 import { Subject } from 'rxjs';
 import { interval } from "rxjs";
+import { Router } from '@angular/router';
+import { firestore } from 'firebase';
 
 @Injectable({
 
@@ -20,18 +22,21 @@ export class SessionService {
   // Variabels //
   ///////////////
 
-  // Holds a Session object.
+  // Holds a reference to the currently played session.
   private session: Session
 
-  // Holds a Level object
+  // Holds a reference to the currently played level.
   private level: Level
-  private lives = 4
 
-  private consecutiveSessions: string[] = []
+  // Defines the number of lives the player starts with.
+  private lives: number = 1
+
+  // 
+  private consecutiveSessions: number = 0
 
   public sessionSubject: Subject<string> = new Subject<string>()
   public statusSubject: Subject<string> = new Subject<string>()
-
+  public surveySubject: Subject<boolean> = new Subject<boolean>()
 
   public timeSubject: Subject<string> = new Subject<string>()
   public scoreSubject: Subject<string> = new Subject<string>()
@@ -45,6 +50,7 @@ export class SessionService {
     private angularFirestore: AngularFirestore,
     private userService: UserService,
     private cloudService: CloudService,
+    private router: Router
 
   ) {
 
@@ -83,7 +89,11 @@ export class SessionService {
 
   /**
    * 
-   * Genereates a new session object.
+   * Genereates a new session object. The function is intended to
+   * be used when a new level should be initialized but has been
+   * created yet. That case should only occur when a new user tries
+   * to play his very first session. For every consecutive session,
+   * a new session obeject should have been created by the backend.
    * 
    */
   public async generateSession(): Promise<Session> {
@@ -101,7 +111,7 @@ export class SessionService {
     const performance: Performance = new Performance(0, 0, 0, 0, 0, 0, 0, 100)
 
     // Initializes a new session object.
-    const session: Session = new Session(key, id, 'created', performance)
+    const session: Session = new Session(key, id, 'created', firestore.Timestamp.fromDate(new Date()), performance)
 
     // Returns a promise referring to the freshly created session.
     return new Promise<Session>(resolve => resolve(session))
@@ -146,10 +156,11 @@ export class SessionService {
    * the project's backend in order to present the user
    * a level with a 
    * 
+   * @param result: 
+   *
    */
   public async storeSession(result: string): Promise<void> {
 
-    console.log(this.session)
     this.statusSubject.next(result)
 
     // Gets the userId of the current user Id from UserService
@@ -161,94 +172,149 @@ export class SessionService {
     // Retrieves the level of the current session.
     const level: Level = this.getLevel()
     
+    this.session.timestamp = firestore.Timestamp.fromDate(new Date())
+    this.session.status = 'finished'
+
     // Stores the current session at Firestore.
-    await this.angularFirestore.doc(ref).set({key: this.session.key, id: this.session.id, status: 'finished'})
+    await this.angularFirestore.doc(ref).set(this.session.toObject())
     await this.angularFirestore.doc(`${ref}/data/performance`).set(this.session.performance.toInterface())
     await this.angularFirestore.doc(`${ref}/data/level`).set(level.toInterface())
 
     // Calls the backend in order to 
     await this.cloudService.evolveLevel(userKey)
 
-    this.sessionSubject.next('stored')
+    const recentSessions: Session[] = await this.checkRecentSessions(userKey)
+
+    console.log('_______________________________________________-')
+    console.log(recentSessions.length)
+
+    if (recentSessions.length > 0) {
+
+      this.sessionSubject.next('stored')
+      this.surveySubject.next(true)
+    
+    } else {
+
+      this.sessionSubject.next('stored')
+
+    }
+
+  }
+  
+
+  private async checkRecentSessions(userKey: string): Promise<Session[]> {
+
+    const recentSessions: Session[] = []
+
+    const storedSessions: Session[] = await this.getSessions(userKey) 
+
+    console.log(storedSessions)
+    for (let i = 0; i < storedSessions.length; i++) {
+
+        const recentlyFinished: number = new Date().valueOf() - (60 * 60 * 1000)
+
+        console.log(new Date())
+        console.log(new Date().valueOf())
+        console.log(60 * 60 * 1000)
+        console.log(recentlyFinished)
+        // Checks whether the a session has been finished within the 
+        if (storedSessions[i].timestamp.toMillis() > recentlyFinished && recentSessions.length < 5) {
+            console.log(storedSessions[i].timestamp.toMillis())
+
+            recentSessions.push(storedSessions[i])
+
+        }
+
+    }
+
+    return new Promise<Session[]>(resolve => resolve(recentSessions))
+
+  }
+
+  public async getSessions(userKey: string): Promise<Session[]> {
+
+    let sessions: Session[] = []
+
+    await this.angularFirestore.collection(`users/${userKey}/sessions`).get().toPromise().then(result => {
+
+      console.log(result)
+      result.forEach(session => {
+
+        sessions.push(Session.fromObject(session.data(), null))
+
+      })
+
+    })
+
+    return new Promise<Session[]>(resolve => resolve(sessions))
 
   }
   
   /**
    * 
+   * Retrieves an existing session from the database which
+   * is identified by a unique user key and a corresponding
+   * session key.
    * 
-   * @param userKey 
-   * @param sessionKey 
+   * @param userKey: A valid user key such as 'user_042' 
+   * @param sessionKey: A valid session key such as 'session_042'
    */
   public async getSession(userKey: string, sessionKey: string): Promise<Session> {
 
-    //
-    //
-    //
+    // Declaring a Session object intended to store a session retrieved
+    // from the database.
     let session: Session
+
+    // Declaring a Performance object that should only a performance
+    // temporarily.
     let performance: Performance
 
-    //
-    //
-    //
-    const performanceReference: string = `users/${userKey}/sessions/${sessionKey}/data/performance`
+    // Defines a reference to a performance document stored at Firebase.
+    const performanceRef: string = `users/${userKey}/sessions/${sessionKey}/data/performance`
 
-    await this.angularFirestore.doc(performanceReference).get().toPromise().then(performanceInterface => {
+    // Retrieves a performance document from Firestore.
+    await this.angularFirestore.doc(performanceRef).get().toPromise().then(result => {
       
-      if (performanceInterface.data() != undefined) {
-
-        performance = new Performance(
-     
-          performanceInterface.data()['defeated_by_gaps'],
-          performanceInterface.data()['defeated_by_opponent_type_1'],
-          performanceInterface.data()['defeated_by_opponent_type_2'],
-          performanceInterface.data()['defeated_by_opponent_type_3'],
-          performanceInterface.data()['score'],
-          performanceInterface.data()['time'],
-          performanceInterface.data()['progess'],
-          performanceInterface.data()['difficulty'],
-
-        )
-
-      } else {
-
-        performance = new Performance(0, 0, 0, 0, 0, 0, 0, 100)
-      
-      }
+      // Checks whether the performance document exists at Firestore. If that is the case, 
+      // a new Performance object based on the data stored at Firestore is created. If the
+      // reference does not link to a valid performance document, a new empty Performance
+      // object is created.
+      performance = result.exists ? Performance.fromObject(result.data()) : new Performance(0, 0, 0, 0, 0, 0, 0, 100)
       
     })
 
-    //
-    //
-    //
-    const sessionReference = `users/${userKey}/sessions/${sessionKey}`
+    // Defines a reference to a session document stored at Firebase.
+    const sessionRef: string = `users/${userKey}/sessions/${sessionKey}`
 
-    //
-    //
-    //
-    await this.angularFirestore.doc(sessionReference).get().toPromise().then(sessionInterface => {
+    // Retrieves a session from Firestore.
+    await this.angularFirestore.doc(sessionRef).get().toPromise().then(result => {
 
-      session = new Session(
-        
-        sessionInterface.data()['key'],
-        sessionInterface.data()['id'],
-        sessionInterface.data()['status'],
-        performance
+      console.log(result)
+      // Checks whether a valid session document exists at Firestore. If that is
+      // the case, the session variable declared above is filled with a Session
+      // obejct generated from the data stored at the session document.
+      result.exists ? session = Session.fromObject(result.data(), performance) : null
 
-      )
+      console.log(session)
 
     })
 
+    // Returns a promise which is resolved as soon as the session object is defined.
     return new Promise<Session>(resolve => resolve(session))
 
   }
 
   /**
    * 
+   * Deletes a single session from the database.
    * 
+   * @param userKey: A valid user key such as 'user_042'
+   * @param sessionKey: A valid session Key such as 'session_042'
    * 
    */
   public async deleteSession(userKey: string, sessionKey: string): Promise<void> {
 
+    // Removes the referenced document from Firestore.
     await this.angularFirestore.doc(`users/${userKey}/sessions/${sessionKey}`).delete()
 
   }
@@ -283,11 +349,10 @@ public resetTimer(): void {
 
 }
 
-
-    
   /////////////
   // Getters //
   /////////////
+
   /**
    * 
    * Returns the session's level.
@@ -296,6 +361,12 @@ public resetTimer(): void {
   public getLevel(): Level {
 
     return this.level
+
+  }
+
+  public getConsecutiveSessions(): number {
+
+    return this.consecutiveSessions
 
   }
 
@@ -380,6 +451,12 @@ public resetTimer(): void {
 
     this.lives -= 1
     this.lifeSubject.next(this.lives)
+
+  }
+
+  public increaseConsecutiveSessions(): void {
+
+    this.consecutiveSessions += 1
 
   }
 

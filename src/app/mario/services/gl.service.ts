@@ -45,7 +45,6 @@ export class GLS {
     /////////////////////////////
     // World Related Constants //
     /////////////////////////////
-    public continueOrRestart: number = 0; // continue = 0; restart = 1;
     public INITIAL_WORLD_BOUND_LEFT: number = 0;
     public INITIAL_WORLD_BOUND_RIGHT: number = 14;
     public DRAW_BOUND: number = 5.5;

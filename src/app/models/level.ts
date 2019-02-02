@@ -25,6 +25,8 @@ export class Level {
     ///////////////
     public static fromDocumentSnapshot(result: firebase.firestore.DocumentSnapshot): Level {
         
+        console.log(result)
+
         return new Level(
 
             result.data().key,

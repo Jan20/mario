@@ -23,7 +23,7 @@ export class SurveyService {
 
     sessionService.sessionSubject.subscribe(status => {
 
-      status === 'stored' ? this.surveySubject.next('ready') : null
+      // status === 'stored' ? this.surveySubject.next('ready') : null
 
     })
 

@@ -1,6 +1,5 @@
 import { MovableObject } from './MoveableObject'
 import { Timer } from '../mario-common/timer'
-import { Howl } from '../mario-common/howler'
 import { texCoord } from '../mario-common/textures'
 import { mat4, mult, translate, flatten } from '../mario-common/MV'
 import { GLS } from '../services/gl.service'
@@ -11,6 +10,7 @@ import { Injectable } from '@angular/core';
 import { SessionService } from '../../analytics/services/session.service';
 import { World } from './world';
 import { LevelService } from '../services/level.service';
+import { AudioService } from '../audio/audio.service';
 
 @Injectable()
 export class Player extends MovableObject{
@@ -34,19 +34,16 @@ export class Player extends MovableObject{
     public playerHeight: number
     public playerWidth: number
     public bounds: any[]
-    public enemyKillSound: HTMLAudioElement
-    public coinSound: HTMLAudioElement
-    public lostLifeSound: any
-    public fireballSound: HTMLAudioElement
-    public powerUpAppearsSound: HTMLAudioElement
-    public lifeSound: HTMLAudioElement
-    public powerUpSound: HTMLAudioElement
-
+    
+    //////////////////
+    // Constructors //
+    //////////////////
     public constructor(
         
         world: World,
         private sessionService: SessionService,
         private levelService: LevelService,
+        private audioService: AudioService
         
     ) {
 
@@ -70,26 +67,7 @@ export class Player extends MovableObject{
         this.playerHeight = .5
         this.playerWidth = .5
         this.bounds = []
-        this.enemyKillSound = new Audio('assets/Sound/Stomp.mp3')
-        this.coinSound = new Audio('assets/Sound/Coin.mp3')
 
-        this.lostLifeSound = new Howl({
-        
-            urls: ['../assets/Sound/LostLife.mp3'],
-            volume: 0.5,
-        
-            onplay: () => {
-            
-                world.bgMusic[0].pause()
-            
-            },
-        
-            onend: () => {
-            
-                world.bgMusic[0].play()
-            }
-        
-        })
     }
     
     public generateVertices(buffer, texbuffer, normalbuffer) {
@@ -205,11 +183,11 @@ export class Player extends MovableObject{
                     this.pos.slice(0), 
                     this.getRowsToCheck(), 
                     this.levelService,
-                    this.sessionService    
+                    this.sessionService,
+                    this.audioService,
                 ))
 
-                this.fireballSound = new Audio('../Sound/Fireball.wav')
-                this.fireballSound.play()
+                this.audioService.playFireball()
             }
         
         }
@@ -295,13 +273,11 @@ export class Player extends MovableObject{
                     if (blockCollide == 'S') {
                     
                         this.sessionService.increaseScore(150)
-                        this.coinSound = new Audio('../Sound/Coin.mp3');
-                        this.coinSound.play();
+                        this.audioService.playCoin()
                     
                     } else {
                     
-                        this.powerUpAppearsSound = new Audio('../Sound/PowerUpAppears.wav');
-                        this.powerUpAppearsSound.play();
+                        this.audioService.playFireball()
                     
                     }
 
@@ -357,8 +333,8 @@ export class Player extends MovableObject{
                     this.velocity[1] = GLS.I().JUMP_CONSTANT;
                     this.world.deadEnemies.push(this.world.enemies[i]);
                     this.world.enemies.splice(i, 1);
-                    this.enemyKillSound.play();
-                    return;
+                    this.audioService.playStomp()
+                    return
                 
                 }
 
@@ -367,21 +343,22 @@ export class Player extends MovableObject{
                     // User looses one life.
                     this.sessionService.decreaseLives()
                     currentEnemy.enemyType
-
+                    console.log(playerRight)
                     ////////////////////////////////////////
                     // TODO: Handle different enemy types //
                     ////////////////////////////////////////
                     this.sessionService.increaseDefeatedByOpponentType1()
-                    
-                    this.resetToDefault();
-                    this.lostLifeSound.play();
-                    
+
                     if (this.sessionService.getLives() === 0) {
                 
                         this.sessionService.setProgress(playerRight)
                         this.sessionService.storeSession('lost')
-
+                        this.audioService.playlostLife()
+                        this.resetToDefault();
                     }
+
+                    this.audioService.playlostLife()
+                    this.resetToDefault();
 
                 }
                 
@@ -406,30 +383,32 @@ export class Player extends MovableObject{
                 
                 switch (curItem.powerType) {
                     case 'L':
-                        this.lifeSound = new Audio('../Sound/1-up.wav');
-                        this.lifeSound.play();
+                        
                         this.sessionService.increaseLives()
                         break;
+
                     case 'P':
-                        this.powerUpSound = new Audio('../Sound/PowerUp.wav');
-                        this.powerUpSound.play();
+                        
+                        this.audioService.playPowerUp()
                         this.hasProjectiles = true;
                         break;
+
                     case 'F':
-                        this.powerUpSound = new Audio('../Sound/PowerUp.wav');
-                        this.powerUpSound.play();
+                        
                         GLS.I().X_VELO_CONSTANT = .045;
-                        break;
+                        break
+
                     case 'G':
-                        this.powerUpSound = new Audio('../Sound/PowerUp.wav');
-                        this.powerUpSound.play();
+                        
                         GLS.I().GRAVITY_CONSTANT = -.0055;
                         break;
                 }
-                var p = this; // settimeout function "this" scope issue
+
                 setTimeout(function () {
+
                     GLS.I().GRAVITY_CONSTANT = -.0075;
                     GLS.I().X_VELO_CONSTANT = .0175;
+
                 }, 20000); // holds for 10 seconds, should be longer?
                 curItem.lives = 0;
             }
@@ -441,15 +420,14 @@ export class Player extends MovableObject{
             this.sessionService.decreaseLives()
             this.sessionService.increaseDefeatedByGaps()
 
-            this.resetToDefault();
-            this.lostLifeSound.play();
+            this.resetToDefault()
+            this.audioService.playlostLife()
             
             if (this.sessionService.getLives() === 0) {
 
-                this.pos = GLS.I().INITIAL_PLAYER_POS.slice(0);
                 this.sessionService.setProgress(playerRight)
                 this.sessionService.storeSession('lost')
-
+                this.pos = GLS.I().INITIAL_PLAYER_POS.slice(0);
             
             } else {
              

@@ -1,7 +1,6 @@
 import { AfterViewInit, Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { interval } from "rxjs";
 import { SessionService } from '../../analytics/services/session.service';
-import { UserService } from '../../analytics/services/user.service';
 import { initShaders } from '../mario-common/InitShaders';
 import { flatten, mat4, mult, translate, vec3 } from '../mario-common/MV';
 import { WebGLUtils } from '../mario-common/webgl-utils';
@@ -9,6 +8,9 @@ import { World } from '../mario-game/world';
 import { GLS } from '../services/gl.service';
 import { LevelService } from '../services/level.service';
 import { Level } from 'src/app/models/level';
+import { AudioService } from '../audio/audio.service';
+import { UserService } from 'src/app/analytics/services/user.service';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-mario',
@@ -20,15 +22,17 @@ export class MarioComponent implements OnInit, AfterViewInit {
     ///////////////
     // Variables //
     ///////////////
-    /** 
-     * 
-     * Gets a HTML canvas element
-     *
-     */
+
+
+    // Canvas
     @ViewChild('canvas') canvas: ElementRef
+    
+    // 
     public isStored: boolean
+    public survey: boolean = false
     public status: string
 
+    // UI elements
     public score: string = `00000`
     public lives: number = this.sessionService.getLives()
     public time: string = `00000`
@@ -44,7 +48,9 @@ export class MarioComponent implements OnInit, AfterViewInit {
     public constructor(
 
         private sessionService: SessionService,
-        private levelService: LevelService
+        private levelService: LevelService,
+        private audioService: AudioService,
+        private router: Router
 
     ) {
 
@@ -54,9 +60,10 @@ export class MarioComponent implements OnInit, AfterViewInit {
 
         })
 
+        this.sessionService.surveySubject.subscribe(survey => this.survey = survey)
         this.sessionService.statusSubject.subscribe(status => this.status = status)
         this.sessionService.statusSubject.next('ready')
-
+        
         this.sessionService.timeSubject.subscribe(time => this.time = time)
         this.sessionService.lifeSubject.subscribe(lives => this.lives = lives)
         this.sessionService.scoreSubject.subscribe(score => this.score = score)
@@ -77,29 +84,45 @@ export class MarioComponent implements OnInit, AfterViewInit {
 
     }
 
+    /**
+     * 
+     * Retrieves 
+     * 
+     */
     public async startNewLevel(): Promise<void> {
 
+        // Checks wheather
         if (this.status === 'ready') {
 
-            this.sessionService.statusSubject.next('running')
+            this.status = 'loading'
 
             const level: Level = await this.levelService.getLevel()
 
             this.init(level)
 
-        }
+            this.sessionService.statusSubject.next('running')
 
+        }
+    
         // If the current session has been stored successfully,
         // a page refresh is performend. 
-        this.isStored === true ? location.reload() : null
+        // this.isStored === true ? location.reload() : null
+
 
     }
+
+    public progressToSurvey(): void {
+
+        this.router.navigate(['survey'])
+
+    }
+
 
     private async init(level: Level) {
 
         GLS.I().lightPosition = vec3(0.0, 15.0, -1.0)
 
-        if (!GLS.I().GL) { alert("WebGL isn't available"); }
+        !GLS.I().GL ? alert("WebGL isn't available") : null
 
         const extension = GLS.I().GL.getExtension('WEBGL_depth_texture');
 
@@ -137,9 +160,9 @@ export class MarioComponent implements OnInit, AfterViewInit {
         // set initial camera position
         GLS.I().CAMERA_POS = GLS.I().INITIAL_CAMERA_POS.slice(0);
 
-        // const level = await this.levelService.getLevel()
+        GLS.I().GAMEWORLD = new World(level, this.sessionService, this.levelService, this.audioService)
 
-        GLS.I().GAMEWORLD = new World(level, this.sessionService, this.levelService);
+        this.audioService.playTheme()
 
         // for hud initialization
         this.sessionService.resetTimer();

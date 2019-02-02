@@ -1,3 +1,5 @@
+<app-audio></app-audio>
+
 <div class='background'>
 
     <div class="container"> 
@@ -8,12 +10,16 @@
 
         <div class='menu' *ngIf='status === "lost"'>
             <h1>Thank you for having tried the level.</h1>
-            <h2 *ngIf='isStored === true' (click)='startNewLevel()'>Try another one!</h2>
+            <app-spinner *ngIf='isStored != true'></app-spinner>
+            <h2 *ngIf='isStored === true && !survey' (click)='startNewLevel()'>Try another one!</h2>
+            <h2 *ngIf='isStored === true && survey' (click)='progressToSurvey()'>Please fill out a little survey</h2>
         </div>
 
         <div class='menu' *ngIf='status === "completed"'>
             <h1>Level Completed!</h1>
-            <h2 *ngIf='isStored === true' (click)='startNewLevel()'>Progress to the next Level</h2>
+            <app-spinner *ngIf='isStored != true'></app-spinner>
+            <h2 *ngIf='isStored && !survey' (click)='startNewLevel()'>Progress to the next Level</h2>
+            <h2 *ngIf='isStored && survey' (click)='progressToSurvey()'>Please fill out a little survey.</h2>
         </div>
 
         <div *ngIf='status === "running"' class='ui'>
