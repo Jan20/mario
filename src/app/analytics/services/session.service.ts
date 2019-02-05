@@ -8,8 +8,8 @@ import { CloudService } from 'src/app/cloud/cloud.service';
 import { Level } from 'src/app/models/level';
 import { Subject } from 'rxjs';
 import { interval } from "rxjs";
-import { Router } from '@angular/router';
 import { firestore } from 'firebase';
+import { SurveyService } from 'src/app/survey/services/survey.service';
 
 @Injectable({
 
@@ -25,6 +25,8 @@ export class SessionService {
   // Holds a reference to the currently played session.
   private session: Session
 
+  private recentSessions: Session[]
+
   // Holds a reference to the currently played level.
   private level: Level
 
@@ -34,9 +36,9 @@ export class SessionService {
   // 
   private consecutiveSessions: number = 0
 
-  public sessionSubject: Subject<string> = new Subject<string>()
   public statusSubject: Subject<string> = new Subject<string>()
-  public surveySubject: Subject<boolean> = new Subject<boolean>()
+  public sessionSubject: Subject<string> = new Subject<string>()
+  public readyForSurveySubject: Subject<boolean> = new Subject<boolean>()
 
   public timeSubject: Subject<string> = new Subject<string>()
   public scoreSubject: Subject<string> = new Subject<string>()
@@ -50,7 +52,7 @@ export class SessionService {
     private angularFirestore: AngularFirestore,
     private userService: UserService,
     private cloudService: CloudService,
-    private router: Router
+    private surveyService: SurveyService
 
   ) {
 
@@ -156,22 +158,24 @@ export class SessionService {
    * the project's backend in order to present the user
    * a level with a 
    * 
-   * @param result: 
+   * @param outcome: The outcome of the just finished session, which can be 'completed' or 'lost'.
    *
    */
-  public async storeSession(result: string): Promise<void> {
+  public async storeSession(outcome: string): Promise<void> {
 
-    this.statusSubject.next(result)
+    // Propa
+    this.statusSubject.next(outcome)
 
-    // Gets the userId of the current user Id from UserService
+    // Gets the user id of the current user from the user service.
     const userKey: string = await this.userService.getCurrentUserKey()
 
-    // Firestore document references.
+    // Defines a Firestore document reference for the just finished session.
     const ref: string = `users/${userKey}/sessions/${this.session.key}`
 
     // Retrieves the level of the current session.
     const level: Level = this.getLevel()
     
+    // 
     this.session.timestamp = firestore.Timestamp.fromDate(new Date())
     this.session.status = 'finished'
 
@@ -183,15 +187,17 @@ export class SessionService {
     // Calls the backend in order to 
     await this.cloudService.evolveLevel(userKey)
 
-    const recentSessions: Session[] = await this.checkRecentSessions(userKey)
+    // Retrieves all recently finished sessions.
+    const recentSessions: Session[] = await this.getRecentlyFinishedSessions(userKey)
 
-    console.log('_______________________________________________-')
-    console.log(recentSessions.length)
+    // If exactly the 
+    if (recentSessions.length === 2 && !this.surveyService.surveyCompleted) {
 
-    if (recentSessions.length > 0) {
+      // Writes the recently finished sessions to the survey service.
+      this.surveyService.setRecentSessions(recentSessions)    
 
       this.sessionSubject.next('stored')
-      this.surveySubject.next(true)
+      this.readyForSurveySubject.next(true)
     
     } else {
 
@@ -201,51 +207,82 @@ export class SessionService {
 
   }
   
+  /**
+   * 
+   * Returns an array of recently finished session. If the user has finished sessions
+   * within the last 60 minutes, the function returns a list of recently
+   * finished sessions and an empty list otherwise.
+   * 
+   * @param userKey: A valid user key such as 'user_042"
+   */
+  private async getRecentlyFinishedSessions(userKey: string): Promise<Session[]> {
 
-  private async checkRecentSessions(userKey: string): Promise<Session[]> {
+    // Variable intented to store all recent sessions.
+    let recentSessions: Session[] = []
 
-    const recentSessions: Session[] = []
-
+    // Stores all previously finished sessions.
     const storedSessions: Session[] = await this.getSessions(userKey) 
 
-    console.log(storedSessions)
-    for (let i = 0; i < storedSessions.length; i++) {
+    // Computes the amount of milliseconds within one hour, which should
+    // result in 3,600,000 milliseconds.
+    const oneHourInMilliseconds: number = 60 * 60 * 1000
 
-        const recentlyFinished: number = new Date().valueOf() - (60 * 60 * 1000)
+    // Iterates over all previously finished sessions.
+    for (let session of storedSessions) {
 
-        console.log(new Date())
-        console.log(new Date().valueOf())
-        console.log(60 * 60 * 1000)
-        console.log(recentlyFinished)
-        // Checks whether the a session has been finished within the 
-        if (storedSessions[i].timestamp.toMillis() > recentlyFinished && recentSessions.length < 5) {
-            console.log(storedSessions[i].timestamp.toMillis())
+      // A session will be regarded as to be recently finished if it has been
+      // completed within the last hour. Therefore, the current date is converted
+      // into milliseconds and reduced by the 3,600,000 milliseconds.
+      const recentlyFinished: number = new Date().valueOf() - oneHourInMilliseconds
 
-            recentSessions.push(storedSessions[i])
-
-        }
+      // Checks whether the session of the current iteration has been finished within
+      // one hour and that not more than two sessions are already stored at recent
+      // sessions. If the conditions are met, the current iteration's session is added
+      // to the recent sessions array.
+      session.timestamp.toMillis() > recentlyFinished && recentSessions.length < 2 ? recentSessions.push(session) : null
 
     }
 
+    // Returns a promise which is resolved as soon as the recent sessions
+    // variable is filled.
     return new Promise<Session[]>(resolve => resolve(recentSessions))
 
   }
 
+  /**
+   * 
+   * Returns all finished sessions for a given user.
+   * 
+   * @param userKey: A valid user id such as 'user_042'
+   * 
+   */
   public async getSessions(userKey: string): Promise<Session[]> {
 
+    // Defines an array intended to be filled with all sessions
+    // stored for a given user.
     let sessions: Session[] = []
 
-    await this.angularFirestore.collection(`users/${userKey}/sessions`).get().toPromise().then(result => {
+    // Defines a reference to the sessions collection at Firestore.
+    const ref: string = `users/${userKey}/sessions`
 
-      console.log(result)
+    // Retrieves all sessions from Firestore that are stored for the
+    // specified user.
+    await this.angularFirestore.collection(ref).get().toPromise().then(result => {
+
+      // Iterates over all stored sessions.
       result.forEach(session => {
 
-        sessions.push(Session.fromObject(session.data(), null))
+        // Creates an object of class Session from the data retrieved from Firestore.
+        const storedSession: Session = Session.fromObject(session.data(), null)
+
+        // Checks whether the session under scrutiny has been finished. 
+        storedSession.status === 'finished' ? sessions.push(storedSession) : null
 
       })
 
     })
 
+    // Retruns a promise that is resolved as soon as all sessions are retrieved.
     return new Promise<Session[]>(resolve => resolve(sessions))
 
   }
@@ -289,13 +326,10 @@ export class SessionService {
     // Retrieves a session from Firestore.
     await this.angularFirestore.doc(sessionRef).get().toPromise().then(result => {
 
-      console.log(result)
       // Checks whether a valid session document exists at Firestore. If that is
       // the case, the session variable declared above is filled with a Session
       // obejct generated from the data stored at the session document.
       result.exists ? session = Session.fromObject(result.data(), performance) : null
-
-      console.log(session)
 
     })
 
@@ -364,6 +398,12 @@ public resetTimer(): void {
 
   }
 
+  public getRecentSessions(): Session[] {
+
+    return this.recentSessions
+
+  }
+
   public getConsecutiveSessions(): number {
 
     return this.consecutiveSessions
@@ -386,6 +426,11 @@ public resetTimer(): void {
   
   }
 
+  public setRecentSessions(recentSessions: Session[]): void {
+
+    this.recentSessions = recentSessions
+
+  }
 
   public setLevel(level: Level): void {
 
@@ -453,12 +498,5 @@ public resetTimer(): void {
     this.lifeSubject.next(this.lives)
 
   }
-
-  public increaseConsecutiveSessions(): void {
-
-    this.consecutiveSessions += 1
-
-  }
-
 
 }

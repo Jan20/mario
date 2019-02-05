@@ -5,7 +5,7 @@ import { environment } from 'src/environments/environment';
 import { TestService } from 'src/app/test/services/test.service';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { HttpClient, HttpHandler } from '@angular/common/http';
-import { Samples } from 'src/app/misc/samples';
+import { Samples } from 'src/app/test/samples';
 import { Session } from 'src/app/models/session';
 
 describe('SessionService', () => {
@@ -57,7 +57,7 @@ describe('SessionService', () => {
     const result: Session = await sessionService.getSession(Samples.sampleUser.key, Samples.sampleSession.key)
     const expectedResult: Session = Samples.sampleSession
 
-    expect(result.toInterface()).toEqual(expectedResult.toInterface())
+    expect(result.toObject()).toEqual(expectedResult.toObject())
 
     await testService.cleanUp()
 

@@ -30,8 +30,8 @@ import { SharedModule } from '../shared/shared.module';
   exports: [
 
     MarioComponent,
-    MaterialModule
-
+    MaterialModule,
+    AudioComponent,
 
   ]
 })

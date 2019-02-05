@@ -6,7 +6,7 @@ import { TestService } from '../test/services/test.service';
 import { AngularFireModule } from '@angular/fire';
 import { environment } from 'src/environments/environment';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { Samples } from '../misc/samples';
+import { Samples } from '../test/samples';
 
 describe('CloudService', () => {
   beforeEach(() => {

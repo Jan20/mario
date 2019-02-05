@@ -29,6 +29,7 @@ export class World {
     public levelTextures: any
     public level: string[][]
     public sessionService: SessionService
+    public audioService: AudioService
 
     //////////////////
     // Constructors //
@@ -43,6 +44,7 @@ export class World {
     ) {
 
         this.sessionService = sessionService
+        this.audioService = audioService
         this.level = level.representation
 
         this.xBoundLeft = GLS.I().INITIAL_WORLD_BOUND_LEFT
@@ -225,11 +227,14 @@ export class World {
         if (this.player.pos[0] > this.stage.finishLine) {
 
             this.sessionService.setProgress(200)
-
+            this.audioService.stopMusic()
             // Stores all collected gameplay information
             // of the current session at Firestore.
             this.sessionService.storeSession('completed')
+            this.sessionService.setProgress(200)
             this.player.pos[0] = 0
+            this.player.restartLevel()
+
         }
         
         //
@@ -240,8 +245,8 @@ export class World {
         this.player.draw();
 
         /////////////////
-        /// Todo //////////
-        ////////////////////
+        /// Todo ////////
+        /////////////////
         for (var i = 0; i < this.enemies.length; i++) {
             if (this.enemies[i].pos[0] + 1 > this.xBoundLeft && this.enemies[i].pos[0] - 1 < this.xBoundRight)
                 this.enemies[i].draw();

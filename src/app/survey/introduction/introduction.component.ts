@@ -1,5 +1,4 @@
 import { Component, OnInit, HostListener } from '@angular/core';
-import { SurveyService } from '../survey-services/survey.service'
 import { Router } from '@angular/router';
 
 @Component({
@@ -9,59 +8,33 @@ import { Router } from '@angular/router';
 })
 export class IntroductionComponent implements OnInit {
 
-  ///////////////
-  // Variabels //
-  ///////////////
-  private status: string
-
   //////////////////
   // Constructors //
   //////////////////
   constructor(
 
-    private surveyService: SurveyService,
     private router: Router
 
   ) { }
 
-  ngOnInit() {
+  ngOnInit() {}
 
-    this.surveyService.surveySubject.subscribe(status => this.setStatus(status))
-
-  }
-
-  @HostListener('document:keydown', ['$event'])
-  handleKeyboardEvent(event: KeyboardEvent) {
-    
-    event.key === 'Enter' ? this.router.navigate(['/game']) : null
-    
-  }
-    
   ///////////////
   // Functions //
   ///////////////
-  public startExperiment(): void {
+  @HostListener('document:keydown', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) {
+    
+    event.key === 'Enter' ? this.proceed() : null
+    
+  }
+    
 
-    this.surveyService.startExperiment()
+  public proceed(): void {
+
+    this.router.navigate(['description'])
 
   }
 
-  /////////////
-  // Getters //
-  /////////////
-  public getStatus(): string {
-
-    return this.status
-
-  }
-
-  /////////////
-  // Setters //
-  /////////////
-  public setStatus(status: string): void {
-
-    this.status = status
-
-  }
 
 }

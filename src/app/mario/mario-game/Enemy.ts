@@ -21,11 +21,11 @@ export class Enemy extends MovableObject{
     public enemyType: string
 
     public enemyWalkTimer = new Timer()
-    public walkTime = 0
-    public texIndex= 0
+    public walkTime: number = 0
+    public texIndex: number = 0
 
-    public enemyWidth = .5
-    public enemyHeight = .7
+    public enemyWidth: number = .5
+    public enemyHeight: number = .7
 
     public vertices = []
     public texCoords = []
@@ -113,6 +113,7 @@ export class Enemy extends MovableObject{
     }
     
     public move() {
+
         var adjustedPos = this.pos[0] + (1 - this.enemyWidth) / 2
         // Ground crawler == C or Horizontal Flyers == H
         if (this.enemyType == "C" || this.enemyType == "H") {

@@ -12,6 +12,7 @@ import { SurveyModule } from './survey/survey.module';
 import { TestModule } from './test/test.module';
 import { CloudModule } from './cloud/cloud.module';
 import { AngularFirestore } from '@angular/fire/firestore';
+import { MenuModule } from './menu/menu.module'
 
 @NgModule({
   
@@ -29,6 +30,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
     ReactiveFormsModule,
     BrowserAnimationsModule,
     ConfigModule,
+    MenuModule,
     MarioModule,
     AnalyticsModule,
     SurveyModule,

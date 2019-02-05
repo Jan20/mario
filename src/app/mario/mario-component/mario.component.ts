@@ -9,7 +9,6 @@ import { GLS } from '../services/gl.service';
 import { LevelService } from '../services/level.service';
 import { Level } from 'src/app/models/level';
 import { AudioService } from '../audio/audio.service';
-import { UserService } from 'src/app/analytics/services/user.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -23,13 +22,20 @@ export class MarioComponent implements OnInit, AfterViewInit {
     // Variables //
     ///////////////
 
-
-    // Canvas
+    // Canvas in which the game should be rendered.
     @ViewChild('canvas') canvas: ElementRef
     
+    // Declares a boolean variable indicating whether
+    // the current session has been stored at Firestore
+    // or not. 
+    public isStored: boolean = false
+
     // 
-    public isStored: boolean
-    public survey: boolean = false
+    public readyForSurvey: boolean = false
+    
+    // Status variable that can either be 'ready', 'loading',
+    // 'running', 'lost' or 'completed'. The status variable
+    // is  
     public status: string
 
     // UI elements
@@ -60,7 +66,7 @@ export class MarioComponent implements OnInit, AfterViewInit {
 
         })
 
-        this.sessionService.surveySubject.subscribe(survey => this.survey = survey)
+        this.sessionService.readyForSurveySubject.subscribe(readyForSurvey => this.readyForSurvey = readyForSurvey)
         this.sessionService.statusSubject.subscribe(status => this.status = status)
         this.sessionService.statusSubject.next('ready')
         
@@ -91,6 +97,13 @@ export class MarioComponent implements OnInit, AfterViewInit {
      */
     public async startNewLevel(): Promise<void> {
 
+        if (this.readyForSurvey) {
+
+            this.progressToSurvey()
+            return
+
+        }
+
         // Checks wheather
         if (this.status === 'ready') {
 
@@ -101,23 +114,31 @@ export class MarioComponent implements OnInit, AfterViewInit {
             this.init(level)
 
             this.sessionService.statusSubject.next('running')
+            this.isStored === true ? location.reload() : null
 
         }
     
         // If the current session has been stored successfully,
         // a page refresh is performend. 
-        // this.isStored === true ? location.reload() : null
-
 
     }
 
+    /**
+     * 
+     * Directs the user further to the first part of the survey.
+     * 
+     */
     public progressToSurvey(): void {
 
-        this.router.navigate(['survey'])
+        // Changes the current URL to the start of the survey.
+        this.router.navigate(['survey/part_1'])
 
     }
 
-
+    /**
+     * 
+     * @param level 
+     */
     private async init(level: Level) {
 
         GLS.I().lightPosition = vec3(0.0, 15.0, -1.0)
@@ -209,7 +230,8 @@ export class MarioComponent implements OnInit, AfterViewInit {
 
     ngAfterViewInit() {
 
-        GLS.I().GL = new WebGLUtils().setupWebGL(this.canvas);
+        GLS.I().GL = new WebGLUtils().setupWebGL(this.canvas)
+
     }
 
 

@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -16,11 +17,42 @@ export class AudioService {
   public theme: HTMLAudioElement = new Audio('assets/Sound/Mario.mp3')
   public isAllowed: boolean = false
 
-  constructor() {}
+  public isAllowedSubject: Subject<boolean> = new Subject<boolean>()
+
+  constructor() {
+
+    this.isAllowedSubject.subscribe(isAllowed => {
+      
+      this.isAllowed = isAllowed
+      
+      if (!isAllowed) {
+
+        this.theme.pause()
+        this.coin.pause()
+        this.powerUp.pause()
+        this.fireball.pause()
+        this.stomp.pause()
+        this.lostLife.pause()
+        
+      }
+      
+    })
+
+  }
 
   ///////////////
   // Functions //
   ///////////////
+  public stopMusic(): void {
+
+    this.theme.pause()
+    this.coin.pause()
+    this.powerUp.pause()
+    this.fireball.pause()
+    this.stomp.pause()
+
+  }
+
   public playTheme(): void {
 
     this.isAllowed ? this.theme.play() : null

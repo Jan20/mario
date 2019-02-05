@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { UserService } from 'src/app/analytics/services/user.service';
-import { Samples } from 'src/app/misc/samples';
 import { SessionService } from 'src/app/analytics/services/session.service';
+import { Samples } from '../samples';
 
 @Injectable({
   providedIn: 'root'

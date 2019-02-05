@@ -1,6 +1,6 @@
 import { Level } from './level';
 import { expect } from 'chai'
-import { Samples } from '../misc/samples'
+import { Samples } from '../test/samples'
 import { LevelInterface } from '../interfaces/level.interface';
 
 describe('Level Test', () => {

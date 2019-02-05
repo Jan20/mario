@@ -1,42 +1,14 @@
-<div class='background'>
-
-<div class='content' *ngIf='getStatus() != "running"'>
-<!--   
+<div class='content'>
+    
   <h1>Introduction</h1>
 
-  <p></p> -->
-
-  <h1>The Game</h1>
   <p>
-    The goal of each level is to reach its end as quickly as possible while trying to collect as many coins as possible. 
-    While progressing through the levels you will encounter a ranch of opponents. Either avoid them by jumping over them
-    or you can destroy them by jumping right on top of them.
+    Thank you for paticipating in this study. 
+    You are invited to play three levels of a jump-and-run game and to answer a small survey afterwards 
+    which should not take more than 10 minutes in total.
   </p>
-  
-  <h2>Controls</h2>
-  <p>To control your avatar, use the following keys:</p>
 
-  <div class='container'>
-    <mat-icon>arrow_forward</mat-icon>
-    <div class='description'>Right arrow Key: Move to the right</div>
-  </div>
-  <div class='container'>
-      <mat-icon>arrow_backward</mat-icon>
-      <div class='description'>Left arrow key: Move to the left</div>
-  </div>
-  <div class='container'>
-    <mat-icon>arrow_upward</mat-icon>
-    <div class='description'>Up Key: Jump</div>
-  </div>
-  <div class='container'>
-    <mat-icon>space_bar</mat-icon>
-    <div class='description'>Space: Shoot a fireball (only available after collecting a power-up)</div>
-  </div>
-
-  <button mat-raised-button color="primary" (click)='startExperiment()'>Start Experiment</button>
+  <button mat-stroked-button (click)='proceed()'>Continue</button>
 
 </div>
 
-</div>
-
-<app-mario *ngIf='getStatus() === "running"'></app-mario>

@@ -1,21 +1,9 @@
-.background {
-
-    height: 100%;
-    width: 100%;
-    background-image: url("../../../assets/Images/Mario/background.png");
-    position: absolute;
-}
-
 .content {
 
-
-    background: rgba(255, 255, 255, 0.8);
     width: 800px;
     margin: auto;
-    margin-top: 50px;
+    color: rgb(80, 80, 80);
     padding: 30px;
-    color: rgb(58, 53, 53);
-    border-radius: 2px;
 
 }
 
@@ -28,25 +16,24 @@ mat-icon {
 
 h1 {
 
-    font-weight: 400;
-}
-
-h2 {
-
-    margin-top: 20px;
+    margin-top: 30px;
+    font-size: 42px;
+    font-weight: 300;
+    font-family: 'Roboto', sans-serif;
     margin-bottom: 10px;
-    font-weight: 400;
 
 }
 
 
-.description {
+p {
 
-    height: 50px;
-    margin-top: -25px !important;
-    margin-left: 30px !important;
-
+    font-size: 24px;
+    font-weight: 300;
+    font-family: 'Roboto', sans-serif;
+    margin-bottom: 10px;
+    
 }
+
 
 .container {
 
@@ -57,6 +44,16 @@ h2 {
 
 button {
 
-    margin-top: 30px;
+    margin-top: 50px;
+    margin-left: calc(700px - 254px);
+}
+
+.mat-stroked-button {
+
+    font-size: 24px;
+    padding: 10px;
+    font-weight: 300;
+    margin-right:0;
+    float: right;
 
 }

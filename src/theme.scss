@@ -47,7 +47,6 @@ $flow-app-theme: mat-light-theme($flow-app-primary, $flow-app-accent, $flow-app-
 
 @include angular-material-theme($flow-app-theme);
 
-@import url(https://fonts.googleapis.com/css?family=Roboto:400);
 @import url(https://fonts.googleapis.com/css?family=Roboto:100);
 @import url(https://fonts.googleapis.com/css?family=Roboto:300);
 @import url(https://fonts.googleapis.com/icon?family=Material+Icons);

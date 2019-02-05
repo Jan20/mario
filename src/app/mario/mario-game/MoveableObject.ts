@@ -14,13 +14,13 @@ export class MovableObject {
 	///////////////
 	public world: World
 	public pos: number[]
-	public velocity: [number, number]
+	public velocity: number[]
 	public lives: number
 
 	//////////////////
 	// Constructors //
 	//////////////////
-	public constructor(world: World, pos, velocity, lives) {
+	public constructor(world: World, pos: number[], velocity: number[], lives: number) {
 	
 		this.world = world
 		this.pos = pos

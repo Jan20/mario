@@ -186,7 +186,6 @@ export class LevelService {
 
       if (session.status === 'finished') {
 
-        console.log('I am called')
         await this.cloudService.evolveLevel(userKey)
 
         // Retrieves the level stored under current session from Firestore.

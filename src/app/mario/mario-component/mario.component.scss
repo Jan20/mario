@@ -1,19 +1,11 @@
 @font-face { font-family: Mario; src: url('/assets/fonts/SuperMario256.ttf'); }
 @font-face { font-family: Arcade; src: url('/assets/fonts/ArcadeClassic.ttf'); }
 
-.background {
-
-    height: 100%;
-    width: 100%;
-    background-image: url("../../../assets/Images/Mario/background.png");
-    position: absolute;
-}
-
-.container {
+.content {
 
     margin-top: 50px;
-    position:relative; 
-    margin: 0px auto; 
+    position: relative; 
+    margin: auto; 
     width:512px
 
 }
@@ -46,12 +38,14 @@
 
 
 h1 {
-    padding-top: 200px; 
+
+    padding-top: 180px; 
     color: white; 
     font-family: Mario; 
     font-size: 30px;
     text-align: center;
     cursor: pointer; 
+
 }
 
 

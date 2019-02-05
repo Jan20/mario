@@ -76,6 +76,7 @@ export class PowerUp extends MovableObject{
     public move(): void {
         
         if (this.pos[1] >= this.yBound) {
+            
             if (this.powerType == 'S' && this.lives != 0)
                 this.lives -= 1;
             return;
@@ -99,9 +100,7 @@ export class PowerUp extends MovableObject{
 
     draw() {
     
-    
-            this.move();
-    
+        this.move()
     
         var ctm = mat4();
     

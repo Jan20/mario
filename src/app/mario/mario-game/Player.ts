@@ -34,6 +34,7 @@ export class Player extends MovableObject{
     public playerHeight: number
     public playerWidth: number
     public bounds: any[]
+    public finished: boolean
     
     //////////////////
     // Constructors //
@@ -97,7 +98,10 @@ export class Player extends MovableObject{
     
     draw() {
         
-        this.move()
+
+        !this.finished ? this.move() : null
+    
+        // this.move
         
         let ctm = mat4()
 
@@ -132,7 +136,6 @@ export class Player extends MovableObject{
     
     public animIndex(): number {
 
-        
         if (Math.abs(this.velocity[0]) < GLS.I().WALK_CUTOFF) {
         
             this.texIndex = 0
@@ -172,6 +175,7 @@ export class Player extends MovableObject{
         
         let keyMap: number[] = this.world.keyMap
         
+        // Shoot a snowball.
         if (keyMap[32] && this.pos[1] < 14) {
         
             if (this.hasProjectiles && ((this.projectileTimer.getNowTime() - this.projectileTimer.prevTime) >= 600)) {
@@ -185,6 +189,7 @@ export class Player extends MovableObject{
                     this.levelService,
                     this.sessionService,
                     this.audioService,
+
                 ))
 
                 this.audioService.playFireball()
@@ -351,13 +356,18 @@ export class Player extends MovableObject{
 
                     if (this.sessionService.getLives() === 0) {
                 
+                        this.resetToDefault()
                         this.sessionService.setProgress(playerRight)
                         this.sessionService.storeSession('lost')
-                        this.audioService.playlostLife()
-                        this.resetToDefault();
+                        this.restartLevel()
+                        this.finished = true
+
+
                     }
 
+                    this.restartLevel()
                     this.audioService.playlostLife()
+                    this.audioService.stopMusic()
                     this.resetToDefault();
 
                 }
@@ -420,22 +430,27 @@ export class Player extends MovableObject{
             this.sessionService.decreaseLives()
             this.sessionService.increaseDefeatedByGaps()
 
+            this.restartLevel()
             this.resetToDefault()
             this.audioService.playlostLife()
-            
+            this.audioService.stopMusic()
+
             if (this.sessionService.getLives() === 0) {
 
-                this.sessionService.setProgress(playerRight)
+                this.sessionService.setProgress(this.pos[0])
                 this.sessionService.storeSession('lost')
-                this.pos = GLS.I().INITIAL_PLAYER_POS.slice(0);
-            
+                // this.pos = GLS.I().INITIAL_PLAYER_POS.slice(0);
+                this.restartLevel()
+                this.finished = true
+                
             } else {
-             
-                this.pos = GLS.I().INITIAL_PLAYER_POS.slice(0);
-                GLS.I().CAMERA_POS = GLS.I().INITIAL_CAMERA_POS.slice(0);
-                this.world.xBoundRight = GLS.I().INITIAL_WORLD_BOUND_RIGHT;
-                this.world.xBoundLeft = GLS.I().INITIAL_WORLD_BOUND_LEFT;
-                this.velocity = [0, 0];
+                this.restartLevel()
+
+                // this.pos = GLS.I().INITIAL_PLAYER_POS.slice(0);
+                // GLS.I().CAMERA_POS = GLS.I().INITIAL_CAMERA_POS.slice(0);
+                // this.world.xBoundRight = GLS.I().INITIAL_WORLD_BOUND_RIGHT;
+                // this.world.xBoundLeft = GLS.I().INITIAL_WORLD_BOUND_LEFT;
+                // this.velocity = [0, 0];
             
             }
         }
@@ -563,7 +578,7 @@ export class Player extends MovableObject{
     
     }
 
-    private resetToDefault() {
+    public resetToDefault() {
     
         GLS.I().GRAVITY_CONSTANT = -.0075
         GLS.I().X_VELO_CONSTANT = .0175
@@ -571,6 +586,16 @@ export class Player extends MovableObject{
         this.world.enemies = this.world.enemies.concat(this.world.deadEnemies)
         this.world.deadEnemies = []
     
+    }
+
+    public restartLevel(): void {
+
+        this.pos = GLS.I().INITIAL_PLAYER_POS.slice(0);
+        GLS.I().CAMERA_POS = GLS.I().INITIAL_CAMERA_POS.slice(0);
+        this.world.xBoundRight = GLS.I().INITIAL_WORLD_BOUND_RIGHT;
+        this.world.xBoundLeft = GLS.I().INITIAL_WORLD_BOUND_LEFT;
+        this.velocity = [0, 0];
+
     }
 
 }
