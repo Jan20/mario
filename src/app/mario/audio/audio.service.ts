@@ -9,12 +9,13 @@ export class AudioService {
   ///////////////
   // Variables //
   ///////////////
-  public coin: HTMLAudioElement = new Audio('assets/Sound/Coin.mp3')
-  public powerUp: HTMLAudioElement = new Audio('assets/Sound/PowerUpAppears.wav')
-  public fireball: HTMLAudioElement = new Audio('assets/Sound/Fireball.wav')
-  public stomp: HTMLAudioElement = new Audio('assets/Sound/Stomp.mp3')
+  public coin: HTMLAudioElement = new Audio('assets/Sound/coin.wav')
+  public powerUp: HTMLAudioElement = new Audio('assets/Sound/upgrade.wav')
+  public fireball: HTMLAudioElement = new Audio('assets/Sound/fireworks.wav')
+  public stomp: HTMLAudioElement = new Audio('assets/Sound/fall.wav')
   public lostLife: HTMLAudioElement = new Audio('assets/Sound/LostLife.mp3')
-  public theme: HTMLAudioElement = new Audio('assets/Sound/Mario.mp3')
+  public theme: HTMLAudioElement = new Audio('assets/Sound/forest_theme.mp3')
+  public finished: HTMLAudioElement = new Audio('assets/Sound/finished.mp3')
   public isAllowed: boolean = false
 
   public isAllowedSubject: Subject<boolean> = new Subject<boolean>()
@@ -87,6 +88,12 @@ export class AudioService {
   public playlostLife(): void {
 
     this.isAllowed ? this.lostLife.play() : null
+
+  }
+
+  public playFinished(): void {
+
+    this.isAllowed ? this.finished.play() : null
 
   }
 

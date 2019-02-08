@@ -31,6 +31,8 @@ export class World {
     public sessionService: SessionService
     public audioService: AudioService
 
+    public hasFinished: boolean = false
+
     //////////////////
     // Constructors //
     //////////////////
@@ -79,8 +81,8 @@ export class World {
                     "/assets/Images/Mario/Char/walk4back.png",
                     "/assets/Images/Mario/Char/walk5.png",
                     "/assets/Images/Mario/Char/walk5back.png",
-                    "/assets/Images/Mario/Char/walk4.png",
-                    "/assets/Images/Mario/Char/walk4back.png",
+                    // "/assets/Images/Mario/Char/walk4.png",
+                    // "/assets/Images/Mario/Char/walk4back.png",
                     "/assets/Images/Mario/Char/jump.png",
                     "/assets/Images/Mario/Char/jumpback.png"
                 ],
@@ -226,14 +228,16 @@ export class World {
         // the end of the level.
         if (this.player.pos[0] > this.stage.finishLine) {
 
-            this.sessionService.setProgress(200)
             this.audioService.stopMusic()
+            this.sessionService.setProgress(200)
+            this.audioService.playFinished()
             // Stores all collected gameplay information
             // of the current session at Firestore.
             this.sessionService.storeSession('completed')
             this.sessionService.setProgress(200)
-            this.player.pos[0] = 0
+            this.player.resetToDefault()
             this.player.restartLevel()
+            this.hasFinished = true
 
         }
         
@@ -242,7 +246,8 @@ export class World {
         //
         this.background.draw();
         this.stage.draw();
-        this.player.draw();
+
+        !this.hasFinished? this.player.draw() : null
 
         /////////////////
         /// Todo ////////

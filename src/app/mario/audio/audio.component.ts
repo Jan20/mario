@@ -12,9 +12,12 @@ export class AudioComponent implements OnInit {
   ///////////////
   // Variables //
   ///////////////
-  status: string
+  public status: string
 
-  constructor(
+  //////////////////
+  // Constructors //
+  //////////////////
+  public constructor(
 
     private audioService: AudioService,
     private sessionService: SessionService
@@ -23,11 +26,9 @@ export class AudioComponent implements OnInit {
 
     this.sessionService.statusSubject.subscribe(status => this.status = status)
 
-
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   ///////////////
   // Functions //

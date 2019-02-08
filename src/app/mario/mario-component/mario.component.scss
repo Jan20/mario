@@ -1,5 +1,4 @@
 @font-face { font-family: Mario; src: url('/assets/fonts/SuperMario256.ttf'); }
-@font-face { font-family: Arcade; src: url('/assets/fonts/ArcadeClassic.ttf'); }
 
 .content {
 
@@ -71,13 +70,32 @@ h2 {
 
 }
 
+.first-ui-element {
+
+    margin-top: 60px;
+    margin-left: 12px;
+    width:162px; 
+    float:left;
+    text-align: center;
+}
+
 .ui-element {
 
     margin-top: 60px;
-    margin-left: 10px;
-    width:156px; 
+    margin-left: 12px;
+    width:174px; 
     float:left;
     text-align: center;
+}
+
+.final-ui-element {
+
+    margin-top: 60px;
+    margin-left: 18px;
+    width:120px; 
+    float:left;
+    text-align: center;
+
 }
 
 .mario {

@@ -1,6 +1,5 @@
 import { ElementRef } from "@angular/core";
 import { vec2 } from "./MV";
-import { interval } from "rxjs";
 
 /*
  * Copyright 2010, Google Inc.

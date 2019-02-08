@@ -192,7 +192,7 @@ export class Player extends MovableObject{
 
                 ))
 
-                this.audioService.playFireball()
+                // this.audioService.playFireball()
             }
         
         }
@@ -282,7 +282,7 @@ export class Player extends MovableObject{
                     
                     } else {
                     
-                        this.audioService.playFireball()
+                        // this.audioService.playFireball()
                     
                     }
 
@@ -333,12 +333,12 @@ export class Player extends MovableObject{
                 
                 // Defeating an enemy.
                 if (bDist < tDist && bDist < lDist && bDist < rDist) {
+                    this.audioService.playStomp()
 
                     this.sessionService.increaseScore(100)
                     this.velocity[1] = GLS.I().JUMP_CONSTANT;
                     this.world.deadEnemies.push(this.world.enemies[i]);
                     this.world.enemies.splice(i, 1);
-                    this.audioService.playStomp()
                     return
                 
                 }
@@ -355,19 +355,18 @@ export class Player extends MovableObject{
                     this.sessionService.increaseDefeatedByOpponentType1()
 
                     if (this.sessionService.getLives() === 0) {
-                
+                        
+                        this.audioService.stopMusic()
                         this.resetToDefault()
                         this.sessionService.setProgress(playerRight)
                         this.sessionService.storeSession('lost')
                         this.restartLevel()
                         this.finished = true
 
-
                     }
 
                     this.restartLevel()
                     this.audioService.playlostLife()
-                    this.audioService.stopMusic()
                     this.resetToDefault();
 
                 }
@@ -433,10 +432,10 @@ export class Player extends MovableObject{
             this.restartLevel()
             this.resetToDefault()
             this.audioService.playlostLife()
-            this.audioService.stopMusic()
 
             if (this.sessionService.getLives() === 0) {
 
+                this.audioService.stopMusic()
                 this.sessionService.setProgress(this.pos[0])
                 this.sessionService.storeSession('lost')
                 // this.pos = GLS.I().INITIAL_PLAYER_POS.slice(0);

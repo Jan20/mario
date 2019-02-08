@@ -49,7 +49,7 @@ export class GLS {
     public INITIAL_WORLD_BOUND_RIGHT: number = 14;
     public DRAW_BOUND: number = 5.5;
 
-    public ENEMY_ALPHA_DEPTH: number = 0.01;
+    public ENEMY_ALPHA_DEPTH: number = -0.90;
 
     //////////////////////////////
     // Player Related Constants //

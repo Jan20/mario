@@ -164,9 +164,7 @@ export class LevelService {
       const i: number = sessionKeys.length - 1
 
       // Retrieves the last session stored at Firestore.
-      const session: Session = await this.sessionService.getSession(userKey, sessionKeys[i])
-
-      console.log(session)
+      let session: Session = await this.sessionService.getSession(userKey, sessionKeys[i])
 
       // If the current session has been created but not yet
       // finished, the level for that specific session is loaded
@@ -175,12 +173,6 @@ export class LevelService {
 
         // Retrieves the level stored under current session from Firestore.
         level = await this.getLevelFromServer(userKey, sessionKeys[i])
-        console.log(level)
-        // Write the session to the session service.
-        this.sessionService.setSession(session)
-
-        // Write the freshly fetched level to the session service.
-        this.sessionService.setLevel(level)
 
       }
 
@@ -188,10 +180,19 @@ export class LevelService {
 
         await this.cloudService.evolveLevel(userKey)
 
+        // Retrieves the last session stored at Firestore.
+        session = await this.sessionService.getSession(userKey, sessionKeys[i + 1])
+
         // Retrieves the level stored under current session from Firestore.
         level = await this.getLevelFromServer(userKey, sessionKeys[i + 1])
 
       }
+
+      // Write the session to the session service.
+      this.sessionService.setSession(session)
+
+      // Write the freshly fetched level to the session service.
+      this.sessionService.setLevel(level)
 
     }
 

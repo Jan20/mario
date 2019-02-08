@@ -117,6 +117,12 @@ export class MarioComponent implements OnInit, AfterViewInit {
             this.isStored === true ? location.reload() : null
 
         }
+
+        if ((this.status === 'completed' || this.status === 'lost') && this.isStored === true) {
+
+            location.reload() 
+
+        }
     
         // If the current session has been stored successfully,
         // a page refresh is performend. 
@@ -141,7 +147,7 @@ export class MarioComponent implements OnInit, AfterViewInit {
      */
     private async init(level: Level) {
 
-        GLS.I().lightPosition = vec3(0.0, 15.0, -1.0)
+        GLS.I().lightPosition = vec3(0.0, 1.0, 1.0)
 
         !GLS.I().GL ? alert("WebGL isn't available") : null
 
@@ -150,7 +156,7 @@ export class MarioComponent implements OnInit, AfterViewInit {
         !extension ? alert("Depth Texture Extension Not Applicable") : null
 
         GLS.I().GL.viewport(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
-        GLS.I().GL.clearColor(1.0, 1.0, 1.0, 0.5);
+        GLS.I().GL.clearColor(1.0, 1.0, 1.0, 1);
 
         GLS.I().GL.enable(GLS.I().GL.DEPTH_TEST);
         GLS.I().GL.enable(GLS.I().GL.BLEND);
@@ -234,7 +240,11 @@ export class MarioComponent implements OnInit, AfterViewInit {
 
     }
 
-
+    /**
+     * 
+     * Implements 
+     * 
+     */
     private vertexShaderText = [
 
         'attribute vec4 vPosition;',
@@ -280,7 +290,7 @@ export class MarioComponent implements OnInit, AfterViewInit {
         'vec4 texColor = texture2D(texture, fTexCoord); ',
         'vec4 ambient = 1.0 * texColor;',
         'float kd = max(dot(fL, fN), 0.0);',
-        'vec4 diffuse = visibility * kd * 0.8 * texColor;',
+        'vec4 diffuse = visibility * kd * 0.2 * texColor;',
         '',
         'float ks = pow(max(dot(fN, fH),0.0), shininess);',
         'vec4 specular = 0.9 * visibility * ks * vec4(1.0, 1.0, 1.0, 1.0);',

@@ -105,7 +105,7 @@ export class PowerUp extends MovableObject{
         var ctm = mat4();
     
         ctm = mult(ctm, translate(this.pos));
-        ctm = mult(ctm, scale(0.5, 0.5, 0.5));
+        ctm = mult(ctm, scale(0.75, 0.75, 0.75));
         GLS.I().GL.uniformMatrix4fv(GLS.I().UNIFORM_MODEL, false, flatten(ctm));
         GLS.I().GL.bindBuffer(GLS.I().GL.ARRAY_BUFFER, GLS.I().T_BUFFER);
         GLS.I().GL.bufferData(GLS.I().GL.ARRAY_BUFFER, flatten(this.texCoords), GLS.I().GL.STATIC_DRAW);

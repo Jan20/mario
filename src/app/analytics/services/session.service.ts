@@ -31,7 +31,7 @@ export class SessionService {
   private level: Level
 
   // Defines the number of lives the player starts with.
-  private lives: number = 1
+  private lives: number = 3
 
   // 
   private consecutiveSessions: number = 0
@@ -191,7 +191,7 @@ export class SessionService {
     const recentSessions: Session[] = await this.getRecentlyFinishedSessions(userKey)
 
     // If exactly the 
-    if (recentSessions.length === 2 && !this.surveyService.surveyCompleted) {
+    if (recentSessions.length === 3 && !this.surveyService.surveyCompleted) {
 
       // Writes the recently finished sessions to the survey service.
       this.surveyService.setRecentSessions(recentSessions)    

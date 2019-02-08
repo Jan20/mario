@@ -1,3 +1,44 @@
-<p>
-  part2 works!
-</p>
+<div class='content'>
+    
+  <div class='question'>
+  
+      <p>
+          What is your age?
+      </p>
+
+      <form class="form">
+          <mat-form-field class="full-width">
+              <input type="text" placeholder='' aria-label="Age" matInput [formControl]="ageControl" [matAutocomplete]="age">
+              <mat-autocomplete #age="matAutocomplete">
+              <mat-option *ngFor="let age of filteredAgeOptions | async" [value]="age">
+                  {{age}}
+              </mat-option>
+              </mat-autocomplete>
+          </mat-form-field>
+      </form> 
+  
+  </div>
+  
+  <div class='question'>
+
+      <p>
+          What is your gender?
+      </p>
+
+      <form class="form">
+          <mat-form-field class="full-width">
+              <input type="text" placeholder='' aria-label="Gender" matInput [formControl]="genderControl" [matAutocomplete]="gender">
+              <mat-autocomplete #gender="matAutocomplete">
+              <mat-option *ngFor="let gender of filteredGenderOptions | async" [value]="gender">
+                  {{gender}}
+              </mat-option>
+              </mat-autocomplete>
+          </mat-form-field>
+      </form>
+    
+    </div>
+    
+     <button mat-stroked-button (click)='continue()'>Continue</button>
+
+  </div>
+    
