@@ -1,0 +1,30 @@
+<div class='content' *ngIf='!isStored'>
+
+  <div class='question'>
+  
+      <p>
+          How many hours a week do you spend playing video games?
+      </p>
+  
+      <form class="form">
+          <mat-form-field class="full-width">
+              <input type="text" placeholder='' aria-label="Usage" matInput [formControl]="usageControl" [matAutocomplete]="usage">
+              <mat-autocomplete #usage="matAutocomplete">
+              <mat-option *ngFor="let usage of filteredUsageOptions | async" [value]="usage">
+                  {{usage}}
+              </mat-option>
+              </mat-autocomplete>
+          </mat-form-field>
+      </form>
+      
+  </div>
+      
+  <button mat-stroked-button (click)='continue()'>Continue</button>
+  
+</div>
+      
+<div class='content' *ngIf='isStored'>
+  <div class='question'>
+    <p>Thank you for participating in the study.</p>
+  </div>
+</div>

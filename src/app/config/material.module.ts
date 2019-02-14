@@ -18,9 +18,9 @@ import { MatAutocompleteModule, MatButtonModule, MatCardModule, MatChipsModule, 
     MatChipsModule,
     MatListModule,
     MatRadioModule,
+    MatAutocompleteModule,
     MatOptionModule,
     MatSelectModule,
-    MatAutocompleteModule,
 
   ], exports: [
 
@@ -37,9 +37,9 @@ import { MatAutocompleteModule, MatButtonModule, MatCardModule, MatChipsModule, 
     MatChipsModule,
     MatListModule,
     MatRadioModule,
+    MatAutocompleteModule,
     MatOptionModule,
     MatSelectModule,
-    MatAutocompleteModule,
 
   ]
 

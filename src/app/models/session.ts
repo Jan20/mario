@@ -25,7 +25,7 @@ export class Session {
 
     }
 
-    public static fromObject(object: any, performance: Performance): Session {
+    public static fromObject(object: Object, performance: Performance): Session {
 
         return new Session(
 

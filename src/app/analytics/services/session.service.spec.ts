@@ -47,7 +47,7 @@ describe('SessionService', () => {
   })
   
 
-  it("getSession() should return 'session", async () => {
+  it("getSession() should return 'session'", async () => {
 
     const testService: TestService = TestBed.get(TestService)
     const sessionService: SessionService = TestBed.get(SessionService)
@@ -61,6 +61,54 @@ describe('SessionService', () => {
 
     await testService.cleanUp()
 
+
+  })
+
+  it('checkProgressToSurvey() should return', async () => {
+
+    const testService: TestService = TestBed.get(TestService)
+    const sessionService: SessionService = TestBed.get(SessionService)
+
+    await testService.setUpThreeSessions()
+
+    const result: boolean = await sessionService.checkProgressToSurvey(Samples.sampleUser.key)
+    const expectedResult: boolean = true
+
+    expect(result).toEqual(expectedResult)
+
+    await testService.cleanUp()
+
+
+  })
+
+  it('getRecentlyFinishedSessions() should return ', async () => {
+
+    const testService: TestService = TestBed.get(TestService)
+    const sessionService: SessionService = TestBed.get(SessionService)
+
+    await testService.setUpThreeSessionStubs()
+
+    const result: Session[] = await sessionService.getRecentlyFinishedSessions(Samples.sampleUser.key)
+    const expectedResult: Session[] = [Samples.sampleSession1Stub, Samples.sampleSession2Stub, Samples.sampleSession3Stub]
+
+    expect(result).toEqual(expectedResult)
+
+    await testService.cleanUp()
+
+  })
+
+  it('getSessions()', async () => {
+
+    const testService: TestService = TestBed.get(TestService)
+    const sessionService: SessionService = TestBed.get(SessionService)
+
+    await testService.setUpThreeSessionStubs()
+
+    const result: Session[] = await sessionService.getSessions(Samples.sampleUser.key)
+
+    expect(result).toEqual([Samples.sampleSession1Stub, Samples.sampleSession2Stub, Samples.sampleSession3Stub])
+
+    await testService.cleanUp()
 
   })
 
@@ -78,6 +126,7 @@ describe('SessionService', () => {
     await testService.cleanUp()
 
   })
+
 
   it('should be created', () => {
 

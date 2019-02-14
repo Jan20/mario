@@ -18,7 +18,7 @@ export class UserService {
 
     private angularFirestore: AngularFirestore,
 
-  ) { }
+  ) {}
 
   ///////////////
   // Functions //

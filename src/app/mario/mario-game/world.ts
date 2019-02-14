@@ -323,11 +323,9 @@ export class World {
                 if (currentSquare == 'C') {
                 
                     // with probability, set enemy to 'A' (smart)
-                    if (Math.random() < 1) {
                     
-                        currentSquare = 'A'
+                    currentSquare = 'A'
                     
-                    }
                     
                     stage[j][i] = '.'
                     

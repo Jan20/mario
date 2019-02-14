@@ -15,7 +15,7 @@ export class MenuComponent implements OnInit {
   ///////////////
   // Variables //
   ///////////////
-  public title: string = 'Player Experience Study'
+  public title: string = ''
   public items: MenuItem[]
   public user: MenuItem
   public status: string
@@ -40,7 +40,6 @@ export class MenuComponent implements OnInit {
 
   ngOnInit() {
 
-    console.log(status)
   }
 
   ///////////////

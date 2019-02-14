@@ -110,4 +110,30 @@ export class Level {
 
     }
 
+    public toObject(): Object {
+
+        return {
+
+            'key': this.key,
+            'id': this.id,
+            'line_00': this.representation[0].join(''),
+            'line_01': this.representation[1].join(''),
+            'line_02': this.representation[2].join(''),
+            'line_03': this.representation[3].join(''),
+            'line_04': this.representation[4].join(''),
+            'line_05': this.representation[5].join(''),
+            'line_06': this.representation[6].join(''),
+            'line_07': this.representation[7].join(''),
+            'line_08': this.representation[8].join(''),
+            'line_09': this.representation[9].join(''),
+            'line_10': this.representation[10].join(''),
+            'line_11': this.representation[11].join(''),
+            'line_12': this.representation[12].join(''),
+            'line_13': this.representation[13].join(''),
+            'line_14': this.representation[14].join('')
+
+        }
+
+    }
+
 }

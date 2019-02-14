@@ -6,6 +6,10 @@ import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { LevelService } from '../services/level.service';
 import { AngularFireModule } from '@angular/fire';
 import { environment } from 'src/environments/environment';
+import { SharedModule } from 'src/app/shared/shared.module';
+import { RouterModule } from '@angular/router';
+import { APP_BASE_HREF } from '@angular/common';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('MarioComponent', () => {
   let component: MarioComponent;
@@ -22,15 +26,19 @@ describe('MarioComponent', () => {
         
         MaterialModule,
         HttpClientModule,
-        AngularFireModule.initializeApp(environment.firebaseConfig)
+        AngularFireModule.initializeApp(environment.firebaseConfig),
+        SharedModule,
+        RouterModule,
+        RouterTestingModule,
       
       ],
       providers: [
         
         HttpClient,
         LevelService,
-        AngularFirestore
-      
+        AngularFirestore,
+        {provide: APP_BASE_HREF, useValue : '/' }
+
       ]  
     })
     .compileComponents();

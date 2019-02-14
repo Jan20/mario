@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Part4Component } from './part4.component';
+import { Part5Component } from './part5.component';
 import { CommonModule, APP_BASE_HREF } from '@angular/common';
 import { MaterialModule } from 'src/app/config/material.module';
 import { BrowserModule } from '@angular/platform-browser';
@@ -9,13 +9,13 @@ import { RouterModule, Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-describe('Part4Component', () => {
-  let component: Part4Component;
-  let fixture: ComponentFixture<Part4Component>;
+describe('Part1Component', () => {
+  let component: Part5Component;
+  let fixture: ComponentFixture<Part5Component>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ Part4Component ],
+      declarations: [ Part5Component ],
       imports: [
 
         CommonModule,
@@ -38,7 +38,7 @@ describe('Part4Component', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(Part4Component);
+    fixture = TestBed.createComponent(Part5Component);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

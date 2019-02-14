@@ -9,6 +9,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { RouterModule } from '@angular/router';
 import { APP_BASE_HREF } from '@angular/common';
 import { RouterTestingModule } from '@angular/router/testing';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('IntroductionComponent', () => {
   let component: IntroductionComponent;
@@ -27,6 +28,7 @@ describe('IntroductionComponent', () => {
         MarioModule,
         AngularFireModule.initializeApp(environment.firebaseConfig),
         RouterTestingModule,
+        BrowserAnimationsModule,
 
       ], 
       providers: [

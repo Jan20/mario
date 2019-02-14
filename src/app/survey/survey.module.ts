@@ -8,10 +8,12 @@ import { Part1Component } from './part1/part1.component'
 import { Part2Component } from './part2/part2.component'
 import { Part3Component } from './part3/part3.component'
 import { Part4Component } from './part4/part4.component';
+import { Part5Component } from './part5/part5.component';
 import { ControlsComponent } from './controls/controls.component';
 import { DescriptionComponent } from './description/description.component'
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
+import { Part6Component } from './part6/part6.component';
 
 @NgModule({
   imports: [
@@ -22,7 +24,6 @@ import { BrowserModule } from '@angular/platform-browser';
     BrowserModule,
     FormsModule,
     ReactiveFormsModule,
-    MaterialModule,
 
   ],
   declarations: [
@@ -34,6 +35,8 @@ import { BrowserModule } from '@angular/platform-browser';
     Part2Component,
     Part3Component,
     Part4Component,
+    Part5Component,
+    Part6Component,
     
   ],
   providers: [

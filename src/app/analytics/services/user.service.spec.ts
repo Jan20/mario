@@ -15,7 +15,6 @@ describe('UserService', () => {
 
         AngularFireModule.initializeApp(environment.firebaseConfig),
 
-
       ],
       providers: [
 

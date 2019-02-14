@@ -22,12 +22,11 @@ export class MarioComponent implements OnInit, AfterViewInit {
     // Variables //
     ///////////////
 
-    // Canvas in which the game should be rendered.
+    // Canvas in which the game is rendered.
     @ViewChild('canvas') canvas: ElementRef
     
-    // Declares a boolean variable indicating whether
-    // the current session has been stored at Firestore
-    // or not. 
+    // Declares a variable indicating whether the current 
+    // session has been stored at Firestore or not. 
     public isStored: boolean = false
 
     // 
@@ -60,9 +59,9 @@ export class MarioComponent implements OnInit, AfterViewInit {
 
     ) {
 
-        this.sessionService.sessionSubject.subscribe(session => {
+        this.sessionService.sessionSubject.subscribe(status => {
 
-            session === 'stored' ? this.isStored = true : this.isStored = false
+            status === 'stored' ? this.isStored = true : this.isStored = false
 
         })
 
@@ -97,8 +96,10 @@ export class MarioComponent implements OnInit, AfterViewInit {
      */
     public async startNewLevel(): Promise<void> {
 
+        // Checks whether the user can progress to the survey.
         if (this.readyForSurvey) {
 
+            // 
             this.progressToSurvey()
             return
 

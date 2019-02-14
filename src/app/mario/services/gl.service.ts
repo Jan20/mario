@@ -63,7 +63,7 @@ export class GLS {
     public X_GROUND_FRICTION = .865;
     public X_AIR_FRICTION = .92;
     public GRAVITY_CONSTANT = -.0075;
-    public JUMP_CONSTANT = .27;
+    public JUMP_CONSTANT = .26;
     public WALK_CUTOFF = 0.003;
     // public ANIM_SPEED = 80
     public ANIM_SPEED = 40

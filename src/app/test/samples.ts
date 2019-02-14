@@ -12,12 +12,7 @@ import { firestore } from "firebase";
 */
 export class Samples {
 
-    public static sampleUser: User = new User(
-        
-        'user_042',
-        42
-        
-    )
+    public static sampleUser: User = new User('user_042', 42)
 
     public static samplePerformance: Performance = new Performance(
         
@@ -86,6 +81,86 @@ export class Samples {
         'line_14': 'XXXXXXXXXXXXXXXXXXXXXXX...XXXXXXXXXXXXXXXXX..ZZZDD',
         
     }
+
+    public static sampleSession1: Session = new Session(
+        
+        'session_001', 
+        1, 
+        'finished',
+        firestore.Timestamp.fromDate(new Date()),
+        Samples.samplePerformance,
+        
+    )
+
+    public static sampleSession2: Session = new Session(
+        
+        'session_002', 
+        2,  
+        'finished', 
+        firestore.Timestamp.fromDate(new Date()),
+        Samples.samplePerformance,
+        
+    )
+
+    public static sampleSession3: Session = new Session(
+        
+        'session_003', 
+        3, 
+        'finished', 
+        firestore.Timestamp.fromDate(new Date()),
+        Samples.samplePerformance,
+        
+    )
+
+    public static sampleSession4: Session = new Session(
+        
+        'session_004', 
+        4,
+        'finished', 
+        firestore.Timestamp.fromDate(new Date()),
+        Samples.samplePerformance,
+        
+    )
+
+    public static sampleSession1Stub: Session = new Session(
+        
+        'session_001', 
+        1, 
+        'finished',
+        firestore.Timestamp.fromDate(new Date()),
+        null,
+        
+    )
+
+    public static sampleSession2Stub: Session = new Session(
+        
+        'session_002', 
+        2,  
+        'finished', 
+        firestore.Timestamp.fromDate(new Date()),
+        null,
+        
+    )
+
+    public static sampleSession3Stub: Session = new Session(
+        
+        'session_003', 
+        3, 
+        'finished', 
+        firestore.Timestamp.fromDate(new Date()),
+        null,
+        
+    )
+
+    public static sampleSession4Stub: Session = new Session(
+        
+        'session_004', 
+        4,
+        'finished', 
+        firestore.Timestamp.fromDate(new Date()),
+        null,
+        
+    )
     
     
 }

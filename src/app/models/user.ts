@@ -38,5 +38,15 @@ export class User {
         return userInterface
 
     }
+
+    public toObject(): Object {
+
+        return {
+            
+            'key': this.key,
+            'id': this.id,
+        }
+
+    }
     
 }

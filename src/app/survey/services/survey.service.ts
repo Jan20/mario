@@ -2,6 +2,10 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { SessionService } from 'src/app/analytics/services/session.service';
 import { Session } from 'src/app/models/session';
+import { Survey } from 'src/app/models/survey';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { UserService } from 'src/app/analytics/services/user.service';
+import { Samples } from 'src/app/test/samples';
 
 @Injectable({
   providedIn: 'root'
@@ -16,15 +20,19 @@ export class SurveyService {
   // finished a survey or not.
   public surveyCompleted: boolean = false
 
-  private recentSessions: Session[]
+  private recentSessions: Session[] = [Samples.sampleSession1, Samples.sampleSession2, Samples.sampleSession3]
 
   public surveySubject: Subject<string> = new Subject<string>()
+
+  public survey: Survey = new Survey()
 
   //////////////////
   // Constructors //
   //////////////////
   constructor(
 
+    private userService: UserService,
+    private angularFirestore: AngularFirestore
 
   ) {   
 
@@ -34,9 +42,25 @@ export class SurveyService {
   ///////////////
   // Functions //
   ///////////////
-  public startExperiment() {
+
+  /**
+   * 
+   * 
+   * 
+   */
+  public startExperiment(): void {
 
     this.surveySubject.next('running')
+
+  }
+
+  public async storeSurvey(): Promise<string> {
+
+    const userKey: string = await this.userService.getCurrentUserKey()
+
+    await this.angularFirestore.doc(`users/${userKey}/surveys/survey_001`).set(this.survey.toObject())
+
+    return new Promise<string>(resolve => resolve('surveyStored'))
 
   }
 
@@ -57,5 +81,7 @@ export class SurveyService {
     this.recentSessions = recentSessions
 
   }
+
+
 
 }

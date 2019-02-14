@@ -287,7 +287,7 @@ export class Player extends MovableObject{
                     }
 
                     this.world.items.push(new PowerUp(this.world, [Math.floor(blockX) + 0.25, Math.floor(blockY), 0], Math.floor(blockY + 1), blockCollide));
-                    this.world.stage.stage[14 - Math.floor(blockY)][Math.floor(blockX)] = 'B';
+                    this.world.stage.stage[14 - Math.floor(blockY)][Math.floor(blockX)] = 'X';
                     this.world.stage = new Stage(this.world, this.world.stage.stage);
                     this.sessionService.increaseScore(100)
 

@@ -1,8 +1,11 @@
-import {Component, OnInit} from '@angular/core';
-import {FormControl} from '@angular/forms';
-import {Observable, range} from 'rxjs';
-import {map, startWith} from 'rxjs/operators';
+import { Component, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { Observable } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { SurveyService } from '../services/survey.service';
+import { Session } from 'src/app/models/session';
+import { RankOption } from 'src/app/models/rankOption';
 
 @Component({
   selector: 'app-part4',
@@ -10,71 +13,83 @@ import { Router } from '@angular/router';
   styleUrls: ['./part4.component.scss']
 })
 export class Part4Component implements OnInit {
-
-
+  
+  
   ///////////////
   // Variables //
   ///////////////
-  public age: string
-  public gender: string
+  opponent_type_1: string;
+  opponent_type_1_options: string[] = ['Strongly agree', 'Agree', 'Neutral', 'Disagree', 'Strongly disagree'];
 
-  public ageControl = new FormControl();
-  public ageOptions: string[] = []
-  public filteredAgeOptions: Observable<string[]>;
+  opponent_type_2: string;
+  opponent_type_2_options: string[] = ['Strongly agree', 'Agree', 'Neutral', 'Disagree', 'Strongly disagree'];
 
-  public genderControl = new FormControl();
-  public genderOptions: string[] = ['Male', 'Female', 'Divers', 'Prefer not to say']
-  public filteredGenderOptions: Observable<string[]>;
+  opponent_type_3: string;
+  opponent_type_3_options: string[] = ['Strongly agree', 'Agree', 'Neutral', 'Disagree', 'Strongly disagree'];
 
+  wide_gaps: string;
+  wide_gaps_options: string[] = ['Strongly agree', 'Agree', 'Neutral', 'Disagree', 'Strongly disagree'];
+
+  number_of_opponents: string;
+  number_of_opponents_options: string[] = ['Strongly agree', 'Agree', 'Neutral', 'Disagree', 'Strongly disagree'];
+
+  opponents_at_choke_points: string;
+  opponents_at_choke_points_options: string[] = ['Strongly agree', 'Agree', 'Neutral', 'Disagree', 'Strongly disagree'];
+
+
+  
+  //////////////////
+  // Constructors //
+  //////////////////
   constructor(
 
-    private router: Router
+    private router: Router,
+    private surveyService: SurveyService
 
-  ) {
+  ) {}
 
-    for (let i = 1; i < 101; i++) {
+  ngOnInit(): void {
 
-      this.ageOptions.push('' + i)
-
-    }
-
-    this.ageControl.valueChanges.subscribe(age => this.age = age)
-    this.genderControl.valueChanges.subscribe(gender => this.gender = gender)
-    
   }
-  
-  ngOnInit() {
-    
-    this.filteredAgeOptions = this.ageControl.valueChanges.pipe(startWith(''), map(age => this.filter(age)))
-    this.filteredGenderOptions = this.genderControl.valueChanges.pipe(startWith(''), map(gender => this.filter2(gender)))
-  
-  }
+
 
   /**
    * 
+   * Controls the transition to the next survey step.
    * 
-   * 
-   * @param age 
    */
-  private filter(age: string): string[] {
-    
-    const filteredAgeOptions = age.toLowerCase()    
-    
-    return this.ageOptions.filter(option => option.toLowerCase().includes(filteredAgeOptions));
-  
-  }
+  public async continue(): Promise<void> {
 
-  private filter2(gender: string): string[] {
-    
-    const filteredGenderOptions = gender.toLowerCase()    
-    
-    return this.genderOptions.filter(option => option.toLowerCase().includes(filteredGenderOptions));
-  
-  }
+    // Defines a boolean variable indicating whether all segments have been completed.
+    let isCompleted: boolean = false
 
-  public continue(): void {
+    // Checks whether all segments have been completed.
+    isCompleted = (
+      
+      this.opponent_type_1 && 
+      this.opponent_type_2 && 
+      this.opponent_type_3 && 
+      this.wide_gaps &&
+      this.number_of_opponents &&
+      this.opponents_at_choke_points
+    
+    ) ? true : false
 
-    this.age != undefined && this.gender != undefined ? this.router.navigate(['survey/part_2']) : null
+    // Stores the given answers persistently at Firestore.
+    isCompleted ? await this.surveyService.survey.storePerception(
+      
+      this.opponent_type_1,
+      this.opponent_type_2,
+      this.opponent_type_3,
+      this.wide_gaps,
+      this.number_of_opponents,
+      this.opponents_at_choke_points
+    
+    ) : null
+
+    // Checks wether all segments have been completed. If all conditions are met, the 
+    // user can progress to the next step of the survey.
+    isCompleted ? this.router.navigate(['survey/part_5']) : null
   
   }
 }
