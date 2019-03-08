@@ -1,8 +1,8 @@
 import { MovableObject } from './MoveableObject'
-import { Timer } from '../mario-common/timer'
-import { texCoord } from '../mario-common/textures'
-import { mat4, mult, translate, flatten } from '../mario-common/MV'
-import { GLS } from '../services/gl.service'
+import { Timer } from '../tux-tutorial-common/timer'
+import { texCoord } from '../tux-tutorial-common/textures'
+import { mat4, mult, translate, flatten } from '../tux-tutorial-common/MV'
+import { GLS } from '../tux-tutorial/gl.service'
 import { Projectile } from './Projectile'
 import { PowerUp } from './PowerUp'
 import { Stage } from './Stage'
@@ -44,7 +44,7 @@ export class Player extends MovableObject{
         world: World,
         private sessionService: SessionService,
         private levelService: LevelService,
-        private audioService: AudioService
+        private audioService: AudioService,
         
     ) {
 
@@ -277,12 +277,14 @@ export class Player extends MovableObject{
                     
                     if (blockCollide == 'S') {
                     
+                        this.sessionService.coinSubject.next(true)
                         this.sessionService.increaseScore(150)
                         this.audioService.playCoin()
                     
                     } else {
                     
-                        // this.audioService.playFireball()
+                        this.sessionService.powerUpSubject.next(true)
+                        this.audioService.playCoin()
                     
                     }
 
@@ -333,8 +335,17 @@ export class Player extends MovableObject{
                 
                 // Defeating an enemy.
                 if (bDist < tDist && bDist < lDist && bDist < rDist) {
-                    
-                    
+
+                    currentEnemy.enemyType === 'C' ? this.sessionService.walkerSubject.next(true) : null
+                    currentEnemy.enemyType === 'A' ? this.sessionService.walkerSubject.next(true) : null
+                    currentEnemy.enemyType === 'V' ? this.sessionService.flyerSubject.next(true) : null
+                    currentEnemy.enemyType === 'J' ? this.sessionService.jumperSubject.next(true) : null
+
+                    if (currentEnemy.enemyType === 'C') {
+
+                        console.log('helo')
+                        this.sessionService.walkerSubject.next(true)
+                    }
 
                     this.audioService.playStomp()
 
@@ -351,7 +362,11 @@ export class Player extends MovableObject{
                     // User looses one life.
                     this.sessionService.decreaseLives()
                     currentEnemy.enemyType
-                    console.log(playerRight)
+                    if (currentEnemy.enemyType === 'C') {
+
+                        // this.tutorialService.walkerSubject.next(true)
+                    }
+
                     ////////////////////////////////////////
                     // TODO: Handle different enemy types //
                     ////////////////////////////////////////
@@ -359,10 +374,12 @@ export class Player extends MovableObject{
 
                     if (this.sessionService.getLives() === 0) {
                         
+                        this.sessionService.tutorialHasBeenFinished = true
+                        this.sessionService.returnToControls()
                         this.audioService.stopMusic()
                         this.resetToDefault()
                         this.sessionService.setProgress(playerRight)
-                        this.sessionService.storeSession('lost')
+                        this.sessionService.finishTutorial()
                         this.restartLevel()
                         this.finished = true
 
@@ -394,6 +411,7 @@ export class Player extends MovableObject{
                 (Math.abs(this.pos[1] - curItem.pos[1])) * 2 < (this.playerHeight + curItem.powerHeight)) {
                 
                 switch (curItem.powerType) {
+                    
                     case 'L':
                         
                         this.sessionService.increaseLives()
@@ -440,7 +458,7 @@ export class Player extends MovableObject{
 
                 this.audioService.stopMusic()
                 this.sessionService.setProgress(this.pos[0])
-                this.sessionService.storeSession('lost')
+                this.sessionService.finishTutorial()
                 // this.pos = GLS.I().INITIAL_PLAYER_POS.slice(0);
                 this.restartLevel()
                 this.finished = true

@@ -1,3 +1,23 @@
+<div class='instructions'>
+
+    <h2 class='instruction' *ngIf='!coinCollected'>coinSubject</h2>
+    <h2 class='instruction-completed' *ngIf='coinCollected'>coinSubject</h2>
+
+    <h2 class='instruction' *ngIf='!powerUpCollected'>powerUpSubject</h2>
+    <h2 class='instruction-completed' *ngIf='powerUpCollected'>powerUpSubject</h2>
+
+    <h2 class='instruction' *ngIf='!walkerDefeated'>walkerSubject</h2>
+    <h2 class='instruction-completed' *ngIf='walkerDefeated'>walkerSubject</h2>
+
+    <h2 class='instruction' *ngIf='!jumperDefeated'>jumperSubject</h2>
+    <h2 class='instruction-completed' *ngIf='jumperDefeated'>jumperSubject</h2>
+
+    <h2 class='instruction' *ngIf='!flyerDefeated'>flyerSubject</h2>
+    <h2 class='instruction-completed' *ngIf='flyerDefeated'>flyerSubject</h2>
+
+
+</div>
+
 <div class='content'>
 
     <div class='menu' *ngIf='status === "completed"'>
@@ -10,7 +30,7 @@
     
     </div>
 
-        <div class='menu' *ngIf='status === "lost"'>
+    <div class='menu' *ngIf='status === "lost"'>
     
         <h1>Thank you for having played the level</h1>
         <h2 class='notification' *ngIf='!isStored'>Please wait a second ...</h2>

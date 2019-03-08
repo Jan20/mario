@@ -200,13 +200,13 @@ export class Part1Component implements OnInit {
     isCompleted = (rank_01_completed && rank_02_completed && rank_03_completed) ? true : false
 
     // Stores the given answers persistently at Firestore.
-    await this.surveyService.survey.storeFunRanking(
+    isCompleted ? await this.surveyService.survey.storeFunRanking(
       
       this.rank_01.session.key, 
       this.rank_02.session.key, 
       this.rank_03.session.key
     
-    )
+    ) : null
 
     // Checks wether all segments have been completed. If all conditions are met, the 
     // user can progress to the next step of the survey.

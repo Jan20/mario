@@ -1,6 +1,6 @@
 import { SessionService } from '../../analytics/services/session.service';
-import { loadImages } from '../mario-common/textures';
-import { GLS } from '../services/gl.service';
+import { loadImages } from '../tux-tutorial-common/textures';
+import { GLS } from '../tux-tutorial/gl.service';
 import { LevelService } from '../services/level.service';
 import { Background } from './Background';
 import { Enemy } from './Enemy';
@@ -19,7 +19,7 @@ export class World {
     public drawBound: number
     public enemies: Enemy[] = []
     public deadEnemies: Enemy[] = []
-    public items  = []
+    public items = []
     public projectiles  = []
     public keyMap = []
     public player: Player
@@ -41,7 +41,7 @@ export class World {
         level: Level, 
         sessionService: SessionService, 
         levelService: LevelService,
-        audioService: AudioService,
+        audioService: AudioService
         
     ) {
 
@@ -227,18 +227,19 @@ export class World {
         // Returns true if the player has reached
         // the end of the level.
         if (this.player.pos[0] > this.stage.finishLine) {
+            
+            this.sessionService.tutorialHasBeenFinished = true
 
             this.audioService.stopMusic()
             this.sessionService.setProgress(200)
             this.audioService.playFinished()
             // Stores all collected gameplay information
             // of the current session at Firestore.
-            this.sessionService.storeSession('completed')
             this.sessionService.setProgress(200)
             this.player.resetToDefault()
             this.player.restartLevel()
             this.hasFinished = true
-
+            this.sessionService.returnToControls()
         }
         
         //

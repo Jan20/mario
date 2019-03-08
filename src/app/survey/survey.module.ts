@@ -14,6 +14,7 @@ import { DescriptionComponent } from './description/description.component'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { Part6Component } from './part6/part6.component';
+import { TransitionComponent } from './transition/transition.component';
 
 @NgModule({
   imports: [
@@ -37,6 +38,7 @@ import { Part6Component } from './part6/part6.component';
     Part4Component,
     Part5Component,
     Part6Component,
+    TransitionComponent,
     
   ],
   providers: [

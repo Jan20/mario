@@ -28,11 +28,11 @@ export class DescriptionComponent implements OnInit {
     event.key === 'Enter' ? this.proceed() : null
     
   }
-    
 
   public proceed(): void {
 
     this.router.navigate(['controls'])
 
   }
+
 }

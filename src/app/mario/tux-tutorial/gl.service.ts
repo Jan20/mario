@@ -1,5 +1,5 @@
-import { perspective, radians, vec3 } from "../mario-common/MV";
-import { World } from "../mario-game/world";
+import { perspective, radians, vec3 } from "../tux-tutorial-common/MV";
+import { World } from "../tux-tutorial/world";
 
 export class GLS {
 

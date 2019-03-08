@@ -4,19 +4,20 @@ import { SessionService } from '../../analytics/services/session.service';
 import { initShaders } from '../mario-common/InitShaders';
 import { flatten, mat4, mult, translate, vec3 } from '../mario-common/MV';
 import { WebGLUtils } from '../mario-common/webgl-utils';
-import { World } from '../mario-game/world';
-import { GLS } from '../services/gl.service';
+import { World } from '../tux-tutorial/world';
+import { GLS } from '../tux-tutorial/gl.service';
 import { LevelService } from '../services/level.service';
 import { Level } from 'src/app/models/level';
 import { AudioService } from '../audio/audio.service';
 import { Router } from '@angular/router';
+import { TutorialService } from '../services/tutorial.service';
 
 @Component({
-    selector: 'app-mario',
-    templateUrl: './mario.component.html',
-    styleUrls: ['./mario.component.scss']
+    selector: 'app-tutorial',
+    templateUrl: './tutorial.component.html',
+    styleUrls: ['./tutorial.component.scss']
 })
-export class MarioComponent implements OnInit, AfterViewInit {
+export class TutorialComponent implements OnInit, AfterViewInit {
 
     ///////////////
     // Variables //
@@ -42,6 +43,13 @@ export class MarioComponent implements OnInit, AfterViewInit {
     public lives: number = this.sessionService.getLives()
     public time: string = `00000`
 
+    // Instructions
+    public coinCollected: boolean = false
+    public powerUpCollected: boolean = false
+    public walkerDefeated: boolean = false
+    public jumperDefeated: boolean = false
+    public flyerDefeated: boolean = false
+
     //////////////////
     // Constructors //
     //////////////////
@@ -55,7 +63,8 @@ export class MarioComponent implements OnInit, AfterViewInit {
         private sessionService: SessionService,
         private levelService: LevelService,
         private audioService: AudioService,
-        private router: Router
+        private tutorialService: TutorialService,
+        private router: Router 
 
     ) {
 
@@ -72,6 +81,12 @@ export class MarioComponent implements OnInit, AfterViewInit {
         this.sessionService.timeSubject.subscribe(time => this.time = time)
         this.sessionService.lifeSubject.subscribe(lives => this.lives = lives)
         this.sessionService.scoreSubject.subscribe(score => this.score = score)
+
+        this.sessionService.coinSubject.subscribe(coinCollected => this.coinCollected = coinCollected)
+        this.sessionService.powerUpSubject.subscribe(powerUpCollected => this.powerUpCollected = powerUpCollected)
+        this.sessionService.walkerSubject.subscribe(walkerDefeated => this.walkerDefeated = walkerDefeated)
+        this.sessionService.jumperSubject.subscribe(jumperDefeated => this.jumperDefeated = jumperDefeated)
+        this.sessionService.flyerSubject.subscribe(flyerDefeated => this.flyerDefeated = flyerDefeated)
 
     }
 
@@ -100,21 +115,13 @@ export class MarioComponent implements OnInit, AfterViewInit {
      */
     public async startNewLevel(): Promise<void> {
 
-        // Checks whether the user can progress to the survey.
-        if (this.readyForSurvey) {
-
-            // 
-            this.progressToSurvey()
-            return
-
-        }
-
+   
         // Checks wheather
         if (this.status === 'ready') {
 
             this.status = 'loading'
 
-            const level: Level = await this.levelService.getLevel()
+            const level: Level = await this.levelService.getTutorial()
 
             this.init(level)
 
@@ -139,11 +146,10 @@ export class MarioComponent implements OnInit, AfterViewInit {
      * Directs the user further to the first part of the survey.
      * 
      */
-    public progressToSurvey(): void {
+    public returnToControls(): void {
 
         // Changes the current URL to the start of the survey.
-        this.router.navigate(['survey/part_1'])
-
+        this.router.navigate(['controls'])
     }
 
     /**

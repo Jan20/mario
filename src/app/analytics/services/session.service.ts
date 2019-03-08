@@ -1,16 +1,16 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { Helper } from 'src/app/misc/helper';
-import { UserService } from './user.service';
-import { Session } from '../../models/session';
-import { Performance } from '../../models/performance';
-import { CloudService } from 'src/app/cloud/cloud.service';
-import { Level } from 'src/app/models/level';
-import { Subject } from 'rxjs';
-import { interval } from "rxjs";
 import { firestore } from 'firebase';
-import { SurveyService } from 'src/app/survey/services/survey.service';
+import { interval, Subject } from 'rxjs';
+import { CloudService } from 'src/app/cloud/cloud.service';
 import { Config } from 'src/app/config/config';
+import { Helper } from 'src/app/misc/helper';
+import { Level } from 'src/app/models/level';
+import { SurveyService } from 'src/app/survey/services/survey.service';
+import { Performance } from '../../models/performance';
+import { Session } from '../../models/session';
+import { UserService } from './user.service';
+import { Router } from '@angular/router';
 
 @Injectable({
 
@@ -45,6 +45,15 @@ export class SessionService {
   public scoreSubject: Subject<string> = new Subject<string>()
   public lifeSubject: Subject<number> = new Subject<number>()
 
+  // Tutorial
+  public coinSubject: Subject<boolean> = new Subject<boolean>()
+  public powerUpSubject: Subject<boolean> = new Subject<boolean>()
+  public walkerSubject: Subject<boolean> = new Subject<boolean>()
+  public jumperSubject: Subject<boolean> = new Subject<boolean>()
+  public flyerSubject: Subject<boolean> = new Subject<boolean>()
+
+  public tutorialHasBeenFinished: boolean = false
+
   //////////////////
   // Constructors //
   //////////////////
@@ -53,7 +62,8 @@ export class SessionService {
     private angularFirestore: AngularFirestore,
     private userService: UserService,
     private cloudService: CloudService,
-    private surveyService: SurveyService
+    private surveyService: SurveyService,
+    private router: Router
 
   ) {
 
@@ -186,11 +196,18 @@ export class SessionService {
     await this.cloudService.evolveLevel(userKey)
 
     // Checks whether the user can progress to the survey.
-    await this.checkProgressToSurvey(userKey)
+    const canProgressToSurvey: boolean = await this.checkProgressToSurvey(userKey)
+
+    this.readyForSurveySubject.next(canProgressToSurvey)
 
     // Informs the user that the current session has been stored.
     this.sessionSubject.next('stored')
-    this.readyForSurveySubject.next(await this.checkProgressToSurvey(userKey))
+
+  }
+
+  public finishTutorial() {
+
+    this.sessionSubject.next('stored')
 
   }
 
@@ -523,6 +540,12 @@ public resetTimer(): void {
 
     this.lives -= 1
     this.lifeSubject.next(this.lives)
+
+  }
+
+  public returnToControls(): void {
+
+    this.router.navigate(['controls'])
 
   }
 

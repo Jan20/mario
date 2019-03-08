@@ -7,7 +7,7 @@ import { SessionService } from 'src/app/analytics/services/session.service';
 import { UserService } from 'src/app/analytics/services/user.service';
 import { Session } from 'src/app/models/session';
 import { CloudService } from 'src/app/cloud/cloud.service';
-
+import { Performance } from 'src/app/models/performance'
 @Injectable({
 
   providedIn: 'root'
@@ -61,6 +61,31 @@ export class LevelService {
       level = Level.fromDocumentSnapshot(result)
     
     })
+
+    // Returns a promise that is resolved as soon as a level has been
+    // successfully retrieved from Firestore.
+    return new Promise<Level>(resolve => resolve(level))
+
+  }
+
+  public async getTutorial(): Promise<Level> {
+
+    // Variable intended to store a level object.
+    let level: Level
+
+    // Defines a reference to the Firestore location at which
+    // the desired level can be found. 
+    const ref: string = `tutorials/tutorial`
+    
+    // Retrieves a level from Firestore.
+    await this.angularFirestore.doc(ref).get().toPromise().then(result => {
+      
+      // Creates a level object from the result coming from Firestore.
+      level = Level.fromDocumentSnapshot(result)
+    
+    })
+
+    this.sessionService.setSession(new Session('tutorial', 0, 'running', null, new Performance(0,0,0,0,0,0, 0,0)))
 
     // Returns a promise that is resolved as soon as a level has been
     // successfully retrieved from Firestore.
