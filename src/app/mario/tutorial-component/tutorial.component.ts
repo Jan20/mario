@@ -10,7 +10,6 @@ import { LevelService } from '../services/level.service';
 import { Level } from 'src/app/models/level';
 import { AudioService } from '../audio/audio.service';
 import { Router } from '@angular/router';
-import { TutorialService } from '../services/tutorial.service';
 
 @Component({
     selector: 'app-tutorial',
@@ -46,9 +45,11 @@ export class TutorialComponent implements OnInit, AfterViewInit {
     // Instructions
     public coinCollected: boolean = false
     public powerUpCollected: boolean = false
+    public snowBallShot: boolean = false
     public walkerDefeated: boolean = false
     public jumperDefeated: boolean = false
     public flyerDefeated: boolean = false
+    public reachedFinishLine: boolean = false
 
     //////////////////
     // Constructors //
@@ -63,7 +64,6 @@ export class TutorialComponent implements OnInit, AfterViewInit {
         private sessionService: SessionService,
         private levelService: LevelService,
         private audioService: AudioService,
-        private tutorialService: TutorialService,
         private router: Router 
 
     ) {
@@ -84,10 +84,12 @@ export class TutorialComponent implements OnInit, AfterViewInit {
 
         this.sessionService.coinSubject.subscribe(coinCollected => this.coinCollected = coinCollected)
         this.sessionService.powerUpSubject.subscribe(powerUpCollected => this.powerUpCollected = powerUpCollected)
+        this.sessionService.snowballSubject.subscribe(snowBallShot => this.snowBallShot = snowBallShot)
         this.sessionService.walkerSubject.subscribe(walkerDefeated => this.walkerDefeated = walkerDefeated)
         this.sessionService.jumperSubject.subscribe(jumperDefeated => this.jumperDefeated = jumperDefeated)
         this.sessionService.flyerSubject.subscribe(flyerDefeated => this.flyerDefeated = flyerDefeated)
-
+        this.sessionService.finishSubject.subscribe(reachedFinishLine => this.reachedFinishLine = reachedFinishLine)
+        
     }
 
     ngOnInit(): void {
@@ -146,10 +148,11 @@ export class TutorialComponent implements OnInit, AfterViewInit {
      * Directs the user further to the first part of the survey.
      * 
      */
-    public returnToControls(): void {
+    public progressToTheMainGame(): void {
 
         // Changes the current URL to the start of the survey.
-        this.router.navigate(['controls'])
+        this.router.navigate(['game'])
+    
     }
 
     /**

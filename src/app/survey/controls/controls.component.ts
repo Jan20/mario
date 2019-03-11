@@ -16,19 +16,10 @@ export class ControlsComponent implements OnInit {
   constructor(
 
     private router: Router,
-    private sessionService: SessionService
 
   ) { }
 
   ngOnInit() {
-
-    if (this.sessionService.tutorialHasBeenFinished === true) {
-
-      this.sessionService.tutorialHasBeenFinished = false
-      location.reload()
-
-    }
-
 
   }
 

@@ -283,9 +283,8 @@ export class Player extends MovableObject{
                     
                     } else {
                     
-                        this.sessionService.powerUpSubject.next(true)
                         this.audioService.playCoin()
-                    
+
                     }
 
                     this.world.items.push(new PowerUp(this.world, [Math.floor(blockX) + 0.25, Math.floor(blockY), 0], Math.floor(blockY + 1), blockCollide));
@@ -375,8 +374,8 @@ export class Player extends MovableObject{
                     if (this.sessionService.getLives() === 0) {
                         
                         this.sessionService.tutorialHasBeenFinished = true
-                        this.sessionService.returnToControls()
-                        this.audioService.stopMusic()
+                        this.sessionService.statusSubject.next('completed')
+                            this.audioService.stopMusic()
                         this.resetToDefault()
                         this.sessionService.setProgress(playerRight)
                         this.sessionService.finishTutorial()
@@ -418,7 +417,8 @@ export class Player extends MovableObject{
                         break;
 
                     case 'P':
-                        
+
+                        this.sessionService.powerUpSubject.next(true)
                         this.audioService.playPowerUp()
                         this.hasProjectiles = true;
                         break;
@@ -455,7 +455,7 @@ export class Player extends MovableObject{
             this.audioService.playlostLife()
 
             if (this.sessionService.getLives() === 0) {
-
+                this.sessionService.statusSubject.next('completed')
                 this.audioService.stopMusic()
                 this.sessionService.setProgress(this.pos[0])
                 this.sessionService.finishTutorial()

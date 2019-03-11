@@ -166,24 +166,21 @@ export class World {
         // for moving the player on button presses
         let world = this
 
-        document.addEventListener('keydown', function (evt) {
-
-            world.keyMap[evt.keyCode] = true
-            if (evt.keyCode == 37) {
-                world.player.texDir = 1
-            }
-            else if (evt.keyCode == 39) {
-                world.player.texDir = 0
-            }
-
+        document.addEventListener('keydown', (event: KeyboardEvent) => {
+            world.keyMap[event.keyCode] = true
+            event.key === 'ArrowLeft' ? world.player.texDir = 1 : null
+            event.key === 'ArrowRight' ? world.player.texDir = 0 : null
          
+            console.log(event.key)
         }, false)
+    
         document.addEventListener('keyup', function (evt) {
             world.keyMap[evt.keyCode] = false
         }, false)
         this.loadTextures()
-
+    
     }
+
 
 
 
@@ -228,8 +225,9 @@ export class World {
         // the end of the level.
         if (this.player.pos[0] > this.stage.finishLine) {
             
+            this.sessionService.finishSubject.next(true)
             this.sessionService.tutorialHasBeenFinished = true
-
+            
             this.audioService.stopMusic()
             this.sessionService.setProgress(200)
             this.audioService.playFinished()
@@ -239,7 +237,7 @@ export class World {
             this.player.resetToDefault()
             this.player.restartLevel()
             this.hasFinished = true
-            this.sessionService.returnToControls()
+            this.sessionService.statusSubject.next('completed')
         }
         
         //

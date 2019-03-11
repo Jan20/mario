@@ -1,3 +1,4 @@
+
 <div class='content'>
 
     <div class='menu' *ngIf='status === "completed"'>
@@ -6,7 +7,7 @@
         <h2 *ngIf='!isStored'>Please wait a second ...</h2>
         <app-spinner *ngIf='isStored != true'></app-spinner>
         <h2 *ngIf='isStored && readyForSurvey' (click)='progressToSurvey()'>Please continue the survey.</h2>
-        <h2 *ngIf='isStored && !readyForSurvey' (click)='startNewLevel()'>Progress to the next Level</h2>
+        <h2 *ngIf='isStored && !readyForSurvey' (click)='startNewLevel()'>Start the Second Level!</h2>
     
     </div>
 
@@ -16,7 +17,7 @@
         <h2 class='notification' *ngIf='!isStored'>Please wait a second ...</h2>
         <app-spinner *ngIf='isStored != true'></app-spinner>
         <h2 *ngIf='isStored && readyForSurvey' (click)='progressToSurvey()'>Please continue to the survey</h2>
-        <h2 *ngIf='isStored && !readyForSurvey' (click)='startNewLevel()'>Try another one!</h2>
+        <h2 *ngIf='isStored && !readyForSurvey' (click)='startNewLevel()'>Start the Second Level!</h2>
 
     </div>
 
@@ -24,18 +25,18 @@
     <div *ngIf='status === "running"' class='ui'>
 
         <div class='first-ui-element'>
-            <span class='mario'>Time: </span>
-            <span class='mario'>{{time}}</span>
+            <span class='element'>Time: </span>
+            <span class='element'>{{time}}</span>
         </div>
 
         <div class='ui-element'>
-            <span class='mario'>Score: </span>
-            <span class='mario'>{{score}}</span>
+            <span class='element'>Score: </span>
+            <span class='element'>{{score}}</span>
         </div>
         
         <div class='final-ui-element'>
-            <span class='mario'>Lives: </span>
-            <span class='mario'>{{lives}}</span>
+            <span class='element'>Lives: </span>
+            <span class='element'>{{lives}}</span>
         </div>
 
     </div>

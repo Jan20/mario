@@ -1,19 +1,9 @@
 .content {
 
-    width: 800px;
+    width: 80%;
     margin: auto;
     color: rgb(80, 80, 80);
     padding: 30px;
-
-}
-
-h1 {
-
-    margin-top: 30px;
-    font-size: 42px;
-    font-weight: 300;
-    font-family: 'Roboto', sans-serif;
-    margin-bottom: 10px;
 
 }
 
@@ -60,6 +50,7 @@ button {
 .question {
 
     margin-top: 40px;
+    width: 100%;
 
 }
 
@@ -67,4 +58,33 @@ input {
 
 
     font-size: 24px;
+}
+
+.option {
+
+    height: 150px !important;
+    width: 100% !important;
+}
+
+.option-active {
+
+    height: 150px !important;
+    width: 100% !important;
+    border: 1px solid rgba(122, 174, 67, 1);
+    background-color: rgba(122, 174, 67, 0.1);
+
+}
+
+.answer {
+
+    width: 48%;
+    float: left !important;
+
+}
+
+.second-answer {
+
+    width: 48%;
+    float: right;
+
 }

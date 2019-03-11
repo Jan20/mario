@@ -35,7 +35,7 @@ export class Part5Component implements OnInit {
 
   ) {
 
-    for (let i = 1; i < 101; i++) {
+    for (let i = 13; i < 101; i++) {
 
       this.ageOptions.push('' + i)
 

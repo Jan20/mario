@@ -12,22 +12,63 @@
 
 .instructions {
 
-    margin-top: 50px;
     position: absolute; 
-    margin: auto; 
     width:25%;
+    margin-top: 50px;
+
+}
+
+.check_box {
+    
+    margin-left: 40px;
+    padding: 10px;
+    width: 10px;
+    float:left; 
+}
+
+.task {
+
+    margin-left: 2px;
+    padding: 10px;
+    width: 230px;
+    padding-right: 0;
+    float:left; 
+}
+
+mat-icon {
+    
+    color: rgba(125, 125, 125, 1);
+
+}
+
+.icon-completed {
+    
+    color: rgba(122, 174, 67, 1);
 
 }
 
 .instruction {
 
-    color: rgba(125, 125, 125, 1)
+    color: rgba(125, 125, 125, 1);
+    font-family: Roboto; 
+    font-size: 16px;
+    text-align: left;
+    margin: 0;
+    cursor: default;
+    font-weight: 300;
+
 
 }
 
 .instruction-completed {
       
-    color: rgba(122, 174, 67, 1)
+    color: rgba(122, 174, 67, 1);
+    font-family: Roboto; 
+    font-size: 16px;
+    text-align: left;
+    margin: 0;
+    cursor: default;
+    font-weight: 300;
 
 }
 
@@ -58,7 +99,6 @@
 }
 
 
-
 h1 {
 
     padding-top: 140px; 
@@ -85,6 +125,7 @@ h2 {
     padding: 10px;
 
 }
+
 
 .notification {
 
@@ -137,9 +178,10 @@ h2:hover {
 
 }
 
-.mario {
+.element {
 
     font-family: Tux;
     font-size: 20px;
+    color: white
 
 }

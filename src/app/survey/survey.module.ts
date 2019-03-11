@@ -9,12 +9,11 @@ import { Part2Component } from './part2/part2.component'
 import { Part3Component } from './part3/part3.component'
 import { Part4Component } from './part4/part4.component';
 import { Part5Component } from './part5/part5.component';
+import { Part6Component } from './part6/part6.component';
 import { ControlsComponent } from './controls/controls.component';
 import { DescriptionComponent } from './description/description.component'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
-import { Part6Component } from './part6/part6.component';
-import { TransitionComponent } from './transition/transition.component';
 
 @NgModule({
   imports: [
@@ -38,7 +37,6 @@ import { TransitionComponent } from './transition/transition.component';
     Part4Component,
     Part5Component,
     Part6Component,
-    TransitionComponent,
     
   ],
   providers: [

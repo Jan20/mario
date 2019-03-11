@@ -77,6 +77,13 @@ export class MarioComponent implements OnInit, AfterViewInit {
 
     ngOnInit(): void {
 
+        if (this.sessionService.tutorialHasBeenFinished === true) {
+
+            this.sessionService.tutorialHasBeenFinished = false
+            location.reload()
+      
+        }
+
         this.startNewLevel()
      
     }

@@ -1,61 +1,76 @@
 <div class='instructions'>
 
-    <h2 class='instruction' *ngIf='!coinCollected'>coinSubject</h2>
-    <h2 class='instruction-completed' *ngIf='coinCollected'>coinSubject</h2>
+    <div class='check_box'>
+        <mat-icon *ngIf='!coinCollected'>check_box_outline_blank</mat-icon>
+        <mat-icon *ngIf='coinCollected' class='icon-completed' >check_box</mat-icon>
+    </div>
+    <div class='task'>
+        <p *ngIf='!coinCollected' class='instruction' >Collect a coin by breaking the cracked ice block by jumping against the buttom side of the block.</p>
+        <p *ngIf='coinCollected' class='instruction-completed' >Collect a coin by breaking the cracked ice block by jumping against the buttom side of the block.</p>
+    </div>
 
-    <h2 class='instruction' *ngIf='!powerUpCollected'>powerUpSubject</h2>
-    <h2 class='instruction-completed' *ngIf='powerUpCollected'>powerUpSubject</h2>
+    <div class='check_box'>
+        <mat-icon *ngIf='!powerUpCollected && coinCollected'>check_box_outline_blank</mat-icon>
+        <mat-icon *ngIf='powerUpCollected && coinCollected' class='icon-completed' >check_box</mat-icon>
+    </div>
+    <div class='task'>
+        <p *ngIf='!powerUpCollected && coinCollected' class='instruction'>Obtain the ability to shoot snow balls by jumping against the bottom side of the block with the question mark and collect the item available afterwards.</p>
+        <p *ngIf='powerUpCollected && coinCollected' class='instruction-completed'>Obtain the ability to shoot snow balls by jumping against the bottom side of the block with the question mark and collect the item available afterwards.</p>
+    </div>
+    
+    <div class='check_box'>
+        <mat-icon *ngIf='!snowBallShot && powerUpCollected'>check_box_outline_blank</mat-icon>
+        <mat-icon *ngIf='snowBallShot && powerUpCollected' class='icon-completed' >check_box</mat-icon>
+    </div>
+    <div class='task'>
+        <p *ngIf='!snowBallShot && powerUpCollected' class='instruction' >Fire a snowball by pressing the space key on your keyboard.</p>
+        <p *ngIf='snowBallShot && powerUpCollected' class='instruction-completed'>Fire a snowball by pressing the space key on your keyboard.</p>
+    </div>
 
-    <h2 class='instruction' *ngIf='!walkerDefeated'>walkerSubject</h2>
-    <h2 class='instruction-completed' *ngIf='walkerDefeated'>walkerSubject</h2>
+    <div class='check_box'>
+        <mat-icon *ngIf='(!walkerDefeated || !jumperDefeated || !flyerDefeated) && snowBallShot'>check_box_outline_blank</mat-icon>
+        <mat-icon *ngIf='(walkerDefeated && jumperDefeated && flyerDefeated) && snowBallShot' class='icon-completed' >check_box</mat-icon>
+    </div>
+    <div class='task'>
+        <p *ngIf='(!walkerDefeated || !jumperDefeated || !flyerDefeated) && snowBallShot' class='instruction'>Defeat all three opponents by either jumping on top of them or hitten them with a snow ball.</p>
+        <p *ngIf='(walkerDefeated && jumperDefeated && flyerDefeated) && snowBallShot' class='instruction-completed'>Defeat all three opponents by either jumping on top of them or hitten them with a snow ball.</p>
+    </div>
 
-    <h2 class='instruction' *ngIf='!jumperDefeated'>jumperSubject</h2>
-    <h2 class='instruction-completed' *ngIf='jumperDefeated'>jumperSubject</h2>
-
-    <h2 class='instruction' *ngIf='!flyerDefeated'>flyerSubject</h2>
-    <h2 class='instruction-completed' *ngIf='flyerDefeated'>flyerSubject</h2>
-
-
+    <div class='check_box'>
+        <mat-icon *ngIf='!reachedFinishLine && (walkerDefeated && jumperDefeated && flyerDefeated)'>check_box_outline_blank</mat-icon>
+        <mat-icon *ngIf='reachedFinishLine && (walkerDefeated && jumperDefeated && flyerDefeated)' class='icon-completed' >check_box</mat-icon>
+    </div>
+    <div class='task'>
+        <p *ngIf='!reachedFinishLine && (walkerDefeated && jumperDefeated && flyerDefeated)' class='instruction' >Finish the tutorial by reaching the goal field at the right side of the level.</p>
+        <p *ngIf='reachedFinishLine && (walkerDefeated && jumperDefeated && flyerDefeated)' class='instruction-completed'>Finish the tutorial by reaching the goal field at the right side of the level.</p>
+    </div>
 </div>
 
 <div class='content'>
 
     <div class='menu' *ngIf='status === "completed"'>
 
-        <h1>Level Completed!</h1>
-        <h2 *ngIf='!isStored'>Please wait a second ...</h2>
-        <app-spinner *ngIf='isStored != true'></app-spinner>
-        <h2 *ngIf='isStored && readyForSurvey' (click)='progressToSurvey()'>Please continue the survey.</h2>
-        <h2 *ngIf='isStored && !readyForSurvey' (click)='startNewLevel()'>Progress to the next Level</h2>
+        <h1>Thank you for having played the tutorial.</h1>
+        <h2 (click)='progressToTheMainGame()'>Progress to the full game</h2>
     
-    </div>
-
-    <div class='menu' *ngIf='status === "lost"'>
-    
-        <h1>Thank you for having played the level</h1>
-        <h2 class='notification' *ngIf='!isStored'>Please wait a second ...</h2>
-        <app-spinner *ngIf='isStored != true'></app-spinner>
-        <h2 *ngIf='isStored && readyForSurvey' (click)='progressToSurvey()'>Please continue to the survey</h2>
-        <h2 *ngIf='isStored && !readyForSurvey' (click)='startNewLevel()'>Try another one!</h2>
-
     </div>
 
 
     <div *ngIf='status === "running"' class='ui'>
 
         <div class='first-ui-element'>
-            <span class='mario'>Time: </span>
-            <span class='mario'>{{time}}</span>
+            <span class='element'>Time: </span>
+            <span class='element'>{{time}}</span>
         </div>
 
         <div class='ui-element'>
-            <span class='mario'>Score: </span>
-            <span class='mario'>{{score}}</span>
+            <span class='element'>Score: </span>
+            <span class='element'>{{score}}</span>
         </div>
         
         <div class='final-ui-element'>
-            <span class='mario'>Lives: </span>
-            <span class='mario'>{{lives}}</span>
+            <span class='element'>Lives: </span>
+            <span class='element'>{{lives}}</span>
         </div>
 
     </div>

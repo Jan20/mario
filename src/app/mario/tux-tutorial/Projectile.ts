@@ -108,6 +108,8 @@ export class Projectile extends MovableObject{
     }
     
     public move(): void {
+
+        this.sessionService.snowballSubject.next(true)
         
         this.pos[0] += this.velocity[0];
         
@@ -118,14 +120,16 @@ export class Projectile extends MovableObject{
         // HANDLE Enemy collisions, using world's list of enemies
         for (let i = 0; i < this.world.enemies.length; i++) {
             
-            const curEnemy = this.world.enemies[i];
+            const currentEnemy = this.world.enemies[i];
+
+            this.sessionService.snowballSubject.next(true)
             
-            if (!(curEnemy.pos[0] + 1 > this.xBoundLeft && curEnemy.pos[0] - 1 < this.xBoundRight))
+            if (!(currentEnemy.pos[0] + 1 > this.xBoundLeft && currentEnemy.pos[0] - 1 < this.xBoundRight))
                 continue;
             // Bounding boxes intersect
-            var adjustedEnemyPos = curEnemy.pos[0] + (1 - curEnemy.enemyWidth) / 2;
-            if ((Math.abs(this.pos[0] - adjustedEnemyPos)) * 2 < (this.velocity[0] + curEnemy.enemyWidth) &&
-                (Math.abs(this.pos[1] - curEnemy.pos[1])) * 2 < (.5 + curEnemy.enemyHeight)) {
+            var adjustedEnemyPos = currentEnemy.pos[0] + (1 - currentEnemy.enemyWidth) / 2;
+            if ((Math.abs(this.pos[0] - adjustedEnemyPos)) * 2 < (this.velocity[0] + currentEnemy.enemyWidth) &&
+                (Math.abs(this.pos[1] - currentEnemy.pos[1])) * 2 < (.5 + currentEnemy.enemyHeight)) {
                 // Need to detect which collision happened, vertical or horizontal
                 this.lives = 0;
                 this.sessionService.increaseScore(100)
@@ -133,6 +137,10 @@ export class Projectile extends MovableObject{
                 this.world.deadEnemies.push(this.world.enemies[i]);
                 this.world.enemies.splice(i, 1);
                 i--;
+                currentEnemy.enemyType === 'C' ? this.sessionService.walkerSubject.next(true) : null
+                currentEnemy.enemyType === 'A' ? this.sessionService.walkerSubject.next(true) : null
+                currentEnemy.enemyType === 'V' ? this.sessionService.flyerSubject.next(true) : null
+                currentEnemy.enemyType === 'J' ? this.sessionService.jumperSubject.next(true) : null
             }
         }
     }

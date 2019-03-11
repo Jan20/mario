@@ -78,6 +78,8 @@ export class SurveyService {
   /////////////
   public setRecentSessions(recentSessions: Session[]): void {
 
+
+    
     this.recentSessions = recentSessions
 
   }

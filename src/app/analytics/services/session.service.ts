@@ -48,9 +48,11 @@ export class SessionService {
   // Tutorial
   public coinSubject: Subject<boolean> = new Subject<boolean>()
   public powerUpSubject: Subject<boolean> = new Subject<boolean>()
+  public snowballSubject: Subject<boolean> = new Subject<boolean>()
   public walkerSubject: Subject<boolean> = new Subject<boolean>()
   public jumperSubject: Subject<boolean> = new Subject<boolean>()
   public flyerSubject: Subject<boolean> = new Subject<boolean>()
+  public finishSubject: Subject<boolean> = new Subject<boolean>()
 
   public tutorialHasBeenFinished: boolean = false
 
@@ -124,7 +126,7 @@ export class SessionService {
     const performance: Performance = new Performance(0, 0, 0, 0, 0, 0, 0, 100)
 
     // Initializes a new session object.
-    const session: Session = new Session(key, id, 'created', firestore.Timestamp.fromDate(new Date()), performance)
+    const session: Session = new Session(key, id, 'created', firestore.Timestamp.fromMillis(new Date().getMilliseconds()), performance)
 
     // Returns a promise referring to the freshly created session.
     return new Promise<Session>(resolve => resolve(session))
@@ -230,7 +232,7 @@ export class SessionService {
 
     // Checks whether at least 3 sessions have been finished while the user
     // has not finished a survey yet.
-    if (recentSessions.length > 2 && !this.surveyService.surveyCompleted) {
+    if (recentSessions.length > 1 && !this.surveyService.surveyCompleted) {
 
       // Writes the recently finished sessions to the survey service.
       await this.surveyService.setRecentSessions(recentSessions)    
@@ -278,7 +280,7 @@ export class SessionService {
         // one hour and that not more than two sessions are already stored at recent
         // sessions. If the conditions are met, the current iteration's session is added
         // to the recent sessions array.
-        if (session.timestamp.toMillis() > recentlyFinished && recentSessions.length < 3) {
+        if (session.timestamp.toMillis() > recentlyFinished && recentSessions.length < 2) {
           
           session.status === 'finished' ? recentSessions.push(session) : null
   
@@ -315,11 +317,10 @@ export class SessionService {
       // Iterates over all stored sessions.
       firestoreSessions.forEach(session => {
 
-        
         // Creates an object of class Session from the data retrieved from Firestore.
         const storedSession: Session = Session.fromObject(session.data(), null)
 
-        // Checks whether the session under scrutiny has been finished. 
+        // Pushes the freshly created Session object to the sessions array.
         sessions.push(storedSession)
 
       })

@@ -2,49 +2,27 @@
     
     <div class='question'>
     
-        <p>
-            Please rank the sessions you have just played from the most frustrating one on the top to the least frustrating one on the bottom.
-        </p>
+        <p>Please decide to what extent you would agree with the statement "The level of difficulty of the second level was appropriate".</p>
 
-        <form class="form">
-            <mat-form-field class="full-width">
-                <input type="text" placeholder='Most Frustrating' aria-label="Rank 1" matInput [formControl]="rank01Control" [matAutocomplete]="rank_001">
-                <mat-autocomplete #rank_001="matAutocomplete">
-                <mat-option *ngFor="let rank of filteredRank01Options | async" [value]="rank">
-                    {{rank}}
-                </mat-option>
-                </mat-autocomplete>
-                <mat-hint *ngIf='displayHint && rank_01 == undefined'>Please choose between 'First Level', 'Second Level' and 'Third Level'</mat-hint>
-            </mat-form-field>
-        </form>
+        <p class='option'>Strongly Agree</p>
+        <p class='option'>Agree</p>
+        <p class='option'>Neutral</p>
+        <p class='option'>Disagree</p>
+        <p class='option'>Strongly Disagree</p>
 
-        <form class="form" *ngIf='rank_01 != undefined || rank_02 != undefined'>
-            <mat-form-field class="full-width">
-                <input type="text" placeholder='Less Frustrating' aria-label="Rank 2" matInput [formControl]="rank02Control" [matAutocomplete]="rank_002">
-                <mat-autocomplete #rank_002="matAutocomplete">
-                <mat-option *ngFor="let rank of filteredRank02Options | async" [value]="rank">
-                    {{rank}}
-                </mat-option>
-                </mat-autocomplete>
-                <mat-hint *ngIf='displayHint && rank_02 == undefined'>Please choose between 'First Level', 'Second Level' and 'Third Level'</mat-hint>
-            </mat-form-field>
-        </form>
+        <mat-divider></mat-divider>
+
+        <mat-radio-group class="example-radio-group" [(ngModel)]="answer">
+            <mat-radio-button class="example-radio-button" color='primary' *ngFor="let option of options" [value]="answer">
+                
+                <p class='option'>{{''}}</p>
+                
+            </mat-radio-button>
+        </mat-radio-group>
+
+        <button *ngIf='active === ""' mat-stroked-button (click)='continue()' disabled>Continue</button>
+        <button *ngIf='active != ""'  mat-stroked-button (click)='continue()'>Continue</button>
     
-        <form class="form" *ngIf='rank_02 != undefined || rank_03 != undefined'>
-            <mat-form-field class="full-width">
-                <input type="text" placeholder='Least Frustrating' aria-label="Rank 3" matInput [formControl]="rank03Control" [matAutocomplete]="rank_003">
-                <mat-autocomplete #rank_003="matAutocomplete">
-                <mat-option *ngFor="let rank of filteredRank03Options | async" [value]="rank">
-                    {{rank}}
-                </mat-option>
-                </mat-autocomplete>
-                <mat-hint *ngIf='displayHint && rank_03 == undefined'>Please choose between 'First Level', 'Second Level' and 'Third Level'</mat-hint>
-            </mat-form-field>
-        </form>
-
     </div>
-
-    <button mat-stroked-button (click)='continue()'>Continue</button>
-
 </div>
       

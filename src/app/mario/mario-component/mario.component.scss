@@ -83,7 +83,7 @@ h2:hover {
     z-index: 1; 
     width:500px; 
     height:20px; 
-    color: white; 
+    color: white !important; 
 
 }
 
@@ -115,9 +115,10 @@ h2:hover {
 
 }
 
-.mario {
+.element {
 
     font-family: Tux;
     font-size: 20px;
+    color: white
 
 }
