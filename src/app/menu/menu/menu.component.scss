@@ -1,5 +1,7 @@
 .spacer{
+
 	flex: 1 1 auto;
+
 }
 
 mat-toolbar {
@@ -18,15 +20,23 @@ span {
 
 
 @media (min-width: 600px) {
+
 	.mobile-menu {
+
 		display: none;
+
 	}
+
 }
 
 @media (max-width: 600px) {
+
 	.desktop-menu {
+
 		display: none;
+
 	}
+
 }
 
 .title {
@@ -34,21 +44,13 @@ span {
 	font-size: 24px;
 	color: rgb(50, 50, 50);
 	font-weight: 300;
+
 }
 
 .user {
 
 	width: 72px;
 
-}
-
-.two {
-
-	padding-top: 20px;
-	font-family: 'Roboto', sans-serif;
-
-	vertical-align: sub;
-	font-size: 16px;
 }
 
 .mat-icon {

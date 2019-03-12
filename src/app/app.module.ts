@@ -3,14 +3,12 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { AnalyticsModule } from './analytics/analytics.module';
 import { AppComponent } from './app.component';
 import { ConfigModule } from './config/config.module';
 import { MaterialModule } from './config/material.module';
-import { MarioModule } from './mario/mario.module';
+import { TuxModule } from './tux/tux.module';
 import { SurveyModule } from './survey/survey.module';
 import { TestModule } from './test/test.module';
-import { CloudModule } from './cloud/cloud.module';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { MenuModule } from './menu/menu.module'
 
@@ -31,10 +29,8 @@ import { MenuModule } from './menu/menu.module'
     BrowserAnimationsModule,
     ConfigModule,
     MenuModule,
-    MarioModule,
-    AnalyticsModule,
+    TuxModule,
     SurveyModule,
-    CloudModule,
     TestModule
 
   ],

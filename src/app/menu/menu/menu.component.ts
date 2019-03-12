@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core'
 import { Router } from '@angular/router'
 import { MenuItem } from '../menu-model/menu.item'
-import { MenuService } from '../menu-service/menu.service'
-import { AudioService } from 'src/app/mario/audio/audio.service';
-import { SessionService } from 'src/app/analytics/services/session.service';
+import { AudioService } from 'src/app/tux/audio/audio.service';
+import { SessionService } from 'src/app/shared/services/session.service';
 
 @Component({
   selector: 'app-menu',

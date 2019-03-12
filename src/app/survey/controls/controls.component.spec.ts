@@ -1,9 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ControlsComponent } from './controls.component';
-import { IntroductionComponent } from '../introduction/introduction.component';
 import { MaterialModule } from 'src/app/config/material.module';
-import { MarioModule } from 'src/app/mario/mario.module';
+import { TuxModule } from 'src/app/tux/tux.module';
 import { AngularFireModule } from '@angular/fire';
 import { environment } from 'src/environments/environment';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -25,7 +24,7 @@ describe('ControlsComponent', () => {
       imports: [ 
         
         MaterialModule, 
-        MarioModule,
+        TuxModule,
         AngularFireModule.initializeApp(environment.firebaseConfig),
         RouterTestingModule,
         BrowserAnimationsModule,

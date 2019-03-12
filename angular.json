@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "Mario": {
+    "Tux": {
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
@@ -50,18 +50,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "Mario:build"
+            "browserTarget": "Tux:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "Mario:build:production"
+              "browserTarget": "Tux:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "Mario:build"
+            "browserTarget": "Tux:build"
           }
         },
         "test": {
@@ -95,7 +95,7 @@
         }
       }
     },
-    "Mario-e2e": {
+    "Tux-e2e": {
       "root": "e2e/",
       "projectType": "application",
       "architect": {
@@ -103,11 +103,11 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "Mario:serve"
+            "devServerTarget": "Tux:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "Mario:serve:production"
+              "devServerTarget": "Tux:serve:production"
             }
           }
         },
@@ -123,7 +123,7 @@
       }
     }
   },
-  "defaultProject": "Mario",
+  "defaultProject": "Tux",
   "schematics": {
     "@schematics/angular:component": {
       "styleext": "scss"

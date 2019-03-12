@@ -10,7 +10,7 @@ export class AppComponent {
   ///////////////
   // Variables //
   ///////////////
-  public title: string = 'Mario'
+  public title: string = 'Tux'
 
   //////////////////
   // Constructors //

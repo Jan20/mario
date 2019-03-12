@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { SurveyService } from '../services/survey.service';
+import { SurveyService } from '../../shared/services/survey.service';
 import { Session } from 'src/app/models/session';
 import { RankOption } from 'src/app/models/rankOption';
-import { SessionService } from 'src/app/analytics/services/session.service';
-import { UserService } from 'src/app/analytics/services/user.service';
+import { SessionService } from 'src/app/shared/services/session.service';
+import { UserService } from 'src/app/shared/services/user.service';
 import { firestore } from 'firebase';
 
 @Component({

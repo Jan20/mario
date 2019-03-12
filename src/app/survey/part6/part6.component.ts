@@ -3,7 +3,7 @@ import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { Router } from '@angular/router';
-import { SurveyService } from '../services/survey.service';
+import { SurveyService } from '../../shared/services/survey.service';
 
 @Component({
   selector: 'app-part6',

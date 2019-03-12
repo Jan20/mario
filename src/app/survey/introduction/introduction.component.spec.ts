@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { IntroductionComponent } from './introduction.component';
 import { MaterialModule } from 'src/app/config/material.module';
-import { MarioModule } from 'src/app/mario/mario.module';
+import { TuxModule } from 'src/app/tux/tux.module';
 import { AngularFireModule } from '@angular/fire';
 import { environment } from 'src/environments/environment';
 import { AngularFirestore } from '@angular/fire/firestore';
@@ -25,7 +25,7 @@ describe('IntroductionComponent', () => {
       imports: [ 
         
         MaterialModule, 
-        MarioModule,
+        TuxModule,
         AngularFireModule.initializeApp(environment.firebaseConfig),
         RouterTestingModule,
         BrowserAnimationsModule,

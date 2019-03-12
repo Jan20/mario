@@ -6,11 +6,11 @@
     Please use the following buttons to move your avatar.  
   </p>
 
-  <div class='container'>
+  <div class='container-first'>
     <mat-icon>arrow_forward</mat-icon>
     <div class='description'>
       <p>
-        Right arrow Key: Move to the right
+        Right arrow Key: Move right
       </p>
     </div>
   </div>
@@ -19,7 +19,7 @@
       <mat-icon>arrow_backward</mat-icon>
       <div class='description'>
         <p>
-          Left arrow key: Move to the left
+          Left arrow key: Move left
         </p>
       </div>
   </div>
@@ -35,14 +35,15 @@
 
   <div class='container'>
     <mat-icon>space_bar</mat-icon>
-    <div class='description'>
+    <div class='description-last'>
       <p>
-        Space: Shoot a snow ball (available after collecting a power-up)
+        Space: Shoot snow balls (after collecting a power-up)
       </p>
     </div>
   </div>
 
+  <button class='tutorial-button' mat-stroked-button (click)='switchToTutorial()'>Tutorial</button>
   <button class='proceed-button' mat-stroked-button (click)='proceed()'>Continue</button>
-  <button class='tutorial-button' mat-stroked-button (click)='switchToTutorial()'>Try a Tutorial</button>
-
+  
 </div>
+

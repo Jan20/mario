@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core'
 import { CommonModule } from '@angular/common'
-import { MarioModule } from '../mario/mario.module'
-import { SurveyService } from './services/survey.service'
+import { TuxModule } from '../tux/tux.module'
+import { SurveyService } from '../shared/services/survey.service'
 import { MaterialModule } from '../config/material.module';
 import { IntroductionComponent } from './introduction/introduction.component';
 import { Part1Component } from './part1/part1.component'
@@ -19,7 +19,7 @@ import { BrowserModule } from '@angular/platform-browser';
   imports: [
 
     CommonModule,
-    MarioModule,
+    TuxModule,
     MaterialModule,
     BrowserModule,
     FormsModule,

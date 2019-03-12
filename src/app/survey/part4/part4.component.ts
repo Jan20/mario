@@ -1,11 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
 import { Router } from '@angular/router';
-import { SurveyService } from '../services/survey.service';
-import { Session } from 'src/app/models/session';
-import { RankOption } from 'src/app/models/rankOption';
+import { SurveyService } from '../../shared/services/survey.service';
 
 @Component({
   selector: 'app-part4',

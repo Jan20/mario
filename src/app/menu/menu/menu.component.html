@@ -3,7 +3,11 @@
   <button class='title' mat-button (click)='switchToLandingPage()'>{{title}}</button>
 
   <span class='spacer'></span>
-  
+
+  <button mat-button>
+    <mat-icon>translate</mat-icon>
+  </button>
+
   <button mat-button (click)='toggleSound()'>
     <mat-icon *ngIf='audioIsEnbabled && status != undefined && status != "lost" && status != "completed"' >music_note</mat-icon>
     <mat-icon *ngIf='!audioIsEnbabled && status != undefined && status != "lost" && status != "completed"'>music_off</mat-icon>

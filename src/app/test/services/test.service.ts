@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { UserService } from 'src/app/analytics/services/user.service';
-import { SessionService } from 'src/app/analytics/services/session.service';
+import { UserService } from 'src/app/shared/services/user.service';
+import { SessionService } from 'src/app/shared/services/session.service';
 import { Samples } from '../samples';
 
 @Injectable({

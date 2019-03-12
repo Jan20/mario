@@ -1,0 +1,104 @@
+<!-- <div class='instructions'>
+
+    <div class='check_box'>
+        <mat-icon *ngIf='!coinCollected'>check_box_outline_blank</mat-icon>
+        <mat-icon *ngIf='coinCollected' class='icon-completed' >check_box</mat-icon>
+    </div>
+    <div class='task'>
+        <p *ngIf='!coinCollected' class='instruction' >Collect a coin by breaking the cracked ice block by jumping against the buttom side of the block.</p>
+        <p *ngIf='coinCollected' class='instruction-completed' >Collect a coin by breaking the cracked ice block by jumping against the buttom side of the block.</p>
+    </div>
+
+    <div class='check_box'>
+        <mat-icon *ngIf='!powerUpCollected && coinCollected'>check_box_outline_blank</mat-icon>
+        <mat-icon *ngIf='powerUpCollected && coinCollected' class='icon-completed' >check_box</mat-icon>
+    </div>
+    <div class='task'>
+        <p *ngIf='!powerUpCollected && coinCollected' class='instruction'>Obtain the ability to shoot snow balls by jumping against the bottom side of the block with the question mark and collect the item available afterwards.</p>
+        <p *ngIf='powerUpCollected && coinCollected' class='instruction-completed'>Obtain the ability to shoot snow balls by jumping against the bottom side of the block with the question mark and collect the item available afterwards.</p>
+    </div>
+    
+    <div class='check_box'>
+        <mat-icon *ngIf='!snowBallShot && powerUpCollected'>check_box_outline_blank</mat-icon>
+        <mat-icon *ngIf='snowBallShot && powerUpCollected' class='icon-completed' >check_box</mat-icon>
+    </div>
+    <div class='task'>
+        <p *ngIf='!snowBallShot && powerUpCollected' class='instruction' >Fire a snowball by pressing the space key on your keyboard.</p>
+        <p *ngIf='snowBallShot && powerUpCollected' class='instruction-completed'>Fire a snowball by pressing the space key on your keyboard.</p>
+    </div>
+
+    <div class='check_box'>
+        <mat-icon *ngIf='(!walkerDefeated || !jumperDefeated || !flyerDefeated) && snowBallShot'>check_box_outline_blank</mat-icon>
+        <mat-icon *ngIf='(walkerDefeated && jumperDefeated && flyerDefeated) && snowBallShot' class='icon-completed' >check_box</mat-icon>
+    </div>
+    <div class='task'>
+        <p *ngIf='(!walkerDefeated || !jumperDefeated || !flyerDefeated) && snowBallShot' class='instruction'>Defeat all three opponents by either jumping on top of them or hitten them with a snow ball.</p>
+        <p *ngIf='(walkerDefeated && jumperDefeated && flyerDefeated) && snowBallShot' class='instruction-completed'>Defeat all three opponents by either jumping on top of them or hitten them with a snow ball.</p>
+    </div>
+
+    <div class='check_box'>
+        <mat-icon *ngIf='!reachedFinishLine && (walkerDefeated && jumperDefeated && flyerDefeated)'>check_box_outline_blank</mat-icon>
+        <mat-icon *ngIf='reachedFinishLine && (walkerDefeated && jumperDefeated && flyerDefeated)' class='icon-completed' >check_box</mat-icon>
+    </div>
+    <div class='task'>
+        <p *ngIf='!reachedFinishLine && (walkerDefeated && jumperDefeated && flyerDefeated)' class='instruction' >Finish the tutorial by reaching the goal field at the right side of the level.</p>
+        <p *ngIf='reachedFinishLine && (walkerDefeated && jumperDefeated && flyerDefeated)' class='instruction-completed'>Finish the tutorial by reaching the goal field at the right side of the level.</p>
+    </div>
+</div> -->
+
+<div class='content'>
+
+    <div class='menu' *ngIf='status === "completed"'>
+
+        <h1>Thank you for having played the tutorial.</h1>
+        <h2 (click)='progressToTheMainGame()'>Progress to the full game</h2>
+
+    </div>
+
+    <div *ngIf='status === "running"' class='ui'>
+
+        <div class='first-ui-element'>
+            <span class='element'>Time: </span>
+            <span class='element'>{{time}}</span>
+        </div>
+
+        <div class='ui-element'>
+            <span class='element'>Score: </span>
+            <span class='element'>{{score}}</span>
+        </div>
+        
+        <div class='final-ui-element'>
+            <span class='element'>Lives: </span>
+            <span class='element'>{{lives}}</span>
+        </div>
+
+    </div>
+
+    <div class='canvas-container'>
+        <canvas [style.visibility]="status === 'running' ? 'visible' : 'hidden'" #canvas class='canvas' width="1500" height="1500"></canvas>
+    </div>
+
+</div>
+
+<div *ngIf='status != "completed"'>
+
+    <button class='control-button-left' mat-fab (mousedown)='selectActiveKey(38)' (touchstart)='selectActiveKey(38)' (mouseup)='removeActiveKey(38)' (touchend)='removeActiveKey(38)'>  
+        <mat-icon class='control-icon'>arrow_upward</mat-icon>
+    </button>
+    
+    <button class='control-button-left' mat-fab (mousedown)='selectActiveKey(32)' (touchstart)='selectActiveKey(32)' (mouseup)='removeActiveKey(32)' (touchend)='removeActiveKey(32)'>  
+        <mat-icon class='control-icon'>space_bar</mat-icon>
+    </button>
+    
+    <button class='control-button-right' mat-fab (mousedown)='selectActiveKey(39)' (touchstart)='selectActiveKey(39)' (mouseup)='removeActiveKey(39)' (touchend)='removeActiveKey(39)'>  
+        <mat-icon class='control-icon'>arrow_forward</mat-icon>
+    </button>
+    
+    <button class='control-button-right' mat-fab (mousedown)='selectActiveKey(37)' (touchstart)='selectActiveKey(37)' (mouseup)='removeActiveKey(37)' (touchend)='removeActiveKey(37)'>  
+        <mat-icon class='control-icon'>arrow_backward</mat-icon>
+    </button>
+
+</div>
+
+
+
