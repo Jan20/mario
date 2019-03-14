@@ -10,6 +10,8 @@ import { LevelService } from '../../shared/services/level.service';
 import { Level } from 'src/app/models/level';
 import { AudioService } from '../audio/audio.service';
 import { Router } from '@angular/router';
+import { Option } from 'src/app/models/option';
+import { LanguageService } from 'src/app/shared/services/language.service';
 
 @Component({
     selector: 'app-tux',
@@ -38,9 +40,21 @@ export class TuxComponent implements OnInit, AfterViewInit {
     public status: string
 
     // UI elements
+    public time: string = `00000`
     public score: string = `00000`
     public lives: number = this.sessionService.getLives()
-    public time: string = `00000`
+
+    public language: string = 'english'
+
+    public timeString: Option = new Option('Time: ', 'Zeit: ')
+    public scoreString: Option = new Option('Score: ', 'Punkte: ')
+    public livesString: Option = new Option('Lives: ', 'Leben: ')
+
+    public completedMessage: Option = new Option('Level Completed!', 'Level abgeschlossen!')
+    public lostMessage: Option = new Option('Thank you for having played the level!', 'Danke, dass du das Level gespielt hast!')
+    public waitMessage: Option = new Option('Please wait a second ...', 'Bitte warten Sie eine Sekunde ...')
+    public surveyMessage: Option = new Option('Please continue to the survey', 'Bitte fahren Sie mit der Umfrage fort')
+    public secondLevelMessage: Option = new Option('Start the Second Level!', 'Fahren Sie mit dem zweiten Level fort!')
 
     //////////////////
     // Constructors //
@@ -55,6 +69,7 @@ export class TuxComponent implements OnInit, AfterViewInit {
         private sessionService: SessionService,
         private levelService: LevelService,
         private audioService: AudioService,
+        private languageService: LanguageService,
         private router: Router
 
     ) {
@@ -72,7 +87,13 @@ export class TuxComponent implements OnInit, AfterViewInit {
         this.sessionService.timeSubject.subscribe(time => this.time = time)
         this.sessionService.lifeSubject.subscribe(lives => this.lives = lives)
         this.sessionService.scoreSubject.subscribe(score => this.score = score)
+        
+        // Updates the language variable every time
+        // the user changes the language setting.
+        this.languageService.languageSubject.subscribe(language => this.language = language)
 
+        // Requests the lanuage service's current language.
+        this.languageService.fetchLanguage()
     }
 
     ngOnInit(): void {

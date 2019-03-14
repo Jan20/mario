@@ -56,19 +56,22 @@
     </div>
 
     <div *ngIf='status === "running"' class='ui'>
-
-        <div class='first-ui-element'>
-            <span class='element'>Time: </span>
+    
+        <div class='ui-element ui-element-first'>
+            <span class='element' *ngIf='language == "english"'>{{timeString.english}}</span>
+            <span class='element' *ngIf='language == "german"'>{{timeString.german}}</span>
             <span class='element'>{{time}}</span>
         </div>
 
-        <div class='ui-element'>
-            <span class='element'>Score: </span>
+        <div class='ui-element ui-element-middle'>
+            <span class='element' *ngIf='language == "english"'>{{scoreString.english}}</span>
+            <span class='element' *ngIf='language == "german"'>{{scoreString.german}}</span>
             <span class='element'>{{score}}</span>
         </div>
         
-        <div class='final-ui-element'>
-            <span class='element'>Lives: </span>
+        <div class='ui-element ui-element-last'>
+            <span class='element' *ngIf='language == "english"'>{{livesString.english}}</span>
+            <span class='element' *ngIf='language == "german"'>{{livesString.german}}</span>
             <span class='element'>{{lives}}</span>
         </div>
 
@@ -82,19 +85,19 @@
 
 <div *ngIf='status != "completed"'>
 
-    <button class='control-button-left' mat-fab (mousedown)='selectActiveKey(38)' (touchstart)='selectActiveKey(38)' (mouseup)='removeActiveKey(38)' (touchend)='removeActiveKey(38)'>  
+    <button class='control-button-left' mat-stroked-button (mousedown)='selectActiveKey(38)' (touchstart)='selectActiveKey(38)' (mouseup)='removeActiveKey(38)' (touchend)='removeActiveKey(38)'>  
         <mat-icon class='control-icon'>arrow_upward</mat-icon>
     </button>
     
-    <button class='control-button-left' mat-fab (mousedown)='selectActiveKey(32)' (touchstart)='selectActiveKey(32)' (mouseup)='removeActiveKey(32)' (touchend)='removeActiveKey(32)'>  
+    <button class='control-button-left' mat-stroked-button (mousedown)='selectActiveKey(32)' (touchstart)='selectActiveKey(32)' (mouseup)='removeActiveKey(32)' (touchend)='removeActiveKey(32)'>  
         <mat-icon class='control-icon'>space_bar</mat-icon>
     </button>
     
-    <button class='control-button-right' mat-fab (mousedown)='selectActiveKey(39)' (touchstart)='selectActiveKey(39)' (mouseup)='removeActiveKey(39)' (touchend)='removeActiveKey(39)'>  
+    <button class='control-button-right' mat-stroked-button (mousedown)='selectActiveKey(39)' (touchstart)='selectActiveKey(39)' (mouseup)='removeActiveKey(39)' (touchend)='removeActiveKey(39)'>  
         <mat-icon class='control-icon'>arrow_forward</mat-icon>
     </button>
     
-    <button class='control-button-right' mat-fab (mousedown)='selectActiveKey(37)' (touchstart)='selectActiveKey(37)' (mouseup)='removeActiveKey(37)' (touchend)='removeActiveKey(37)'>  
+    <button class='control-button-right' mat-stroked-button (mousedown)='selectActiveKey(37)' (touchstart)='selectActiveKey(37)' (mouseup)='removeActiveKey(37)' (touchend)='removeActiveKey(37)'>  
         <mat-icon class='control-icon'>arrow_backward</mat-icon>
     </button>
 

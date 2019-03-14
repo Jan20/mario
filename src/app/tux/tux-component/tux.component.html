@@ -2,45 +2,80 @@
 
     <div [class.processing]='!isStored' class='menu' *ngIf='status === "completed"'>
 
-        <h1>Level Completed!</h1>
-        <h2 *ngIf='!isStored'>Please wait a second ...</h2>
+        <h1 *ngIf='language == "english"'>{{completedMessage.english}}</h1>
+        <h1 *ngIf='language == "german"'>{{completedMessage.german}}</h1>
+        <h2 *ngIf='!isStored && language == "english"'>{{waitMessage.english}}</h2>
+        <h2 *ngIf='!isStored && language == "german"'>{{waitMessage.german}}</h2>
+        
         <app-spinner *ngIf='!isStored'></app-spinner>
-        <h2 *ngIf='isStored && readyForSurvey' (click)='progressToSurvey()'>Please continue the survey.</h2>
-        <h2 *ngIf='isStored && !readyForSurvey' (click)='startNewLevel()'>Start the Second Level!</h2>
+        
+        <h2 *ngIf='isStored && readyForSurvey && language == "english"' (click)='progressToSurvey()' class='ready'>{{surveyMessage.english}}</h2>
+        <h2 *ngIf='isStored && readyForSurvey && language == "german"' (click)='progressToSurvey()' class='ready'>{{surveyMessage.german}}</h2>
+        <h2 *ngIf='isStored && !readyForSurvey && language == "english"' (click)='startNewLevel()' class='ready'>{{secondLevelMessage.english}}</h2>
+        <h2 *ngIf='isStored && !readyForSurvey && language == "german"' (click)='startNewLevel()' class='ready'>{{secondLevelMessage.german}}</h2>
     
     </div>
 
     <div [class.processing]='!isStored' class='menu' *ngIf='status === "lost"'>
-    
-        <h1>Thank you for having played the level</h1>
-        <h2 class='notification' *ngIf='!isStored'>Please wait a second ...</h2>
+        
+        <h1 *ngIf='language == "english"'>{{lostMessage.english}}</h1>
+        <h1 *ngIf='language == "german"'>{{lostMessage.german}}</h1>
+        <h2 *ngIf='!isStored && language == "english"'>{{waitMessage.english}}</h2>
+        <h2 *ngIf='!isStored && language == "german"'>{{waitMessage.german}}</h2>
+        
         <app-spinner *ngIf='!isStored'></app-spinner>
-        <h2 *ngIf='isStored && readyForSurvey' (click)='progressToSurvey()'>Please continue to the survey</h2>
-        <h2 *ngIf='isStored && !readyForSurvey' (click)='startNewLevel()'>Start the Second Level!</h2>
+        
+        <h2 *ngIf='isStored && readyForSurvey && language == "english"' (click)='progressToSurvey()' class='ready'>{{surveyMessage.english}}</h2>
+        <h2 *ngIf='isStored && readyForSurvey && language == "german"' (click)='progressToSurvey()' class='ready'>{{surveyMessage.german}}</h2>
+        <h2 *ngIf='isStored && !readyForSurvey && language == "english"' (click)='startNewLevel()' class='ready'>{{secondLevelMessage.english}}</h2>
+        <h2 *ngIf='isStored && !readyForSurvey && language == "german"' (click)='startNewLevel()' class='ready'>{{secondLevelMessage.german}}</h2>
 
     </div>
 
     <div *ngIf='status === "running"' class='ui'>
 
-        <div class='first-ui-element'>
-            <span class='element'>Time: </span>
+        <div class='ui-element ui-element-first'>
+            <span class='element' *ngIf='language == "english"'>{{timeString.english}}</span>
+            <span class='element' *ngIf='language == "german"'>{{timeString.german}}</span>
             <span class='element'>{{time}}</span>
         </div>
 
-        <div class='ui-element'>
-            <span class='element'>Score: </span>
+        <div class='ui-element ui-element-middle'>
+            <span class='element' *ngIf='language == "english"'>{{scoreString.english}}</span>
+            <span class='element' *ngIf='language == "german"'>{{scoreString.german}}</span>
             <span class='element'>{{score}}</span>
         </div>
         
-        <div class='final-ui-element'>
-            <span class='element'>Lives: </span>
+        <div class='ui-element ui-element-last'>
+            <span class='element' *ngIf='language == "english"'>{{livesString.english}}</span>
+            <span class='element' *ngIf='language == "german"'>{{livesString.german}}</span>
             <span class='element'>{{lives}}</span>
         </div>
 
     </div>
 
-    <div class='center'>
-        <canvas [style.visibility]="status === 'running' ? 'visible' : 'hidden'" #canvas class='canvas' width="1500" height="1500"></canvas>
-    </div>
+    <canvas [style.visibility]="status === 'running' ? 'visible' : 'hidden'" #canvas class='canvas' width="1500" height="1500"></canvas>
 
 </div>
+
+<div *ngIf='status == "running"'>
+
+    <button class='control-button-left' mat-stroked-button (mousedown)='selectActiveKey(38)' (touchstart)='selectActiveKey(38)' (mouseup)='removeActiveKey(38)' (touchend)='removeActiveKey(38)'>  
+        <mat-icon class='control-icon'>arrow_upward</mat-icon>
+    </button>
+    
+    <button class='control-button-left' mat-stroked-button (mousedown)='selectActiveKey(32)' (touchstart)='selectActiveKey(32)' (mouseup)='removeActiveKey(32)' (touchend)='removeActiveKey(32)'>  
+        <mat-icon class='control-icon'>space_bar</mat-icon>
+    </button>
+    
+    <button class='control-button-right' mat-stroked-button (mousedown)='selectActiveKey(39)' (touchstart)='selectActiveKey(39)' (mouseup)='removeActiveKey(39)' (touchend)='removeActiveKey(39)'>  
+        <mat-icon class='control-icon'>arrow_forward</mat-icon>
+    </button>
+    
+    <button class='control-button-right' mat-stroked-button (mousedown)='selectActiveKey(37)' (touchstart)='selectActiveKey(37)' (mouseup)='removeActiveKey(37)' (touchend)='removeActiveKey(37)'>  
+        <mat-icon class='control-icon'>arrow_backward</mat-icon>
+    </button>
+
+</div>
+    
+    

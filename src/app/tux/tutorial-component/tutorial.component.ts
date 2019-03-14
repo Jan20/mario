@@ -10,6 +10,8 @@ import { LevelService } from '../../shared/services/level.service';
 import { Level } from 'src/app/models/level';
 import { AudioService } from '../audio/audio.service';
 import { Router } from '@angular/router';
+import { LanguageService } from 'src/app/shared/services/language.service';
+import { Option } from 'src/app/models/option';
 
 @Component({
     selector: 'app-tutorial',
@@ -38,9 +40,9 @@ export class TutorialComponent implements OnInit, AfterViewInit {
     public status: string
 
     // UI elements
+    public time: string = `00000`
     public score: string = `00000`
     public lives: number = this.sessionService.getLives()
-    public time: string = `00000`
 
     // Instructions
     public coinCollected: boolean = false
@@ -50,6 +52,12 @@ export class TutorialComponent implements OnInit, AfterViewInit {
     public jumperDefeated: boolean = false
     public flyerDefeated: boolean = false
     public reachedFinishLine: boolean = false
+
+    public language: string = 'english'
+
+    public timeString: Option = new Option('Time: ', 'Zeit: ')
+    public scoreString: Option = new Option('Score: ', 'Punkte: ')
+    public livesString: Option = new Option('Lives: ', 'Leben: ')
 
     //////////////////
     // Constructors //
@@ -64,6 +72,7 @@ export class TutorialComponent implements OnInit, AfterViewInit {
         private sessionService: SessionService,
         private levelService: LevelService,
         private audioService: AudioService,
+        private languageService: LanguageService,
         private router: Router 
 
     ) {
@@ -90,6 +99,12 @@ export class TutorialComponent implements OnInit, AfterViewInit {
         this.sessionService.flyerSubject.subscribe(flyerDefeated => this.flyerDefeated = flyerDefeated)
         this.sessionService.finishSubject.subscribe(reachedFinishLine => this.reachedFinishLine = reachedFinishLine)
         
+        // Updates the language variable every time
+        // the user changes the language setting.
+        this.languageService.languageSubject.subscribe(language => this.language = language)
+
+        // Requests the lanuage service's current language.
+        this.languageService.fetchLanguage()
     }
 
     ngOnInit(): void {
@@ -227,7 +242,8 @@ export class TutorialComponent implements OnInit, AfterViewInit {
         this.sessionService.resetTimer();
         this.sessionService.myTimer();
 
-        this.render();
+        this.render()
+
     }
 
 
@@ -258,12 +274,8 @@ export class TutorialComponent implements OnInit, AfterViewInit {
 
                 // Draw the world and everything in it    
                 GLS.I().GAMEWORLD.draw();
-            });
-
-
-        });
-
-
+            })
+        })
     }
 
     ngAfterViewInit() {
