@@ -9,11 +9,9 @@ export class Survey {
     ///////////////
     private fun_rank_01: string
     private fun_rank_02: string
-    private fun_rank_03: string
 
     private challenge_rank_01: string
     private challenge_rank_02: string
-    private challenge_rank_03: string
 
     private preferred_challenge_level: number
 
@@ -53,13 +51,13 @@ export class Survey {
     
     /**
      * 
-     * @param frustration_rank_01 
-     * @param frustration_rank_02 
+     * @param challenge_rank_01 
+     * @param challenge_rank_02 
      */
-    public storeChallengeRanking(frustration_rank_01: string, frustration_rank_02: string) {
+    public storeChallengeRanking(challenge_rank_01: string, challenge_rank_02: string) {
 
-        this.challenge_rank_01 = frustration_rank_01
-        this.challenge_rank_01 = frustration_rank_02
+        this.challenge_rank_01 = challenge_rank_01
+        this.challenge_rank_02 = challenge_rank_02
 
     }
 
@@ -73,36 +71,50 @@ export class Survey {
     
     }
 
-
-
-    public storePerception(
-
-        perception_opponent_type_1,
-        perception_opponent_type_2,
-        perception_opponent_type_3,
-        perception_wide_gaps,
-        perception_number_of_opponents,
-        perception_opponents_at_choke_points,
-
-    ) {
+    public storePerceptionOfOpponentType1(perception_opponent_type_1: string): void {
 
         this.perception_opponent_type_1 = perception_opponent_type_1
+
+    }
+
+    public storePerceptionOfOpponentType2(perception_opponent_type_2: string): void {
+
         this.perception_opponent_type_2 = perception_opponent_type_2
+
+    }
+
+    public storePerceptionOfOpponentType3(perception_opponent_type_3: string): void {
+
         this.perception_opponent_type_3 = perception_opponent_type_3
-        this.perception_wide_gaps = perception_wide_gaps
-        this.perception_number_of_opponents = perception_number_of_opponents
-        this.perception_opponents_at_choke_points = perception_opponents_at_choke_points
 
     }
     
-    public storeDemographicInformation(
+    public storePerceptionOfWideGaps(perception_wide_gaps: string): void {
 
-        age,
-        gender
+        this.perception_wide_gaps = perception_wide_gaps
 
-    ) {
+    }
+
+    public storePerceptionOfNumberOfComponents(perception_number_of_opponents: string): void {
+
+        this.perception_number_of_opponents = perception_number_of_opponents
+
+    }
+
+    public storePerceptionOfOpponentsAtChokePoints(perception_opponents_at_choke_points: string): void {
+
+        this.perception_opponents_at_choke_points = perception_opponents_at_choke_points
+
+    }
+
+    public storeAge(age: string): void  {
 
         this.age = age
+    
+    }
+
+    public storeGender(gender: string): void {
+
         this.gender = gender
 
     }

@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { SurveyService } from '../../shared/services/survey.service';
+import { LanguageService } from 'src/app/shared/services/language.service';
+import { Option } from 'src/app/models/option';
 
 @Component({
   selector: 'app-part4',
@@ -8,45 +10,130 @@ import { SurveyService } from '../../shared/services/survey.service';
   styleUrls: ['./part4.component.scss']
 })
 export class Part4Component implements OnInit {
-  
-  
+ 
   ///////////////
   // Variables //
   ///////////////
-  opponent_type_1: string;
-  opponent_type_1_options: string[] = ['Strongly agree', 'Agree', 'Neutral', 'Disagree', 'Strongly disagree'];
+  /**
+   * 
+   * Refers to the language choosen by the user, which
+   * can either by English or German.
+   * 
+   */
+  public language: string = 'english'
 
-  opponent_type_2: string;
-  opponent_type_2_options: string[] = ['Strongly agree', 'Agree', 'Neutral', 'Disagree', 'Strongly disagree'];
-
-  opponent_type_3: string;
-  opponent_type_3_options: string[] = ['Strongly agree', 'Agree', 'Neutral', 'Disagree', 'Strongly disagree'];
-
-  wide_gaps: string;
-  wide_gaps_options: string[] = ['Strongly agree', 'Agree', 'Neutral', 'Disagree', 'Strongly disagree'];
-
-  number_of_opponents: string;
-  number_of_opponents_options: string[] = ['Strongly agree', 'Agree', 'Neutral', 'Disagree', 'Strongly disagree'];
-
-  opponents_at_choke_points: string;
-  opponents_at_choke_points_options: string[] = ['Strongly agree', 'Agree', 'Neutral', 'Disagree', 'Strongly disagree'];
-
-
+  /**
+   * 
+   * Describes the question raised within in the current
+   * part of survey with the option to get the quesion
+   * in English or in German.
+   * 
+   */
+  public questionPart1: Option = new Option(
   
+    'Please decide to what extent you would agree with the statement "The presence of walking opponents (', 
+    'Bitte entscheiden Sie, inwieweit Sie der Aussage "Die Anwesenheit von laufenden Gegnern ('
+  
+  )
+
+  public questionPart2: Option = new Option(
+  
+    ') makes the game more challenging".', 
+    ') zustimmen würden'
+  
+  )
+  
+  /**
+   * 
+   * Defines five options on a Likert scale.
+   * 
+   */
+  public options: Option[] = [
+    
+    new Option('strongly agree', 'trifft zu'),
+    new Option('agree', 'trifft eher zu'),
+    new Option('neutral', 'teils-teils'),
+    new Option('disagree', 'trifft eher nicht zu'),
+    new Option('strongly disagree', 'trifft nicht zu')
+    
+  ]
+  
+  /**
+   * 
+   * Declares an empty string serving as placeholder
+   * for the user's answer.
+   * 
+   */
+  public answer: string = ''
+
+  /**
+   * 
+   * Defines the text displayed on the progress
+   * button at the bottom end of the page.
+   * 
+   */
+  public button: Option = new Option('Continue', 'Weiter')
+
   //////////////////
   // Constructors //
   //////////////////
-  constructor(
+  public constructor(
 
     private router: Router,
-    private surveyService: SurveyService
+    private surveyService: SurveyService,
+    private languageService: LanguageService,
 
-  ) {}
+  ) {
+    
+    // Updates the language variable every time
+    // the user changes the language setting.
+    this.languageService.languageSubject.subscribe(language => this.language = language)
 
-  ngOnInit(): void {
+    // Requests the lanuage service's current language.
+    this.languageService.fetchLanguage()
 
   }
+  
+  public ngOnInit() {}
+  
+  ///////////////
+  // Functions //
+  ///////////////
+  /**
+   * 
+   * Ensures that the user has the option to use
+   * the enter key to progress to the next step
+   * within the survey.
+   * 
+   * @param event: A keyboard event.
+   * 
+   */
+  @HostListener('document:keydown', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) {
+    
+    // Checks whether the user hit the enter key on 
+    // his keyboard. If this is the case, the survey
+    // progresses to the next part as long as the user
+    // has given a valid answer in the current step.
+    event.key === 'Enter' ? this.continue() : null
+    
+  }
 
+  /**
+   * 
+   * Stores the answer given by the user
+   * within the components scope.
+   * 
+   * @param answer: A string referring to the choosen option. 
+   * 
+   */
+  public selectOption(answer: string): void {
+
+    // Writes the answer given by the user
+    // to a local variable.
+    this.answer = answer
+    
+  }
 
   /**
    * 
@@ -55,36 +142,13 @@ export class Part4Component implements OnInit {
    */
   public async continue(): Promise<void> {
 
-    // Defines a boolean variable indicating whether all segments have been completed.
-    let isCompleted: boolean = false
+    // Passes the given answer to the survey service. 
+    this.answer != undefined ? await this.surveyService.survey.storePerceptionOfOpponentType1(this.answer) : null
 
-    // Checks whether all segments have been completed.
-    isCompleted = (
-      
-      this.opponent_type_1 && 
-      this.opponent_type_2 && 
-      this.opponent_type_3 && 
-      this.wide_gaps &&
-      this.number_of_opponents &&
-      this.opponents_at_choke_points
-    
-    ) ? true : false
-
-    // Stores the given answers persistently at Firestore.
-    isCompleted ? await this.surveyService.survey.storePerception(
-      
-      this.opponent_type_1,
-      this.opponent_type_2,
-      this.opponent_type_3,
-      this.wide_gaps,
-      this.number_of_opponents,
-      this.opponents_at_choke_points
-    
-    ) : null
-
-    // Checks wether all segments have been completed. If all conditions are met, the 
-    // user can progress to the next step of the survey.
-    isCompleted ? this.router.navigate(['survey/part_5']) : null
+    // Checks whether a valid answer was given. If this is the case,
+    // the user can progress to the next step of the survey.
+    this.answer != undefined ? this.router.navigate(['survey/part_5']) : null
   
   }
+  
 }

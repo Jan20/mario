@@ -1,9 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { SurveyService } from '../../shared/services/survey.service';
+import { Option } from 'src/app/models/option';
+import { LanguageService } from 'src/app/shared/services/language.service';
 
 @Component({
   selector: 'app-part5',
@@ -11,96 +10,145 @@ import { SurveyService } from '../../shared/services/survey.service';
   styleUrls: ['./part5.component.scss']
 })
 export class Part5Component implements OnInit {
-
+ 
   ///////////////
   // Variables //
   ///////////////
-  public age: string
-  public gender: string
+  /**
+   * 
+   * Refers to the language choosen by the user, which
+   * can either by English or German.
+   * 
+   */
+  public language: string = 'english'
 
-  public ageControl = new FormControl();
-  public ageOptions: string[] = []
-  public filteredAgeOptions: Observable<string[]>;
+  /**
+   * 
+   * Describes the question raised within in the current
+   * part of survey with the option to get the quesion
+   * in English or in German.
+   * 
+   */
+  public questionPart1: Option = new Option(
+  
+    'Please decide to what extent you would agree with the statement "The presence of walking opponents (', 
+    'Bitte entscheiden Sie, inwieweit Sie der Aussage "Die Anwesenheit von laufenden Gegnern ('
+  
+  )
 
-  public genderControl = new FormControl();
-  public genderOptions: string[] = ['Male', 'Female', 'Divers', 'Prefer not to say']
-  public filteredGenderOptions: Observable<string[]>;
+  public questionPart2: Option = new Option(
+  
+    ') makes the game more challenging".', 
+    ') zustimmen würden'
+  
+  )
+  
+  /**
+   * 
+   * Defines five options on a Likert scale.
+   * 
+   */
+  public options: Option[] = [
+    
+    new Option('strongly agree', 'trifft zu'),
+    new Option('agree', 'trifft eher zu'),
+    new Option('neutral', 'teils-teils'),
+    new Option('disagree', 'trifft eher nicht zu'),
+    new Option('strongly disagree', 'trifft nicht zu')
+    
+  ]
+  
+  /**
+   * 
+   * Declares an empty string serving as placeholder
+   * for the user's answer.
+   * 
+   */
+  public answer: string = ''
 
-  public isCompleted: boolean = false
+  /**
+   * 
+   * Defines the text displayed on the progress
+   * button at the bottom end of the page.
+   * 
+   */
+  public button: Option = new Option('Continue', 'Weiter')
 
-  constructor(
+  //////////////////
+  // Constructors //
+  //////////////////
+  public constructor(
 
     private router: Router,
-    private surveyService: SurveyService
+    private surveyService: SurveyService,
+    private languageService: LanguageService,
 
   ) {
-
-    for (let i = 13; i < 101; i++) {
-
-      this.ageOptions.push('' + i)
-
-    }
-
-
-    this.ageControl.valueChanges.subscribe(age => this.age = age)
-    this.genderControl.valueChanges.subscribe(gender => this.gender = gender)
     
+    // Updates the language variable every time
+    // the user changes the language setting.
+    this.languageService.languageSubject.subscribe(language => this.language = language)
+
+    // Requests the lanuage service's current language.
+    this.languageService.fetchLanguage()
+
   }
   
-  ngOnInit() {
-    
-    this.filteredAgeOptions = this.ageControl.valueChanges.pipe(startWith(''), map(age => this.filter(age)))
-    this.filteredGenderOptions = this.genderControl.valueChanges.pipe(startWith(''), map(gender => this.filter2(gender)))
+  public ngOnInit() {}
   
+  ///////////////
+  // Functions //
+  ///////////////
+  /**
+   * 
+   * Ensures that the user has the option to use
+   * the enter key to progress to the next step
+   * within the survey.
+   * 
+   * @param event: A keyboard event.
+   * 
+   */
+  @HostListener('document:keydown', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) {
+    
+    // Checks whether the user hit the enter key on 
+    // his keyboard. If this is the case, the survey
+    // progresses to the next part as long as the user
+    // has given a valid answer in the current step.
+    event.key === 'Enter' ? this.continue() : null
+    
   }
 
   /**
    * 
+   * Stores the answer given by the user
+   * within the components scope.
    * 
+   * @param answer: A string referring to the choosen option. 
    * 
-   * @param age 
    */
-  private filter(age: string): string[] {
+  public selectOption(answer: string): void {
+
+    // Writes the answer given by the user
+    // to a local variable.
+    this.answer = answer
     
-    const filteredAgeOptions = age.toLowerCase()    
-    
-    return this.ageOptions.filter(option => option.toLowerCase().includes(filteredAgeOptions));
-  
   }
 
-  private filter2(gender: string): string[] {
-    
-    const filteredGenderOptions = gender.toLowerCase()    
-    
-    return this.genderOptions.filter(option => option.toLowerCase().includes(filteredGenderOptions));
-  
-  }
-
-
-
+  /**
+   * 
+   * Controls the transition to the next survey step.
+   * 
+   */
   public async continue(): Promise<void> {
 
-    // Defines a boolean variable indicating whether all segments have been completed.
-    let isCompleted: boolean = false
+    // Passes the given answer to the survey service. 
+    this.answer != undefined ? await this.surveyService.survey.storePerceptionOfOpponentType2(this.answer) : null
 
-    // Checks whether all segments have been completed.
-    isCompleted = (
-      
-      this.age && 
-      this.gender
-    
-    ) ? true : false
-
-    // Stores the given answers persistently at Firestore.
-    isCompleted ? await this.surveyService.survey.storeDemographicInformation(
-      
-      this.age,
-      this.gender
-    
-    ) : null
-
-    isCompleted ? this.router.navigate(['survey/part_6']) : null
-    
+    // Checks whether a valid answer was given. If this is the case,
+    // the user can progress to the next step of the survey.
+    this.answer != undefined ? this.router.navigate(['survey/part_6']) : null
+  
   }
-
+  
 }

@@ -1,30 +1,50 @@
-<div class='content' *ngIf='!isStored'>
+<div class='content'>
 
-  <div class='question'>
-  
-      <p>
-          How many hours a week do you spend playing video games?
-      </p>
-  
-      <form class="form">
-          <mat-form-field class="full-width">
-              <input type="text" placeholder='' aria-label="Usage" matInput [formControl]="usageControl" [matAutocomplete]="usage">
-              <mat-autocomplete #usage="matAutocomplete">
-              <mat-option *ngFor="let usage of filteredUsageOptions | async" [value]="usage">
-                  {{usage}}
-              </mat-option>
-              </mat-autocomplete>
-          </mat-form-field>
-      </form>
-      
-  </div>
-      
-  <button mat-stroked-button (click)='continue()'>Continue</button>
-  
-</div>
-      
-<div class='content' *ngIf='isStored'>
-  <div class='question'>
-    <p>Thank you for participating in the study. You may now close your browser window.</p>
-  </div>
+    <p class='question' *ngIf='language == "english"'>
+        {{questionPart1.english}}
+        <img  src='/assets/survey/flyer.png' class='image'>
+        {{questionPart2.english}}
+    </p>
+
+    <p class='question' *ngIf='language == "german"'>
+        {{questionPart1.german}}
+        <img  src='/assets/survey/flyer.png' class='image'>
+        {{questionPart2.german}}
+    </p>
+
+    <div *ngIf='language == "english"'>
+
+        <button mat-stroked-button (click)='selectOption(options[0].english)' *ngIf='answer != options[0].english' class='option'>              {{options[0].english}}</button>
+        <button mat-stroked-button (click)='selectOption(options[0].english)' *ngIf='answer == options[0].english' class='option-active'>       {{options[0].english}}</button>
+        <button mat-stroked-button (click)='selectOption(options[1].english)' *ngIf='answer != options[1].english' class='option'>              {{options[1].english}}</button>
+        <button mat-stroked-button (click)='selectOption(options[1].english)' *ngIf='answer == options[1].english' class='option-active'>       {{options[1].english}}</button>
+        <button mat-stroked-button (click)='selectOption(options[2].english)' *ngIf='answer != options[2].english' class='option'>              {{options[2].english}}</button>
+        <button mat-stroked-button (click)='selectOption(options[2].english)' *ngIf='answer == options[2].english' class='option-active'>       {{options[2].english}}</button>
+        <button mat-stroked-button (click)='selectOption(options[3].english)' *ngIf='answer != options[3].english' class='option'>              {{options[3].english}}</button>
+        <button mat-stroked-button (click)='selectOption(options[3].english)' *ngIf='answer == options[3].english' class='option-active'>       {{options[3].english}}</button>
+        <button mat-stroked-button (click)='selectOption(options[4].english)' *ngIf='answer != options[4].english' class='option last'>         {{options[4].english}}</button>
+        <button mat-stroked-button (click)='selectOption(options[4].english)' *ngIf='answer == options[4].english' class='option-active last'>  {{options[4].english}}</button>
+
+    </div>
+   
+    <div *ngIf='language == "german"'>
+
+        <button mat-stroked-button (click)='selectOption(options[0].english)' *ngIf='answer != options[0].english' class='option'>              {{options[0].german}}</button>
+        <button mat-stroked-button (click)='selectOption(options[0].english)' *ngIf='answer == options[0].english' class='option-active'>       {{options[0].german}}</button>
+        <button mat-stroked-button (click)='selectOption(options[1].english)' *ngIf='answer != options[1].english' class='option'>              {{options[1].german}}</button>
+        <button mat-stroked-button (click)='selectOption(options[1].english)' *ngIf='answer == options[1].english' class='option-active'>       {{options[1].german}}</button>
+        <button mat-stroked-button (click)='selectOption(options[2].english)' *ngIf='answer != options[2].english' class='option'>              {{options[2].german}}</button>
+        <button mat-stroked-button (click)='selectOption(options[2].english)' *ngIf='answer == options[2].english' class='option-active'>       {{options[2].german}}</button>
+        <button mat-stroked-button (click)='selectOption(options[3].english)' *ngIf='answer != options[3].english' class='option'>              {{options[3].german}}</button>
+        <button mat-stroked-button (click)='selectOption(options[3].english)' *ngIf='answer == options[3].english' class='option-active'>       {{options[3].german}}</button>
+        <button mat-stroked-button (click)='selectOption(options[4].english)' *ngIf='answer != options[4].english' class='option last'>         {{options[4].german}}</button>
+        <button mat-stroked-button (click)='selectOption(options[4].english)' *ngIf='answer == options[4].english' class='option-active last'>  {{options[4].german}}</button>
+
+    </div>
+
+    <button *ngIf='answer == "" && language == "english"' mat-stroked-button (click)='continue()' class='disabled' disabled>{{button.english}}</button>
+    <button *ngIf='answer != "" && language == "english"' mat-stroked-button (click)='continue()'>{{button.english}}</button>
+    <button *ngIf='answer == "" && language == "german" ' mat-stroked-button (click)='continue()' class='disabled' disabled>{{button.german}}</button>
+    <button *ngIf='answer != "" && language == "german" ' mat-stroked-button (click)='continue()'>{{button.german}}</button>
+
 </div>

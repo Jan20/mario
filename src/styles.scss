@@ -5,147 +5,7 @@
     padding:0;
     margin:0;
     font-family: 'Roboto', sans-serif;
-    color: rgb(80, 80, 80);
 
-}
-
-@media (max-width: 900px) {
-    
-    .content {
-
-        width: 80%;
-        margin: auto;
-        padding: 30px;
-    
-    }
-}
-
-@media (min-width: 900px) {
-
-    .content {
-
-        width: 800px;
-        margin: auto;
-        padding: 30px;
-    
-    }
-}
-
-h1 {
-
-    line-height: 100%;
-    font-size: 30px;
-    font-weight: 300;
-    margin-bottom: 10px;
-    font-family: 'Roboto', sans-serif;
-
-}
-
-p {
-
-    line-height: 150%;
-    font-size: 16px;
-    font-family: 'Roboto', sans-serif;
-    font-weight: 500;
-    text-align: justify;
-
-}
-// -------------------------------
-//          Mat Card
-// -------------------------------
-
-@media (max-width: 680px) {
-    mat-card {
-        height: 180px;
-        width: 80%;
-    }
-}
-
-@media (min-width: 680px) {
-    mat-card {
-        height: 180px;
-        width: 500px;
-        
-    }
-}
-
-@media (max-width: 680px) {
-    .card-button-container {
-        
-        width: 80%;
-        margin: auto;
-        
-    }
-}
-
-@media (min-width: 680px) {
-    .card-button-container  {
-        
-        width: 550px;
-        margin: auto;
-        
-    }
-
-}
-
-.mat-raised-button {
-    padding: 0;
-}
-
-
-.full-width {
-    
-    width: 100%;
-    
-}
-
-    
-// -------------------------------
-//          Spaces
-// -------------------------------
-.small-space{
-    
-    margin: 20px;    
-
-}
-
-.normal-space {
-
-    margin: 50px;
-
-}
-
-.whitespace {
-    
-    margin: 50px;
-    
-}
-
-.whitespace-tiny {
-
-    margin: 5px;
-
-}
-
-// -------------------------------
-//          Buttons
-// -------------------------------
-
-.mat-fab-container {
-
-    margin-top: -45px;
-    margin-left: -48px;
-    position: absolute;
-    
-}
-
-p {
-
-    font-size: 24px;
-    font-weight: 300;
-    font-family: 'Roboto', sans-serif;
-    margin-bottom: 10px;
-    
 }
 
 h1 {
@@ -155,5 +15,45 @@ h1 {
     font-weight: 300;
     font-family: 'Roboto', sans-serif;
     margin-bottom: 10px;
+    color: rgb(80, 80, 80);
 
 }
+
+p {
+
+    line-height: 150%;
+    font-size: 24px;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 300;
+    text-align: justify;
+    color: rgb(80, 80, 80);
+
+}
+
+.content {
+
+    width: 95%;
+    margin: auto;
+    padding: 0;
+    margin-top: 20px;
+
+}
+
+.question {
+
+    margin-bottom: 20px;
+  
+}
+
+.disabled {
+
+    cursor: not-allowed;
+
+}
+
+.processing {
+
+    cursor: progress;
+
+}
+

@@ -5,7 +5,8 @@
         width: 95%;
         margin: auto;
         padding: 0;
-        
+        margin-top: 5px;
+
     }
 
     h1 {
@@ -81,12 +82,27 @@
 
     }
 
+    .container-first {
+
+        margin-top: 5px;
+        height: 20px;
+
+    }
+
     .description {
 
         height: 50px;
-        margin-top: -40px;
+        margin-top: -45px;
         margin-left: 60px;
 
+    }
+
+    .description-last {
+
+        height: 50px;
+        margin-top: -45px;
+        margin-left: 60px;
+    
     }
 
     mat-icon {
@@ -106,6 +122,7 @@
     padding: 10px;
     font-weight: 300;
     float: right;
+    color: rgb(80, 80, 80)
 
 }
 

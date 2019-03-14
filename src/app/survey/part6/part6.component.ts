@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { SurveyService } from '../../shared/services/survey.service';
+import { Option } from 'src/app/models/option';
+import { LanguageService } from 'src/app/shared/services/language.service';
 
 @Component({
   selector: 'app-part6',
@@ -12,63 +14,145 @@ import { SurveyService } from '../../shared/services/survey.service';
 })
 export class Part6Component implements OnInit {
 
+  
   ///////////////
   // Variables //
   ///////////////
-  public usage: string
+  /**
+   * 
+   * Refers to the language choosen by the user, which
+   * can either by English or German.
+   * 
+   */
+  public language: string = 'english'
 
-  public usageControl = new FormControl();
-  public usageOptions: string[] = []
-  public filteredUsageOptions: Observable<string[]>;
+  /**
+   * 
+   * Describes the question raised within in the current
+   * part of survey with the option to get the quesion
+   * in English or in German.
+   * 
+   */
+  public questionPart1: Option = new Option(
+  
+    'Please decide to what extent you would agree with the statement "The presence of walking opponents (', 
+    'Bitte entscheiden Sie, inwieweit Sie der Aussage "Die Anwesenheit von laufenden Gegnern ('
+  
+  )
 
-  public isStored: boolean = false
+  public questionPart2: Option = new Option(
+  
+    ') makes the game more challenging".', 
+    ') zustimmen würden'
+  
+  )
+  
+  /**
+   * 
+   * Defines five options on a Likert scale.
+   * 
+   */
+  public options: Option[] = [
+    
+    new Option('strongly agree', 'trifft zu'),
+    new Option('agree', 'trifft eher zu'),
+    new Option('neutral', 'teils-teils'),
+    new Option('disagree', 'trifft eher nicht zu'),
+    new Option('strongly disagree', 'trifft nicht zu')
+    
+  ]
+  
+  /**
+   * 
+   * Declares an empty string serving as placeholder
+   * for the user's answer.
+   * 
+   */
+  public answer: string = ''
 
-  constructor(
+  /**
+   * 
+   * Defines the text displayed on the progress
+   * button at the bottom end of the page.
+   * 
+   */
+  public button: Option = new Option('Continue', 'Weiter')
+
+  //////////////////
+  // Constructors //
+  //////////////////
+  public constructor(
 
     private router: Router,
-    private surveyService: SurveyService
+    private surveyService: SurveyService,
+    private languageService: LanguageService,
 
   ) {
-
-    for (let i = 1; i < 101; i++) {
-
-      this.usageOptions.push('' + i)
-
-    }
-
-    this.usageControl.valueChanges.subscribe(usage => this.usage = usage)
     
+    // Updates the language variable every time
+    // the user changes the language setting.
+    this.languageService.languageSubject.subscribe(language => this.language = language)
+
+    // Requests the lanuage service's current language.
+    this.languageService.fetchLanguage()
+
   }
   
-  ngOnInit() {
-    
-    this.filteredUsageOptions = this.usageControl.valueChanges.pipe(startWith(''), map(usage => this.filter(usage)))
+  public ngOnInit() {}
   
+  ///////////////
+  // Functions //
+  ///////////////
+  /**
+   * 
+   * Ensures that the user has the option to use
+   * the enter key to progress to the next step
+   * within the survey.
+   * 
+   * @param event: A keyboard event.
+   * 
+   */
+  @HostListener('document:keydown', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) {
+    
+    // Checks whether the user hit the enter key on 
+    // his keyboard. If this is the case, the survey
+    // progresses to the next part as long as the user
+    // has given a valid answer in the current step.
+    event.key === 'Enter' ? this.continue() : null
+    
   }
 
-  private filter(usage: string): string[] {
+  /**
+   * 
+   * Stores the answer given by the user
+   * within the components scope.
+   * 
+   * @param answer: A string referring to the choosen option. 
+   * 
+   */
+  public selectOption(answer: string): void {
+
+    // Writes the answer given by the user
+    // to a local variable.
+    this.answer = answer
     
-    const filteredUsageOptions = usage.toLowerCase()    
-    
-    return this.usageOptions.filter(option => option.toLowerCase().includes(filteredUsageOptions));
-  
   }
 
-
+  /**
+   * 
+   * Controls the transition to the next survey step.
+   * 
+   */
   public async continue(): Promise<void> {
 
-    // Defines a boolean variable indicating whether all segments have been completed.
-    let isCompleted: boolean = false
+    // Passes the given answer to the survey service. 
+    this.answer != undefined ? await this.surveyService.survey.storePerceptionOfOpponentType3(this.answer) : null
 
-    // Checks whether all segments have been completed.
-    isCompleted = this.usage ? true : false
-
-    // Stores the given answers persistently at Firestore.
-    isCompleted ? await this.surveyService.survey.storeUsage(this.usage) : null
-    
-    isCompleted ? await this.surveyService.storeSurvey() : null
-
-    this.isStored = true
-
+    // Checks whether a valid answer was given. If this is the case,
+    // the user can progress to the next step of the survey.
+    this.answer != undefined ? this.router.navigate(['survey/part_7']) : null
+  
   }
+  
 }

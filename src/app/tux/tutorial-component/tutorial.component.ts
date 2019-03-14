@@ -160,8 +160,6 @@ export class TutorialComponent implements OnInit, AfterViewInit {
 
     }
 
-    
-
 
     /**
      * 

@@ -1,49 +1,39 @@
 <div class='content'>
   
-  <h1>Controls</h1>
+  <h1>{{headline}}</h1>
   
-  <p>
-    Please use the following buttons to move your avatar.  
-  </p>
+  <p>{{text}}</p>
 
   <div class='container-first'>
     <mat-icon>arrow_forward</mat-icon>
     <div class='description'>
-      <p>
-        Right arrow Key: Move right
-      </p>
+      <p>{{control_0}}</p>
     </div>
   </div>
 
   <div class='container'>
-      <mat-icon>arrow_backward</mat-icon>
-      <div class='description'>
-        <p>
-          Left arrow key: Move left
-        </p>
-      </div>
+    <mat-icon>arrow_backward</mat-icon>
+    <div class='description'>
+      <p>{{control_1}}</p>
+    </div>
   </div>
 
   <div class='container'>
     <mat-icon>arrow_upward</mat-icon>
     <div class='description'>
-      <p>
-        Up Key: Jump
-      </p>
+      <p>{{control_2}}</p>
     </div>
   </div>
 
   <div class='container'>
     <mat-icon>space_bar</mat-icon>
     <div class='description-last'>
-      <p>
-        Space: Shoot snow balls (after collecting a power-up)
-      </p>
+        <p>{{control_3}}</p>
     </div>
   </div>
 
   <button class='tutorial-button' mat-stroked-button (click)='switchToTutorial()'>Tutorial</button>
-  <button class='proceed-button' mat-stroked-button (click)='proceed()'>Continue</button>
+  <button class='proceed-button' mat-stroked-button (click)='proceed()'>{{button}}</button>
   
 </div>
 

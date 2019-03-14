@@ -3,6 +3,7 @@ import { Router } from '@angular/router'
 import { MenuItem } from '../menu-model/menu.item'
 import { AudioService } from 'src/app/tux/audio/audio.service';
 import { SessionService } from 'src/app/shared/services/session.service';
+import { LanguageService } from 'src/app/shared/services/language.service';
 
 @Component({
   selector: 'app-menu',
@@ -28,6 +29,7 @@ export class MenuComponent implements OnInit {
     private router: Router,
     private audioService: AudioService,
     private sessionService: SessionService,
+    private languageService: LanguageService
   
   ) {
     
@@ -82,5 +84,10 @@ export class MenuComponent implements OnInit {
 
   }
   
+  public switchLanguage(): void {
+
+    this.languageService.switchLanguage()
+
+  }
 
 }

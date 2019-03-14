@@ -76,8 +76,6 @@ export class SurveyService {
   // Setters //
   /////////////
   public setRecentSessions(recentSessions: Session[]): void {
-
-
     
     this.recentSessions = recentSessions
 

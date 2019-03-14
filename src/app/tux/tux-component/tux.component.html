@@ -1,20 +1,20 @@
 <div class='content'>
 
-    <div class='menu' *ngIf='status === "completed"'>
+    <div [class.processing]='!isStored' class='menu' *ngIf='status === "completed"'>
 
         <h1>Level Completed!</h1>
         <h2 *ngIf='!isStored'>Please wait a second ...</h2>
-        <app-spinner *ngIf='isStored != true'></app-spinner>
+        <app-spinner *ngIf='!isStored'></app-spinner>
         <h2 *ngIf='isStored && readyForSurvey' (click)='progressToSurvey()'>Please continue the survey.</h2>
         <h2 *ngIf='isStored && !readyForSurvey' (click)='startNewLevel()'>Start the Second Level!</h2>
     
     </div>
 
-        <div class='menu' *ngIf='status === "lost"'>
+    <div [class.processing]='!isStored' class='menu' *ngIf='status === "lost"'>
     
         <h1>Thank you for having played the level</h1>
         <h2 class='notification' *ngIf='!isStored'>Please wait a second ...</h2>
-        <app-spinner *ngIf='isStored != true'></app-spinner>
+        <app-spinner *ngIf='!isStored'></app-spinner>
         <h2 *ngIf='isStored && readyForSurvey' (click)='progressToSurvey()'>Please continue to the survey</h2>
         <h2 *ngIf='isStored && !readyForSurvey' (click)='startNewLevel()'>Start the Second Level!</h2>
 

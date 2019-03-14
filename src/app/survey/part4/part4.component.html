@@ -1,90 +1,50 @@
 <div class='content'>
 
-    <div class='question'>
-    
-        <p>
-            The presence of the feature make the game more challenging.
-        </p>
-        <span class='special-option'></span>
-        <span class='option'>Strongly agree</span>
-        <span class='option'>Agree</span>
-        <span class='option'>Neutral</span>
-        <span class='option'>Disagree</span>
-        <span class='option'>Strongly disagree</span>
+    <p class='question' *ngIf='language == "english"'>
+        {{questionPart1.english}}
+        <img  src='/assets/survey/walker.png' class='image'>
+        {{questionPart2.english}}
+    </p>
 
-        <mat-divider></mat-divider>
+    <p class='question' *ngIf='language == "german"'>
+        {{questionPart1.german}}
+        <img  src='/assets/survey/walker.png' class='image'>
+        {{questionPart2.german}}
+    </p>
 
-        <mat-radio-group class="example-radio-group" [(ngModel)]="opponent_type_1">
-            <img class="example-option-img" aria-hidden src="/assets/survey/walker.png" height="25">
-            <span class='description'>Walkers:</span>
-            <mat-radio-button class="example-radio-button" color='primary' *ngFor="let opponent_type_1 of opponent_type_1_options" [value]="opponent_type_1">
-                {{''}}
-            </mat-radio-button>
-        </mat-radio-group>
+    <div *ngIf='language == "english"'>
 
-        <mat-divider></mat-divider>
+        <button mat-stroked-button (click)='selectOption(options[0].english)' *ngIf='answer != options[0].english' class='option'>              {{options[0].english}}</button>
+        <button mat-stroked-button (click)='selectOption(options[0].english)' *ngIf='answer == options[0].english' class='option-active'>       {{options[0].english}}</button>
+        <button mat-stroked-button (click)='selectOption(options[1].english)' *ngIf='answer != options[1].english' class='option'>              {{options[1].english}}</button>
+        <button mat-stroked-button (click)='selectOption(options[1].english)' *ngIf='answer == options[1].english' class='option-active'>       {{options[1].english}}</button>
+        <button mat-stroked-button (click)='selectOption(options[2].english)' *ngIf='answer != options[2].english' class='option'>              {{options[2].english}}</button>
+        <button mat-stroked-button (click)='selectOption(options[2].english)' *ngIf='answer == options[2].english' class='option-active'>       {{options[2].english}}</button>
+        <button mat-stroked-button (click)='selectOption(options[3].english)' *ngIf='answer != options[3].english' class='option'>              {{options[3].english}}</button>
+        <button mat-stroked-button (click)='selectOption(options[3].english)' *ngIf='answer == options[3].english' class='option-active'>       {{options[3].english}}</button>
+        <button mat-stroked-button (click)='selectOption(options[4].english)' *ngIf='answer != options[4].english' class='option last'>         {{options[4].english}}</button>
+        <button mat-stroked-button (click)='selectOption(options[4].english)' *ngIf='answer == options[4].english' class='option-active last'>  {{options[4].english}}</button>
 
-        <mat-radio-group class="example-radio-group" [(ngModel)]="opponent_type_2">
-            <img class="example-option-img" aria-hidden src="/assets/survey/jumper.png" height="25">
-            <span class='description'>Jumpers:</span>
-            <mat-radio-button class="example-radio-button" color='primary' *ngFor="let opponent_type_2 of opponent_type_2_options" [value]="opponent_type_2">
-                {{''}}
-            </mat-radio-button>
-        </mat-radio-group>
-    
-        <mat-divider></mat-divider>
+    </div>
+   
+    <div *ngIf='language == "german"'>
 
-        <mat-radio-group class="example-radio-group" [(ngModel)]="opponent_type_3">
-            <img class="example-option-img" aria-hidden src="/assets/survey/flyer.png" height="25">
-            <span class='description'>Flyers:</span>
-            <mat-radio-button class="example-radio-button" color='primary' *ngFor="let opponent_type_3 of opponent_type_3_options" [value]="opponent_type_3">
-                {{''}}
-            </mat-radio-button>
-        </mat-radio-group>
-    
-        <mat-divider></mat-divider>
-
-        <mat-radio-group class="example-radio-group" [(ngModel)]="wide_gaps">
-                <img class="example-option-img" aria-hidden src="/assets/survey/gaps.png" height="25">
-            <span class='description'>
-                Wide Gaps:
-            </span>
-            <mat-radio-button class="example-radio-button" color='primary' *ngFor="let wide_gaps of wide_gaps_options" [value]="wide_gaps">
-                {{''}}
-            </mat-radio-button>
-        </mat-radio-group>
-    
-        <mat-divider></mat-divider>
-
-        <mat-radio-group class="example-radio-group" [(ngModel)]="number_of_opponents">
-            <img class="special-img" aria-hidden src="/assets/survey/number_of_opponents.png" height="25">
-            <div class='special-description'>
-                High Number of Opponents:
-            </div>
-            <mat-radio-button class="example-radio-button" color='primary' *ngFor="let number_of_opponents of number_of_opponents_options" [value]="number_of_opponents">
-                {{''}}
-            </mat-radio-button>
-            </mat-radio-group>
-
-        <mat-divider></mat-divider>
-
-        <mat-radio-group class="example-radio-group" [(ngModel)]="opponents_at_choke_points">
-            <img class="special-img" aria-hidden src="/assets/survey/opponents_at_choke_points.png" height="25">
-            <div class='special-description'>
-                Opponents at Choke Points:
-            </div>
-            <mat-radio-button class="example-radio-button" color='primary' *ngFor="let opponents_at_choke_points of opponents_at_choke_points_options" [value]="opponents_at_choke_points">
-                {{''}}
-            </mat-radio-button>
-            </mat-radio-group>
-
-        <mat-divider></mat-divider>
+        <button mat-stroked-button (click)='selectOption(options[0].english)' *ngIf='answer != options[0].english' class='option'>              {{options[0].german}}</button>
+        <button mat-stroked-button (click)='selectOption(options[0].english)' *ngIf='answer == options[0].english' class='option-active'>       {{options[0].german}}</button>
+        <button mat-stroked-button (click)='selectOption(options[1].english)' *ngIf='answer != options[1].english' class='option'>              {{options[1].german}}</button>
+        <button mat-stroked-button (click)='selectOption(options[1].english)' *ngIf='answer == options[1].english' class='option-active'>       {{options[1].german}}</button>
+        <button mat-stroked-button (click)='selectOption(options[2].english)' *ngIf='answer != options[2].english' class='option'>              {{options[2].german}}</button>
+        <button mat-stroked-button (click)='selectOption(options[2].english)' *ngIf='answer == options[2].english' class='option-active'>       {{options[2].german}}</button>
+        <button mat-stroked-button (click)='selectOption(options[3].english)' *ngIf='answer != options[3].english' class='option'>              {{options[3].german}}</button>
+        <button mat-stroked-button (click)='selectOption(options[3].english)' *ngIf='answer == options[3].english' class='option-active'>       {{options[3].german}}</button>
+        <button mat-stroked-button (click)='selectOption(options[4].english)' *ngIf='answer != options[4].english' class='option last'>         {{options[4].german}}</button>
+        <button mat-stroked-button (click)='selectOption(options[4].english)' *ngIf='answer == options[4].english' class='option-active last'>  {{options[4].german}}</button>
 
     </div>
 
-    <button mat-stroked-button (click)='continue()'>Continue</button>
+    <button *ngIf='answer == "" && language == "english"' mat-stroked-button (click)='continue()' class='disabled' disabled>{{button.english}}</button>
+    <button *ngIf='answer != "" && language == "english"' mat-stroked-button (click)='continue()'>{{button.english}}</button>
+    <button *ngIf='answer == "" && language == "german" ' mat-stroked-button (click)='continue()' class='disabled' disabled>{{button.german}}</button>
+    <button *ngIf='answer != "" && language == "german" ' mat-stroked-button (click)='continue()'>{{button.german}}</button>
 
 </div>
-
-
-  

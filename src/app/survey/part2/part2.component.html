@@ -1,25 +1,32 @@
 <div class='content'>
     
-    <div class='question'>
-    
-        <p>
-            Which of the two levels you just played did you find more challenging?
-        </p>
+    <p class='question' *ngIf='language == "english"'>{{question.english}}</p>
+    <p class='question' *ngIf='language == "german" '>{{question.german}}</p>
 
-        <div class='answer'>
-            <button mat-stroked-button class='option' *ngIf='active != "First Level"' (click)='selectOption(rankOptions[0], rankOptions[1])'>{{rankOptions[0].option}}</button>
-            <button mat-stroked-button class='option-active' *ngIf='active === "First Level"' (click)='selectOption(rankOptions[0], rankOptions[1])'>{{rankOptions[0].option}}</button>
-        </div>
-
-        <div class='second-answer'>
-            <button mat-stroked-button class='option' *ngIf='active != "Second Level"' (click)='selectOption(rankOptions[1], rankOptions[0])'>{{rankOptions[1].option}}</button>
-            <button mat-stroked-button class='option-active' *ngIf='active === "Second Level"' (click)='selectOption(rankOptions[1], rankOptions[0])'>{{rankOptions[1].option}}</button>
-        </div>
-        
+    <div class='answer' *ngIf='language == "english"'>
+        <button mat-stroked-button *ngIf='isChosen != "First Level"' (click)='selectOption(rankOptionsEnglish[0], rankOptionsEnglish[1])' class='option'>{{rankOptionsEnglish[0].option}}</button>
+        <button mat-stroked-button *ngIf='isChosen == "First Level"' (click)='selectOption(rankOptionsEnglish[0], rankOptionsEnglish[1])' class='option-active'>{{rankOptionsEnglish[0].option}}</button>
     </div>
 
-    <button *ngIf='active === ""' mat-stroked-button (click)='continue()' disabled>Continue</button>
-    <button *ngIf='active != ""'  mat-stroked-button (click)='continue()'>Continue</button>
+    <div class='second-answer' *ngIf='language == "english"'>
+        <button mat-stroked-button *ngIf='isChosen != "Second Level"' (click)='selectOption(rankOptionsEnglish[1], rankOptionsEnglish[0])' class='option'>{{rankOptionsEnglish[1].option}}</button>
+        <button mat-stroked-button *ngIf='isChosen == "Second Level"' (click)='selectOption(rankOptionsEnglish[1], rankOptionsEnglish[0])' class='option-active'>{{rankOptionsEnglish[1].option}}</button>
+    </div>
+
+    <div class='answer' *ngIf='language == "german"'>
+        <button mat-stroked-button *ngIf='isChosen != "Erstes Level"' (click)='selectOption(rankOptionsGerman[0], rankOptionsGerman[1])' class='option'>{{rankOptionsGerman[0].option}}</button>
+        <button mat-stroked-button *ngIf='isChosen == "Erstes Level"' (click)='selectOption(rankOptionsGerman[0], rankOptionsGerman[1])' class='option-active'>{{rankOptionsGerman[0].option}}</button>
+    </div>
+
+    <div class='second-answer' *ngIf='language == "german"'>
+        <button mat-stroked-button *ngIf='isChosen != "Zweites Level"' (click)='selectOption(rankOptionsGerman[1], rankOptionsGerman[0])' class='option'>{{rankOptionsGerman[1].option}}</button>
+        <button mat-stroked-button *ngIf='isChosen == "Zweites Level"' (click)='selectOption(rankOptionsGerman[1], rankOptionsGerman[0])' class='option-active'>{{rankOptionsGerman[1].option}}</button>
+    </div>
+
+    <button *ngIf='isChosen == "" && language == "english"' mat-stroked-button (click)='continue()' class='disabled' disabled>{{button.english}}</button>
+    <button *ngIf='isChosen != "" && language == "english"' mat-stroked-button (click)='continue()'>{{button.english}}</button>
+    <button *ngIf='isChosen == "" && language == "german" ' mat-stroked-button (click)='continue()' class='disabled' disabled>{{button.german}}</button>
+    <button *ngIf='isChosen != "" && language == "german" ' mat-stroked-button (click)='continue()'>{{button.german}}</button>
 
 </div>
       

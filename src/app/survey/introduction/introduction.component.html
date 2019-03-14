@@ -1,13 +1,10 @@
 <div class='content'>
     
-  <h1>Introduction</h1>
+  <h1>{{headline}}</h1>
 
-  <p>
-    You are invited to play <b>two levels</b> of a platform game and to answer a small survey afterwards 
-    which should not take more than 10 minutes in total.
-  </p>
+  <p [innerHTML]="text"></p>
 
-  <button mat-stroked-button (click)='proceed()'>Continue</button>
+  <button mat-stroked-button (click)='proceed()'>{{button}}</button>
 
 </div>
 

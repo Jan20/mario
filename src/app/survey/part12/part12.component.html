@@ -1,0 +1,37 @@
+<div class='content' *ngIf='!isStored'>
+
+  <p class='question' *ngIf='language == "english"'>{{question.english}}</p>
+  <p class='question' *ngIf='language == "german" '>{{question.german}}</p>
+
+  <form class="form">
+      <mat-form-field class="full-width">
+          <input type="text" placeholder='' aria-label="Age" matInput [formControl]="ageControl" [matAutocomplete]="age">
+          <mat-autocomplete #age="matAutocomplete">
+          <mat-option *ngFor="let age of filteredAgeOptions | async" [value]="age">
+              {{age}}
+          </mat-option>
+          </mat-autocomplete>
+      </mat-form-field>
+  </form> 
+  
+  <button *ngIf='answer == undefined && language == "english"' mat-stroked-button (click)='continue()' class='disabled' disabled>{{button.english}}</button>
+  <button *ngIf='answer != undefined && language == "english"' mat-stroked-button (click)='continue()'>{{button.english}}</button>
+  <button *ngIf='answer == undefined && language == "german" ' mat-stroked-button (click)='continue()' class='disabled' disabled>{{button.german}}</button>
+  <button *ngIf='answer != undefined && language == "german" ' mat-stroked-button (click)='continue()'>{{button.german}}</button>
+
+</div>
+
+<div class='content' *ngIf='isStored'>
+
+    <p class='question' *ngIf='language == "english"'>{{message.english}}</p>
+    <p class='question' *ngIf='language == "german" '>{{message.german}}</p>
+
+</div>
+
+
+
+
+
+
+
+

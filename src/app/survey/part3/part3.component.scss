@@ -1,65 +1,119 @@
-.content {
+@media (max-width: 800px) {
 
-  width: 800px;
-  margin: auto;
-  color: rgb(80, 80, 80);
-  padding: 30px;
+  h1 {
 
-}
+    margin-top: 0px;
+    font-size: 32px;
+    font-weight: 300;
+    margin-bottom: 5px;
 
-p {
+  }
 
-  font-size: 24px;
-  font-weight: 300;
-  font-family: 'Roboto', sans-serif;
-  margin-bottom: 25px;
+  p {
+
+    font-size: 18px;
+
+  }
+
+  .mat-stroked-button {
+
+    font-size: 24px;
+    padding: 10px;
+    font-weight: 300;
+    float: right;
+    margin-top: 10px;
   
-}
-
-button {
-
-  margin-top: 50px;
-  margin-left: calc(700px - 254px);
-
-}
-
-.mat-stroked-button {
-
-  font-size: 24px;
-  padding: 10px;
-  font-weight: 300;
-  margin-right:0;
-  float: right;
-
-}
-
-.question {
-
-  margin-top: 40px;
-
-}
-
-
-.option {
+  }
   
-  display: inline-block;
-  width: 20%;
-  font-family: 'Roboto', sans-serif;
-  font-weight: 300;
-  text-align: center;
-  font-size: 18px;
-  margin: 0;
+  .option {
+
+    height: 32px;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    padding-top: -8px;
+    font-size: 16px !important;
+    margin-bottom: 5px;
+    color: rgb(80, 80, 80)
+
+  }
+  
+  .option-active {
+  
+    height: 32px;
+    width: 100%;
+    border: 1px solid rgba(122, 174, 67, 1);
+    background-color: rgba(122, 174, 67, 0.1);
+    margin: 0;
+    padding: 0;
+    padding-top: -8px;
+    font-size: 16px !important;
+    margin-bottom: 5px;
+    color: rgb(80, 80, 80)
+
+  }
+
+  .last {
+
+    margin-left: 0;
+    margin-bottom: 0;
+
+  }
 
 }
 
-.option-first {
- 
-  display: inline-block;
-  width: 20%;
-  font-family: 'Roboto', sans-serif;
-  font-weight: 300;
-  text-align: left;
-  font-size: 18px;
-  margin: 0;
+@media (min-width: 800px) {
 
+  .content {
+
+    width: 800px;
+  
+  }
+
+  .mat-stroked-button {
+
+    font-size: 24px;
+    padding: 10px;
+    font-weight: 300;
+    float: right;
+    margin-top: 20px;
+  
+  }
+
+  .option {
+
+    height: 120px;
+    width: calc(20% - 4px);
+    margin-left: 4px;
+    font-size: 18px;
+    color: rgb(80, 80, 80)
+  
+  }
+  
+  .option-active {
+  
+    height: 120px;
+    width: calc(20% - 4px);
+    margin-left: 4px;
+    border: 1px solid rgba(122, 174, 67, 1);
+    background-color: rgba(122, 174, 67, 0.1);
+    font-size: 18px;
+    color: rgb(80, 80, 80)
+  
+  }
+
+  .last {
+
+    width: calc(20%);
+    margin-left: 0px;
+
+  }
+
+}
+
+.disabled {
+
+  color: rgba(200, 200, 200, 1);
+  cursor: not-allowed;
+  
 }
