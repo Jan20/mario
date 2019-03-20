@@ -148,7 +148,7 @@ export class Part7Component implements OnInit {
 
     // Checks whether a valid answer was given. If this is the case,
     // the user can progress to the next step of the survey.
-    this.answer != undefined ? this.router.navigate(['survey/part_8']) : null
+    this.answer != undefined ? this.router.navigate(['survey/part_5']) : null
   
   }
   

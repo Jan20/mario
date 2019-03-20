@@ -1,17 +1,17 @@
 import { AfterViewInit, Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
-import { interval, Subject } from "rxjs";
+import { Router } from '@angular/router';
+import { interval } from "rxjs";
+import { Level } from 'src/app/models/level';
+import { Option } from 'src/app/models/option';
+import { LanguageService } from '../../shared/services/language.service';
+import { LevelService } from '../../shared/services/level.service';
 import { SessionService } from '../../shared/services/session.service';
+import { AudioService } from '../audio/audio.service';
+import { GLS } from '../tux-component/gl.service';
 import { initShaders } from '../tux-tutorial-common/InitShaders';
 import { flatten, mat4, mult, translate, vec3 } from '../tux-tutorial-common/MV';
 import { WebGLUtils } from '../tux-tutorial-common/webgl-utils';
 import { World } from '../tux-tutorial/world';
-import { GLS } from '../tux-component/gl.service';
-import { LevelService } from '../../shared/services/level.service';
-import { Level } from 'src/app/models/level';
-import { AudioService } from '../audio/audio.service';
-import { Router } from '@angular/router';
-import { LanguageService } from 'src/app/shared/services/language.service';
-import { Option } from 'src/app/models/option';
 
 @Component({
     selector: 'app-tutorial',
@@ -58,6 +58,28 @@ export class TutorialComponent implements OnInit, AfterViewInit {
     public timeString: Option = new Option('Time: ', 'Zeit: ')
     public scoreString: Option = new Option('Score: ', 'Punkte: ')
     public livesString: Option = new Option('Lives: ', 'Leben: ')
+
+    public tutorialMessage0: Option = new Option('Collect a coin by breaking the cracked ice block by jumping against the bottom side of the block.', 
+        'Sammeln Sie eine Münze, indem Sie den gebrochenen Eisblock brechen, indem Sie gegen die Unterseite des Blocks springen.')
+
+    public tutorialMessage1: Option = new Option('Obtain the ability to shoot snow balls by jumping against the bottom side of the block with the question mark and collect the item available afterwards.', 
+        'Erhalten Sie die Fähigkeit, Schneebälle zu schießen, indem Sie mit dem Fragezeichen gegen die Unterseite des Blocks springen und anschließend den verfügbaren Gegenstand einsammeln.')
+
+    public tutorialMessage2: Option = new Option('Fire a snowball by pressing the space key on your keyboard.', 
+        'Schieße einen Schneeball, indem du die Leertaste auf deiner Tastatur drückst.')
+
+    public tutorialMessage3: Option = new Option('Defeat all three opponents by either jumping on top of them or hitten them with a snow ball.', 
+        'Besiege alle drei Gegner, indem du entweder auf sie springst oder sie mit einem Schneeball besiegst.')
+
+    public tutorialMessage4: Option = new Option('Finish the tutorial by reaching the goal field at the right side of the level.', 
+        'Beenden Sie das Tutorial, indem Sie das Zielfeld auf der rechten Seite des Levels erreichen.')
+
+
+    public leaveMessage: Option = new Option('Thank you for having played the tutorial.', 'Vielen Dank, dass Sie das Tutorial gespielt haben.')
+    public progressMessage: Option = new Option('Progress to the main game.', 'Gehen Sie zum Hauptspiel über.')
+    public waitMessage: Option = new Option('Please wait a second ...', 'Bitte warten Sie eine Sekunde ...')
+    public surveyMessage: Option = new Option('Please continue to the survey', 'Bitte fahren Sie mit der Umfrage fort')
+    public secondLevelMessage: Option = new Option('Start the Second Level!', 'Fahren Sie mit dem zweiten Level fort!')
 
     //////////////////
     // Constructors //
@@ -121,7 +143,7 @@ export class TutorialComponent implements OnInit, AfterViewInit {
     @HostListener('document:keydown', ['$event'])
     async handleKey(event: KeyboardEvent) {
 
-        event.key === 'Enter' ? this.startNewLevel() : null
+        event.key === 'Enter' ? this.progressToTheMainGame() : null
 
     }
 
@@ -183,8 +205,7 @@ export class TutorialComponent implements OnInit, AfterViewInit {
      */
     public progressToTheMainGame(): void {
 
-        // Changes the current URL to the start of the survey.
-        this.router.navigate(['game'])
+        this.reachedFinishLine ? this.router.navigate(['game']) : null
     
     }
 

@@ -204,11 +204,23 @@ export class SessionService {
     await this.angularFirestore.doc(`${ref}/data/performance`).set(this.session.performance.toObject())
     await this.angularFirestore.doc(`${ref}/data/level`).set(this.getLevel().toObject())
 
-    // Calls the backend in order to adapt the difficulty of the next level.
-    await this.cloudService.evolveLevel(userKey)
+    let object: object = this.session.performance.toObject()
+    
+    object['user_key'] = userKey
+    object['session_key'] = this.session.key
+
+    const key: string = `${userKey}:${this.session.key}`
+
+    await this.angularFirestore.doc(`performances/${key}`).set(object)
 
     // Checks whether the user can progress to the survey.
     const canProgressToSurvey: boolean = await this.checkProgressToSurvey(userKey)
+    
+    canProgressToSurvey ? this.readyForSurveySubject.next(canProgressToSurvey): null
+    canProgressToSurvey ? this.sessionSubject.next('stored') : null
+
+    // Calls the backend in order to adapt the difficulty of the next level.
+    await this.cloudService.evolveLevel(userKey)
 
     this.readyForSurveySubject.next(canProgressToSurvey)
 

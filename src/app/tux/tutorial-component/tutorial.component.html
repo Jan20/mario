@@ -1,57 +1,74 @@
-<!-- <div class='instructions'>
+<div class='instructions'>
 
     <div class='check_box'>
-        <mat-icon *ngIf='!coinCollected'>check_box_outline_blank</mat-icon>
-        <mat-icon *ngIf='coinCollected' class='icon-completed' >check_box</mat-icon>
+        <mat-icon *ngIf='!coinCollected && !reachedFinishLine' class='mat-icon'>check_box_outline_blank</mat-icon>
+        <mat-icon *ngIf='coinCollected && !reachedFinishLine' class='icon-completed'>check_box</mat-icon>
     </div>
     <div class='task'>
-        <p *ngIf='!coinCollected' class='instruction' >Collect a coin by breaking the cracked ice block by jumping against the buttom side of the block.</p>
-        <p *ngIf='coinCollected' class='instruction-completed' >Collect a coin by breaking the cracked ice block by jumping against the buttom side of the block.</p>
+        <p *ngIf='!coinCollected && !reachedFinishLine && language == "english"' class='instruction'>{{tutorialMessage0.english}}</p>
+        <p *ngIf='!coinCollected && !reachedFinishLine && language == "german"' class='instruction'>{{tutorialMessage0.german}}</p>
+        <p *ngIf='coinCollected && !reachedFinishLine && language == "english"' class='instruction-completed'>{{tutorialMessage0.english}}</p>
+        <p *ngIf='coinCollected && !reachedFinishLine && language == "german"' class='instruction-completed'>{{tutorialMessage0.german}}</p>
     </div>
 
-    <div class='check_box'>
-        <mat-icon *ngIf='!powerUpCollected && coinCollected'>check_box_outline_blank</mat-icon>
-        <mat-icon *ngIf='powerUpCollected && coinCollected' class='icon-completed' >check_box</mat-icon>
-    </div>
-    <div class='task'>
-        <p *ngIf='!powerUpCollected && coinCollected' class='instruction'>Obtain the ability to shoot snow balls by jumping against the bottom side of the block with the question mark and collect the item available afterwards.</p>
-        <p *ngIf='powerUpCollected && coinCollected' class='instruction-completed'>Obtain the ability to shoot snow balls by jumping against the bottom side of the block with the question mark and collect the item available afterwards.</p>
-    </div>
     
     <div class='check_box'>
-        <mat-icon *ngIf='!snowBallShot && powerUpCollected'>check_box_outline_blank</mat-icon>
-        <mat-icon *ngIf='snowBallShot && powerUpCollected' class='icon-completed' >check_box</mat-icon>
+        <mat-icon *ngIf='!powerUpCollected && coinCollected && !reachedFinishLine' class='mat-icon'>check_box_outline_blank</mat-icon>
+        <mat-icon *ngIf='powerUpCollected && coinCollected && !reachedFinishLine' class='icon-completed' >check_box</mat-icon>
     </div>
     <div class='task'>
-        <p *ngIf='!snowBallShot && powerUpCollected' class='instruction' >Fire a snowball by pressing the space key on your keyboard.</p>
-        <p *ngIf='snowBallShot && powerUpCollected' class='instruction-completed'>Fire a snowball by pressing the space key on your keyboard.</p>
+        <p *ngIf='!powerUpCollected && coinCollected && !reachedFinishLine && language == "english"' class='instruction'>{{tutorialMessage1.english}}</p>
+        <p *ngIf='!powerUpCollected && coinCollected && !reachedFinishLine && language == "german"' class='instruction'>{{tutorialMessage1.german}}</p>
+        <p *ngIf='powerUpCollected && coinCollected && !reachedFinishLine && language == "english"' class='instruction-completed'>{{tutorialMessage1.english}}</p>
+        <p *ngIf='powerUpCollected && coinCollected && !reachedFinishLine && language == "german"' class='instruction-completed'>{{tutorialMessage1.german}}</p>
     </div>
+
+    
+    <div class='check_box'>
+        <mat-icon *ngIf='!snowBallShot && powerUpCollected && coinCollected && !reachedFinishLine' class='mat-icon'>check_box_outline_blank</mat-icon>
+        <mat-icon *ngIf='snowBallShot && powerUpCollected && coinCollected && !reachedFinishLine' class='icon-completed'>check_box</mat-icon>
+    </div>
+    <div class='task'>
+        <p *ngIf='!snowBallShot && powerUpCollected && coinCollected && !reachedFinishLine && language == "english"' class='instruction' >{{tutorialMessage2.english}}</p>
+        <p *ngIf='!snowBallShot && powerUpCollected && coinCollected && !reachedFinishLine && language == "german"' class='instruction' >{{tutorialMessage2.german}}</p>
+        <p *ngIf='snowBallShot && powerUpCollected && coinCollected && !reachedFinishLine && language == "english"' class='instruction-completed'>{{tutorialMessage2.english}}</p>
+        <p *ngIf='snowBallShot && powerUpCollected && coinCollected && !reachedFinishLine && language == "german"' class='instruction-completed'>{{tutorialMessage2.german}}</p>
+    </div> 
+
 
     <div class='check_box'>
-        <mat-icon *ngIf='(!walkerDefeated || !jumperDefeated || !flyerDefeated) && snowBallShot'>check_box_outline_blank</mat-icon>
-        <mat-icon *ngIf='(walkerDefeated && jumperDefeated && flyerDefeated) && snowBallShot' class='icon-completed' >check_box</mat-icon>
+        <mat-icon *ngIf='(!walkerDefeated || !jumperDefeated || !flyerDefeated) && snowBallShot && !reachedFinishLine' class='mat-icon'>check_box_outline_blank</mat-icon>
+        <mat-icon *ngIf='(walkerDefeated && jumperDefeated && flyerDefeated) && snowBallShot && !reachedFinishLine' class='icon-completed' >check_box</mat-icon>
     </div>
     <div class='task'>
-        <p *ngIf='(!walkerDefeated || !jumperDefeated || !flyerDefeated) && snowBallShot' class='instruction'>Defeat all three opponents by either jumping on top of them or hitten them with a snow ball.</p>
-        <p *ngIf='(walkerDefeated && jumperDefeated && flyerDefeated) && snowBallShot' class='instruction-completed'>Defeat all three opponents by either jumping on top of them or hitten them with a snow ball.</p>
+        <p *ngIf='(!walkerDefeated || !jumperDefeated || !flyerDefeated) && snowBallShot && coinCollected && powerUpCollected && !reachedFinishLine && language == "english"' class='instruction'>{{tutorialMessage3.english}}</p>
+        <p *ngIf='(!walkerDefeated || !jumperDefeated || !flyerDefeated) && snowBallShot && coinCollected && powerUpCollected && !reachedFinishLine && language == "german"' class='instruction'>{{tutorialMessage3.german}}</p>
+        <p *ngIf='(walkerDefeated && jumperDefeated && flyerDefeated) && snowBallShot && coinCollected && powerUpCollected && !reachedFinishLine && language == "english"' class='instruction-completed'>{{tutorialMessage3.english}}</p>
+        <p *ngIf='(walkerDefeated && jumperDefeated && flyerDefeated) && snowBallShot && coinCollected && powerUpCollected && !reachedFinishLine && language == "german"' class='instruction-completed'>{{tutorialMessage3.german}}</p>
     </div>
+
 
     <div class='check_box'>
-        <mat-icon *ngIf='!reachedFinishLine && (walkerDefeated && jumperDefeated && flyerDefeated)'>check_box_outline_blank</mat-icon>
-        <mat-icon *ngIf='reachedFinishLine && (walkerDefeated && jumperDefeated && flyerDefeated)' class='icon-completed' >check_box</mat-icon>
+        <mat-icon *ngIf='!reachedFinishLine && (walkerDefeated && jumperDefeated && flyerDefeated)' class='mat-icon'>check_box_outline_blank</mat-icon>
+        <mat-icon *ngIf='reachedFinishLine && (walkerDefeated && jumperDefeated && flyerDefeated)' class='icon-completed-last'>check_box</mat-icon>
     </div>
     <div class='task'>
-        <p *ngIf='!reachedFinishLine && (walkerDefeated && jumperDefeated && flyerDefeated)' class='instruction' >Finish the tutorial by reaching the goal field at the right side of the level.</p>
-        <p *ngIf='reachedFinishLine && (walkerDefeated && jumperDefeated && flyerDefeated)' class='instruction-completed'>Finish the tutorial by reaching the goal field at the right side of the level.</p>
+        <p *ngIf='!reachedFinishLine && (walkerDefeated && jumperDefeated && flyerDefeated) && snowBallShot && coinCollected && powerUpCollected && language == "english"' class='instruction'>{{tutorialMessage4.english}}</p>
+        <p *ngIf='!reachedFinishLine && (walkerDefeated && jumperDefeated && flyerDefeated) && snowBallShot && coinCollected && powerUpCollected && language == "german"' class='instruction'>{{tutorialMessage4.german}}</p>
+        <p *ngIf='reachedFinishLine && (walkerDefeated && jumperDefeated && flyerDefeated) && snowBallShot && coinCollected && powerUpCollected && language == "english"' class='instruction-completed-last'>{{tutorialMessage4.english}}</p>
+        <p *ngIf='reachedFinishLine && (walkerDefeated && jumperDefeated && flyerDefeated) && snowBallShot && coinCollected && powerUpCollected && language == "german"' class='instruction-completed-last'>{{tutorialMessage4.german}}</p>
     </div>
-</div> -->
 
+</div>
+ 
 <div class='content'>
 
     <div class='menu' *ngIf='status === "completed"'>
 
-        <h1>Thank you for having played the tutorial.</h1>
-        <h2 (click)='progressToTheMainGame()'>Progress to the full game</h2>
+        <h1 *ngIf='language == "english"'>{{leaveMessage.english}}</h1>
+        <h1 *ngIf='language == "german"'>{{leaveMessage.german}}</h1>
+        <h2 *ngIf='language == "english"' (click)='progressToTheMainGame()' class='ready'>{{progressMessage.english}}</h2>
+        <h2 *ngIf='language == "german"' (click)='progressToTheMainGame()' class='ready'>{{progressMessage.german}}</h2>
 
     </div>
 
@@ -78,7 +95,7 @@
     </div>
 
     <div class='canvas-container'>
-        <canvas [style.visibility]="status === 'running' ? 'visible' : 'hidden'" #canvas class='canvas' width="1500" height="1500"></canvas>
+        <canvas [style.display]="status === 'running' ? 'inherit' : 'none'" #canvas class='canvas' width="1500" height="1500"></canvas>
     </div>
 
 </div>

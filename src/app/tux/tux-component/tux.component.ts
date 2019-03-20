@@ -51,7 +51,7 @@ export class TuxComponent implements OnInit, AfterViewInit {
     public livesString: Option = new Option('Lives: ', 'Leben: ')
 
     public completedMessage: Option = new Option('Level Completed!', 'Level abgeschlossen!')
-    public lostMessage: Option = new Option('Thank you for having played the level!', 'Danke, dass du das Level gespielt hast!')
+    public lostMessage: Option = new Option('Thank you for having played the level!', 'Danke, dass Sie das Level gespielt hast!')
     public waitMessage: Option = new Option('Please wait a second ...', 'Bitte warten Sie eine Sekunde ...')
     public surveyMessage: Option = new Option('Please continue to the survey', 'Bitte fahren Sie mit der Umfrage fort')
     public secondLevelMessage: Option = new Option('Start the Second Level!', 'Fahren Sie mit dem zweiten Level fort!')

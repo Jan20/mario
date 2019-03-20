@@ -74,7 +74,6 @@ export class Part12Component implements OnInit {
   //////////////////
   public constructor(
 
-    private router: Router,
     private surveyService: SurveyService,
     private languageService: LanguageService,
 
@@ -147,16 +146,17 @@ export class Part12Component implements OnInit {
    * 
    */
   public async continue(): Promise<void> {
-        // Passes the given answer to the survey service. 
-      if (this.answer != undefined) {
-
-        await this.surveyService.survey.storeUsage(this.answer)
-  
-        await  this.surveyService.storeSurvey()
       
-        this.isStored = true
-  
-      } 
+    // Passes the given answer to the survey service. 
+    if (this.answer != undefined) {
+
+      await this.surveyService.survey.storeUsage(this.answer)
+
+      await  this.surveyService.storeSurvey()
+    
+      this.isStored = true
+
+    } 
     
   }
   

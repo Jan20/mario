@@ -137,9 +137,6 @@ export class Survey {
             
             "prefered_challenge_level": this.preferred_challenge_level,
 
-            "perception_opponent_type_1": this.perception_opponent_type_1,
-            "perception_opponent_type_2": this.perception_opponent_type_2,
-            "perception_opponent_type_3": this.perception_opponent_type_3,
             "perception_wide_gaps": this.perception_wide_gaps,
             "perception_number_of_opponents": this.perception_number_of_opponents,
             "perception_opponents_at_choke_points": this.perception_opponents_at_choke_points,

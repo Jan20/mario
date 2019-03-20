@@ -27,15 +27,12 @@ export const ROUTES: Routes = [
   { path: 'survey/part_1', component: Part1Component },
   { path: 'survey/part_2', component: Part2Component },
   { path: 'survey/part_3', component: Part3Component },
-  { path: 'survey/part_4', component: Part4Component },
-  { path: 'survey/part_5', component: Part5Component },
-  { path: 'survey/part_6', component: Part6Component },
-  { path: 'survey/part_7', component: Part7Component },
-  { path: 'survey/part_8', component: Part8Component },
-  { path: 'survey/part_9', component: Part9Component },
-  { path: 'survey/part_10', component: Part10Component },
-  { path: 'survey/part_11', component: Part11Component },
-  { path: 'survey/part_12', component: Part12Component },
+  { path: 'survey/part_4', component: Part7Component },
+  { path: 'survey/part_5', component: Part8Component },
+  { path: 'survey/part_6', component: Part9Component },
+  { path: 'survey/part_7', component: Part10Component },
+  { path: 'survey/part_8', component: Part11Component },
+  { path: 'survey/part_9', component: Part12Component },
   
 ]
 
