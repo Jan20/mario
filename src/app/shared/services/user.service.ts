@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { User } from 'src/app/models/user';
-import { UserInterface } from 'src/app/interfaces/user.interface';
 import { Helper } from 'src/app/shared/helper';
 
 @Injectable({
@@ -167,7 +166,7 @@ export class UserService {
 
     // Creates a new entry at Firestore that 
     // corresponds to the newly created user key.
-    await this.angularFirestore.doc(`users/${user.key}`).set(user.toInterface())
+    await this.angularFirestore.doc(`users/${user.key}`).set(user.toObject())
 
     // Sets a key-value-pair for the newly created
     // user key at the user's localStorage.
@@ -192,7 +191,7 @@ export class UserService {
     // Iterates through all users from firestore and
     // compares their user ids with the one stored in
     // the highestUserId variable.
-    await this.angularFirestore.collection<UserInterface[]>('users').get().toPromise().then(users => {
+    await this.angularFirestore.collection('users').get().toPromise().then(users => {
 
       // Iterates over all users stored at Firestore.
       users.docs.forEach(user => {

@@ -2,7 +2,6 @@ import { User } from "../models/user";
 import { Performance } from '../models/performance'
 import { Level } from "../models/level";
 import { Session } from "../models/session";
-import { LevelInterface } from "../interfaces/level.interface";
 import { firestore } from "firebase";
 
 /**
@@ -60,7 +59,7 @@ export class Samples {
     
     )
 
-    public static sampleLevelInterface: LevelInterface = {
+    public static sampleLevelInterface: object = {
 
         'key': 'level_01', 
         'id': 1,

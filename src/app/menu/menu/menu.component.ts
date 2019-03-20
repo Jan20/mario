@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core'
 import { Router } from '@angular/router'
 import { MenuItem } from '../menu-model/menu.item'
-import { AudioService } from 'src/app/tux/audio/audio.service';
+import { AudioService } from 'src/app/game/audio/audio.service';
 import { SessionService } from 'src/app/shared/services/session.service';
 import { LanguageService } from 'src/app/shared/services/language.service';
 

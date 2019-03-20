@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core'
 import { CommonModule } from '@angular/common'
-import { TuxModule } from '../tux/tux.module'
+import { GameModule } from '../game/game.module'
 import { SurveyService } from '../shared/services/survey.service'
 import { MaterialModule } from '../config/material.module';
 import { IntroductionComponent } from './introduction/introduction.component';
@@ -25,7 +25,7 @@ import { Part12Component } from './part12/part12.component';
   imports: [
 
     CommonModule,
-    TuxModule,
+    GameModule,
     MaterialModule,
     BrowserModule,
     FormsModule,

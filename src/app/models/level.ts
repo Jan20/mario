@@ -1,5 +1,3 @@
-import { LevelInterface } from '../interfaces/level.interface'
-
 export class Level {
 
     ///////////////
@@ -50,64 +48,6 @@ export class Level {
             ]
     
         )
-    }
-
-
-    public static fromInterface(levelInterface: LevelInterface): Level {
-      
-        console.log('fromInterface')
-        console.log(levelInterface)
-        console.log(Array.from(levelInterface.line_00))
-
-        const representation: string[][] = [
-            
-            Array.from(levelInterface.line_00),
-            Array.from(levelInterface.line_01),
-            Array.from(levelInterface.line_02),
-            Array.from(levelInterface.line_03),
-            Array.from(levelInterface.line_04),
-            Array.from(levelInterface.line_05),
-            Array.from(levelInterface.line_06),
-            Array.from(levelInterface.line_07),
-            Array.from(levelInterface.line_08),
-            Array.from(levelInterface.line_09),
-            Array.from(levelInterface.line_10),
-            Array.from(levelInterface.line_11),
-            Array.from(levelInterface.line_12),
-            Array.from(levelInterface.line_13),
-            Array.from(levelInterface.line_14),
-        
-        ]
-
-        return new Level(levelInterface.key, levelInterface.id, representation)
-
-    }
-    
-    public toInterface(): LevelInterface {
-
-        const levelInterface: LevelInterface = {
-
-            'key': this.key,
-            'id': this.id,
-            'line_00': this.representation[0].join(''),
-            'line_01': this.representation[1].join(''),
-            'line_02': this.representation[2].join(''),
-            'line_03': this.representation[3].join(''),
-            'line_04': this.representation[4].join(''),
-            'line_05': this.representation[5].join(''),
-            'line_06': this.representation[6].join(''),
-            'line_07': this.representation[7].join(''),
-            'line_08': this.representation[8].join(''),
-            'line_09': this.representation[9].join(''),
-            'line_10': this.representation[10].join(''),
-            'line_11': this.representation[11].join(''),
-            'line_12': this.representation[12].join(''),
-            'line_13': this.representation[13].join(''),
-            'line_14': this.representation[14].join(''),
-        }
-
-        return levelInterface
-
     }
 
     public toObject(): Object {

@@ -1,5 +1,3 @@
-import { UserInterface } from "../interfaces/user.interface";
-
 export class User {
 
     ///////////////
@@ -21,24 +19,6 @@ export class User {
     ///////////////
     // Functions //
     ///////////////
-    public static fromInterface(userInterface: UserInterface): User {
-      
-        return new User(userInterface.key, userInterface.id)
-
-    }
-    
-    public toInterface(): UserInterface {
-
-        const userInterface: UserInterface = {
-
-            'key': this.key,
-            'id': this.id,
-        }
-
-        return userInterface
-
-    }
-
     public toObject(): Object {
 
         return {

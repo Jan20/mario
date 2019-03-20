@@ -54,19 +54,19 @@ export class TestService {
 
   public async setUpFourSessions() {
 
-    await this.angularFirestore.doc(`users/${Samples.sampleUser.key}`).set(Samples.sampleUser.toInterface())
+    await this.angularFirestore.doc(`users/${Samples.sampleUser.key}`).set(Samples.sampleUser.toObject())
     await this.angularFirestore.doc(`users/${Samples.sampleUser.key}/sessions/${Samples.sampleSession1.key}`).set(Samples.sampleSession1.toObject())
     await this.angularFirestore.doc(`users/${Samples.sampleUser.key}/sessions/${Samples.sampleSession1.key}/data/performance`).set(Samples.sampleSession1.performance.toObject())
 
-    await this.angularFirestore.doc(`users/${Samples.sampleUser.key}`).set(Samples.sampleUser.toInterface())
+    await this.angularFirestore.doc(`users/${Samples.sampleUser.key}`).set(Samples.sampleUser.toObject())
     await this.angularFirestore.doc(`users/${Samples.sampleUser.key}/sessions/${Samples.sampleSession2.key}`).set(Samples.sampleSession2.toObject())
     await this.angularFirestore.doc(`users/${Samples.sampleUser.key}/sessions/${Samples.sampleSession2.key}/data/performance`).set(Samples.sampleSession2.performance.toObject())
 
-    await this.angularFirestore.doc(`users/${Samples.sampleUser.key}`).set(Samples.sampleUser.toInterface())
+    await this.angularFirestore.doc(`users/${Samples.sampleUser.key}`).set(Samples.sampleUser.toObject())
     await this.angularFirestore.doc(`users/${Samples.sampleUser.key}/sessions/${Samples.sampleSession3.key}`).set(Samples.sampleSession3.toObject())
     await this.angularFirestore.doc(`users/${Samples.sampleUser.key}/sessions/${Samples.sampleSession3.key}/data/performance`).set(Samples.sampleSession3.performance.toObject())
 
-    await this.angularFirestore.doc(`users/${Samples.sampleUser.key}`).set(Samples.sampleUser.toInterface())
+    await this.angularFirestore.doc(`users/${Samples.sampleUser.key}`).set(Samples.sampleUser.toObject())
     await this.angularFirestore.doc(`users/${Samples.sampleUser.key}/sessions/${Samples.sampleSession4.key}`).set(Samples.sampleSession4.toObject())
     await this.angularFirestore.doc(`users/${Samples.sampleUser.key}/sessions/${Samples.sampleSession4.key}/data/performance`).set(Samples.sampleSession4.performance.toObject())
 

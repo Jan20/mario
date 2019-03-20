@@ -6,7 +6,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppComponent } from './app.component';
 import { ConfigModule } from './config/config.module';
 import { MaterialModule } from './config/material.module';
-import { TuxModule } from './tux/tux.module';
+import { GameModule } from './game/game.module';
 import { SurveyModule } from './survey/survey.module';
 import { TestModule } from './test/test.module';
 import { AngularFirestore } from '@angular/fire/firestore';
@@ -29,7 +29,7 @@ import { MenuModule } from './menu/menu.module'
     BrowserAnimationsModule,
     ConfigModule,
     MenuModule,
-    TuxModule,
+    GameModule,
     SurveyModule,
     TestModule
 

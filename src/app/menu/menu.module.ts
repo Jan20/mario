@@ -6,7 +6,7 @@ import { ROUTES } from './../config/routing.config';
 import { RouterModule } from '@angular/router';
 import { MenuComponent } from './menu/menu.component';
 import { MenuService } from './menu-service/menu.service';
-import { TuxModule } from '../tux/tux.module';
+import { GameModule } from '../game/game.module';
 
 @NgModule({
   imports: [
@@ -15,7 +15,7 @@ import { TuxModule } from '../tux/tux.module';
     MaterialModule,
     BrowserAnimationsModule,
     RouterModule.forRoot(ROUTES, { enableTracing: false }),
-    TuxModule,
+    GameModule,
   
   ],declarations: [
   

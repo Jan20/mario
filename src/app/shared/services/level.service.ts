@@ -18,7 +18,7 @@ export class LevelService {
   ///////////////
 
   // Variable intented to store the service's current level.
-  private level: Level
+  public level: Level
 
   //////////////////
   // Constructors //
@@ -60,6 +60,8 @@ export class LevelService {
     
     })
 
+    this.level = level
+
     // Returns a promise that is resolved as soon as a level has been
     // successfully retrieved from Firestore.
     return new Promise<Level>(resolve => resolve(level))
@@ -84,6 +86,8 @@ export class LevelService {
     })
 
     this.sessionService.setSession(new Session('tutorial', 0, 'running', null, new Performance(0,0,0,0,0,0, 0,0)))
+
+    this.level = level
 
     // Returns a promise that is resolved as soon as a level has been
     // successfully retrieved from Firestore.
@@ -117,6 +121,8 @@ export class LevelService {
       level = Level.fromDocumentSnapshot(result)
 
     })
+
+    this.level = level
 
     // Returns a promise that should be resolved as soon as a random
     // level is selected.

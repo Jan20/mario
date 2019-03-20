@@ -1,5 +1,3 @@
-import { PerformanceInterface } from "../interfaces/performance.interface";
-
 export class Performance {
 
     ///////////////
@@ -48,25 +46,6 @@ export class Performance {
     ///////////////
     // Functions //
     ///////////////
-    public static fromInterface(performanceInterface: PerformanceInterface): Performance {
-        
-        const performance: Performance = new Performance(
-            
-            performanceInterface.defeated_by_gaps, 
-            performanceInterface.defeated_by_opponent_type_1,
-            performanceInterface.defeated_by_opponent_type_2,
-            performanceInterface.defeated_by_opponent_type_3,
-            performanceInterface.score,
-            performanceInterface.time,
-            performanceInterface.progress,
-            performanceInterface.difficulty,
-            
-        )
-
-        return performance
-
-    }
-
     public static fromObject(object: any): Performance {
 
         return new Performance(
@@ -96,24 +75,6 @@ export class Performance {
             'progress': this.progress,
             'difficulty': this.difficulty
         }
-
-    }
-    
-    public toInterface(): PerformanceInterface {
-
-        const performanceInterface: PerformanceInterface = {
-
-            'defeated_by_gaps': this.defeatedByGaps,
-            'defeated_by_opponent_type_1': this.defeatedByOpponentType1,
-            'defeated_by_opponent_type_2': this.defeatedByOpponentType2,
-            'defeated_by_opponent_type_3': this.defeatedByOpponentType3,
-            'score': this.score,
-            'time': this.time,
-            'progress': this.progress,
-            'difficulty': this.difficulty
-        }
-
-        return performanceInterface
 
     }
     
