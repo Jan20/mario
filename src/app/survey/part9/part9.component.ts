@@ -1,7 +1,9 @@
 import { Component, OnInit, HostListener } from '@angular/core';
-import { Option } from 'src/app/models/option';
-import { Router } from '@angular/router';
+import { FormControl } from '@angular/forms';
+import { Observable } from 'rxjs';
 import { SurveyService } from 'src/app/shared/services/survey.service';
+import { startWith, map } from 'rxjs/operators';
+import { Option } from 'src/app/models/option';
 import { LanguageService } from 'src/app/shared/services/language.service';
 
 @Component({
@@ -11,7 +13,6 @@ import { LanguageService } from 'src/app/shared/services/language.service';
 })
 export class Part9Component implements OnInit {
 
- 
   ///////////////
   // Variables //
   ///////////////
@@ -30,42 +31,34 @@ export class Part9Component implements OnInit {
    * in English or in German.
    * 
    */
-  public questionPart1: Option = new Option(
+  public question: Option = new Option(
   
-    'Please decide to what extent you would agree with the statement "The presence of walking opponents (', 
-    'Bitte entscheiden Sie, inwieweit Sie der Aussage "Die Anwesenheit von laufenden Gegnern ('
+    'What is your age?', 
+    'Wie alt sind Sie?'
   
   )
+  
+  public message: Option = new Option(
 
-  public questionPart2: Option = new Option(
-  
-    ') makes the game more challenging".', 
-    ') zustimmen würden'
-  
+    'Thank you for participating in the study. You may now close your browse window.',
+    'Vielen Dank für Ihre Teilnahme an der Studie. Sie können jetzt Ihr Browserfenster schließen.'
+
   )
   
-  /**
-   * 
-   * Defines five options on a Likert scale.
-   * 
-   */
-  public options: Option[] = [
-    
-    new Option('strongly agree', 'trifft zu'),
-    new Option('agree', 'trifft eher zu'),
-    new Option('neutral', 'teils-teils'),
-    new Option('disagree', 'trifft eher nicht zu'),
-    new Option('strongly disagree', 'trifft nicht zu')
-    
-  ]
-  
+  public isStored: boolean = false
+
   /**
    * 
    * Declares an empty string serving as placeholder
    * for the user's answer.
    * 
    */
-  public answer: string = ''
+  public age: string = '0'
+  public answer: string
+
+  public ageControl = new FormControl();
+  public ageOptions: string[] = []
+  public filteredAgeOptions: Observable<string[]>;
 
   /**
    * 
@@ -73,26 +66,39 @@ export class Part9Component implements OnInit {
    * button at the bottom end of the page.
    * 
    */
-  public button: Option = new Option('Continue', 'Weiter')
+  public button: Option = new Option('Finish Survey', 'Umfrage abschließen')
 
   //////////////////
   // Constructors //
   //////////////////
   public constructor(
 
-    private router: Router,
     private surveyService: SurveyService,
     private languageService: LanguageService,
 
   ) {
-    
+
+    for (let i = 13; i < 101; i++) {
+
+      this.ageOptions.push('' + i)
+
+    }
+
     // Updates the language variable every time
     // the user changes the language setting.
     this.languageService.languageSubject.subscribe(language => this.language = language)
 
     // Requests the lanuage service's current language.
     this.languageService.fetchLanguage()
+  
+    this.ageControl.valueChanges.subscribe(age => {
+      
+      this.age = age
+      this.answer = age
 
+    })
+    this.filteredAgeOptions = this.ageControl.valueChanges.pipe(startWith(''), map(age => this.filter(age)))
+   
   }
   
   public ngOnInit() {}
@@ -120,20 +126,17 @@ export class Part9Component implements OnInit {
     
   }
 
+
   /**
    * 
-   * Stores the answer given by the user
-   * within the components scope.
+   * Filters 
    * 
-   * @param answer: A string referring to the choosen option. 
-   * 
+   * @param age 
    */
-  public selectOption(answer: string): void {
-
-    // Writes the answer given by the user
-    // to a local variable.
-    this.answer = answer
+  private filter(age: string): string[] {
     
+    return this.ageOptions.filter(option => option.toLowerCase().includes(age.toLowerCase()));
+  
   }
 
   /**
@@ -142,14 +145,28 @@ export class Part9Component implements OnInit {
    * 
    */
   public async continue(): Promise<void> {
-
+      
     // Passes the given answer to the survey service. 
-    this.answer != '' ? await this.surveyService.survey.storePerceptionOfOpponentsAtChokePoints(this.answer) : null
+    if (this.answer != undefined) {
 
-    // Checks whether a valid answer was given. If this is the case,
-    // the user can progress to the next step of the survey.
-    this.answer != '' ? this.router.navigate(['survey/part_7']) : null
-  
+      await this.surveyService.survey.storeAge(this.answer)
+
+      await this.surveyService.storeSurvey()
+    
+      this.isStored = true
+
+    } 
+    
   }
   
 }
+
+
+
+
+
+
+
+
+
+

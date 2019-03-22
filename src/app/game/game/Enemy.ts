@@ -37,7 +37,12 @@ export class Enemy extends MovableObject{
     public constructor(
         
         private gameService: GameService,
-        pos, xBoundLeft, xBoundRight, yBoundLow, yBoundHigh, enemyType
+        pos, 
+        xBoundLeft, 
+        xBoundRight, 
+        yBoundLow, 
+        yBoundHigh, 
+        enemyType
         
     ) {
         
@@ -66,19 +71,20 @@ export class Enemy extends MovableObject{
             case 'J':
                 this.enemyIndex = 1
                 break
-            case 'H':
+            case 'A':
                 this.enemyIndex = 2
                 break
-            case 'V':
+            case 'F':
                 this.enemyIndex = 3
                 this.velocity[1] = ENEMY_XVELO_CONSTANT
                 break
         }
+        
         this.generateVertices(this.vertices, this.texCoords, this.normals)
         this.bounds = []
     }
 
-    generateVertices(buffer, texbuffer, normalbuffer): void {
+    public generateVertices(buffer, texbuffer, normalbuffer): void {
 
         buffer.push([1, 1, 0])
         buffer.push([0, 1, 0])
@@ -110,8 +116,8 @@ export class Enemy extends MovableObject{
         
         this.texIndex = Math.floor(this.walkTime % this.gameService.GAMEWORLD.levelTextures.enemies[this.enemyIndex].textures.length / 2) * 2
         
-        if (this.velocity[0] < 0.0 || this.enemyIndex == 1 || this.enemyIndex == 3)
-            this.texIndex++
+        this.velocity[0] < 0.0 || this.enemyIndex == 1 || this.enemyIndex == 3 ? this.texIndex++ : null
+
         return this.texIndex
     
     }
@@ -120,7 +126,7 @@ export class Enemy extends MovableObject{
 
         var adjustedPos = this.pos[0] + (1 - this.enemyWidth) / 2
         // Ground crawler == C or Horizontal Flyers == H
-        if (this.enemyType == "C" || this.enemyType == "H") {
+        if (this.enemyType === 'C') {
             if (this.xBoundLeft == this.xBoundRight)
                 this.velocity[0] = 0
             if (this.xBoundLeft < this.xBoundRight) {
@@ -128,16 +134,6 @@ export class Enemy extends MovableObject{
                     this.velocity[0] = -this.velocity[0]
             }
             this.pos[0] += this.velocity[0]
-        }
-        // Vertical Flyers
-        else if (this.enemyType == "V") {
-            if (this.yBoundLow == this.yBoundHigh)
-                this.velocity[1] = 0
-            if (this.yBoundLow < this.yBoundHigh) {
-                if (this.pos[1] < this.yBoundLow || this.pos[1] - this.enemyHeight > this.yBoundHigh)
-                    this.velocity[1] = -this.velocity[1]
-            }
-            this.pos[1] += this.velocity[1]
         }
         // Jumpers
         else if (this.enemyType == 'J') {
@@ -147,62 +143,17 @@ export class Enemy extends MovableObject{
                 this.velocity[1] += ENEMY_GRAVITY_CONSTANT
             this.pos[1] += this.velocity[1]
         }
-        // reasonably smart AI
-        else if (this.enemyType == 'A') {
-            // // check if tux is close
-            // var xDistPlayer = this.pos[0] - this.gameService.GAMEWORLD.player.pos[0]
-            // var yDistPlayer = Math.abs(this.gameService.GAMEWORLD.player.pos[1] - this.pos[1])
-            // // default crawler movement
-            // if (this.xBoundLeft == this.xBoundRight)
-            //     this.velocity[0] = 0
-            // var speedUp
-            // if (yDistPlayer <= 1 && Math.abs(xDistPlayer) <= 4) {
-            //     speedUp = 1.65
-            //     if (xDistPlayer > 0) {
-            //         this.velocity[0] = -Math.abs(this.velocity[0])
-            //     }
-            //     else if (xDistPlayer < 0) {
-            //         this.velocity[0] = Math.abs(this.velocity[0])
-            //     }
-            // }
-            // else {
-            //     speedUp = 1.0
-            // }
-            // if (this.xBoundLeft < this.xBoundRight && speedUp == 1.0) {
-            //     if (adjustedPos < this.xBoundLeft) {
-            //         this.velocity[0] = Math.abs(this.velocity[0])
-            //     }
-            //     else if (adjustedPos - this.enemyWidth > this.xBoundRight && speedUp == 1.0) {
-            //         this.velocity[0] = -Math.abs(this.velocity[0])
-            //     }
-            // }
-            // this.pos[0] += this.velocity[0] * speedUp;
-            // this.pos[0] = Math.max(this.xBoundLeft - (1 - this.enemyWidth) / 2 - .05, this.pos[0]);
-            // this.pos[0] = Math.min(this.xBoundRight + (1 - this.enemyWidth) / 2 + .05, this.pos[0]);
-            // // intelligent projectile avoidance
-            // for (var i = 0; i < this.gameService.GAMEWORLD.projectiles.length; i++) {
-            //     var xDist = Math.abs(this.pos[0] - this.gameService.GAMEWORLD.projectiles[i].pos[0]);
-            //     var yDist = Math.abs(this.gameService.GAMEWORLD.projectiles[i].pos[1] - this.pos[1]);
-            //     if (yDist > 1) {
-            //         continue;
-            //     }
-            //     if (xDist <= 3 && xDist > 0) {
-            //         if (this.pos[1] <= this.yBoundLow) {
-            //             this.velocity[1] = ENEMY_JUMP_CONSTANT;
-            //             this.pos[1] += this.velocity[1];
-            //             return;
-            //         }
-            //     }
-            // }
-            if (this.pos[1] > this.yBoundLow) {
-                this.velocity[1] += ENEMY_GRAVITY_CONSTANT
-            }
-            if (this.pos[1] <= this.yBoundLow) {
+        // Vertical Flyers
+        else if (this.enemyType == 'F') {
+            if (this.yBoundLow == this.yBoundHigh)
                 this.velocity[1] = 0
-                this.pos[1] = this.yBoundLow
+            if (this.yBoundLow < this.yBoundHigh) {
+                if (this.pos[1] < this.yBoundLow || this.pos[1] - this.enemyHeight > this.yBoundHigh)
+                    this.velocity[1] = -this.velocity[1]
             }
             this.pos[1] += this.velocity[1]
         }
+        
         return
     }
 

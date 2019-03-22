@@ -136,9 +136,8 @@ export class Projectile extends MovableObject{
                 this.world.enemies.splice(i, 1);
                 i--;
                 currentEnemy.enemyType === 'C' ? this.sessionService.walkerSubject.next(true) : null
-                currentEnemy.enemyType === 'A' ? this.sessionService.walkerSubject.next(true) : null
-                currentEnemy.enemyType === 'V' ? this.sessionService.flyerSubject.next(true) : null
                 currentEnemy.enemyType === 'J' ? this.sessionService.jumperSubject.next(true) : null
+                currentEnemy.enemyType === 'F' ? this.sessionService.flyerSubject.next(true) : null
             }
         }
     }

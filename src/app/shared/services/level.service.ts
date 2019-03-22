@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { Level } from '../../models/level';
+import { Performance } from 'src/app/models/performance';
+import { Session } from 'src/app/models/session';
+import { CloudService } from 'src/app/shared/services/cloud.service';
 import { SessionService } from 'src/app/shared/services/session.service';
 import { UserService } from 'src/app/shared/services/user.service';
-import { Session } from 'src/app/models/session';
-import { CloudService } from 'src/app/shared/services/cloud.service'
-import { Performance } from 'src/app/models/performance'
+import { Level } from '../../models/level';
+
 @Injectable({
 
   providedIn: 'root'

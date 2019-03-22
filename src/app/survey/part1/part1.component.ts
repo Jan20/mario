@@ -36,8 +36,8 @@ export class Part1Component implements OnInit {
    */
   public question: Option = new Option(
   
-    'Please decide to what extent you would agree with the statement "The level of difficulty of the second level was appropriate".', 
-    'Bitte entscheiden Sie, inwieweit Sie mit der Aussage "Der Schwierigkeitsgrad der zweiten Stufe war angemessen" einverstanden sind.'
+    'Which of the two levels you just played was more fun for you?', 
+    'Welches der beiden Levels, die Sie gerade gespielt haben, hat Ihnen mehr Spaß gemacht?'
   
   )
 

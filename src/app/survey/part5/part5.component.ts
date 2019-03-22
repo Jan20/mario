@@ -1,7 +1,7 @@
 import { Component, OnInit, HostListener } from '@angular/core';
-import { Router } from '@angular/router';
-import { SurveyService } from '../../shared/services/survey.service';
 import { Option } from 'src/app/models/option';
+import { Router } from '@angular/router';
+import { SurveyService } from 'src/app/shared/services/survey.service';
 import { LanguageService } from 'src/app/shared/services/language.service';
 
 @Component({
@@ -10,6 +10,7 @@ import { LanguageService } from 'src/app/shared/services/language.service';
   styleUrls: ['./part5.component.scss']
 })
 export class Part5Component implements OnInit {
+
  
   ///////////////
   // Variables //
@@ -143,7 +144,7 @@ export class Part5Component implements OnInit {
   public async continue(): Promise<void> {
 
     // Passes the given answer to the survey service. 
-    this.answer != undefined ? await this.surveyService.survey.storePerceptionOfOpponentType2(this.answer) : null
+    this.answer != undefined ? await this.surveyService.survey.storePerceptionOfNumberOfComponents(this.answer) : null
 
     // Checks whether a valid answer was given. If this is the case,
     // the user can progress to the next step of the survey.

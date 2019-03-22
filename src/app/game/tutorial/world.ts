@@ -27,8 +27,6 @@ export class World {
 
     public levelTextures: any
     public level: string[][]
-    public sessionService: SessionService
-    public audioService: AudioService
 
     public hasFinished: boolean = false
 
@@ -39,9 +37,9 @@ export class World {
         
         private gameService: GameService,
         level: Level, 
-        sessionService: SessionService, 
-        levelService: LevelService,
-        audioService: AudioService
+        private sessionService: SessionService, 
+        private levelService: LevelService,
+        private audioService: AudioService
         
     ) {
 
@@ -56,9 +54,8 @@ export class World {
         //
         // need to do this before constructing the stage
         //
-        this.enemies
         this.generateEnemies()
-        this.player = new Player(this.gameService, sessionService, levelService, audioService)
+        this.player = new Player(this.gameService, this.sessionService, this.levelService, this.audioService)
         this.stage = new Stage(this.gameService, level.representation)
 
         this.background = new Background(this.gameService)
@@ -167,8 +164,6 @@ export class World {
         // 
         document.addEventListener('keydown', (event: KeyboardEvent) => {
             
-            console.log(event)
-            console.log(event.keyCode)
             this.sessionService.keyArray[event.keyCode] = true
             event.key === 'ArrowLeft' ? this.player.texDir = 1 : null
             event.key === 'ArrowRight' ? this.player.texDir = 0 : null
@@ -177,10 +172,8 @@ export class World {
 
         document.addEventListener('keyup', (event: KeyboardEvent) => this.sessionService.keyArray[event.keyCode] = false)
 
-  
         this.sessionService.selectActiveKeySubject.subscribe(keyCode => {
 
-            console.log(keyCode)
             keyCode === 37 ? this.player.texDir = 1 : null
             keyCode === 39 ? this.player.texDir = 0 : null
 
@@ -190,16 +183,11 @@ export class World {
             
     }
 
-
-
+    ngOnInit(): void {}
 
     ///////////////
     // Functions //
     ///////////////
-    ngOnInit(): void {
-
-
-    }
 
     /**
      * 
@@ -214,11 +202,9 @@ export class World {
 
                 new Textures(this.gameService).loadImages(this.levelTextures[key].fileNames, this.levelTextures[key].textures);
 
-            }
+            } else {
 
-            else {
-
-                for (var j = 0; j < this.levelTextures[key].length; j++) {
+                for (let j = 0; j < this.levelTextures[key].length; j++) {
 
                     new Textures(this.gameService).loadImages(this.levelTextures[key][j].fileNames, this.levelTextures[key][j].textures);
 
@@ -320,26 +306,15 @@ export class World {
         // TODO store the stages somwhere
         for (let i = 0; i < this.level[0].length; i++) {
             for (let j = 0; j < this.level.length; j++) {
-                // G = ground crawler
-                // J = Jumper
-                // A = aerial
 
-                // Assume these are all placed smartly, too much unnecessary checking otherwise
                 let stage = this.level
                 let currentSquare = stage[j][i];
                 
                 if (currentSquare == 'C') {
                 
-                    // with probability, set enemy to 'A' (smart)
-                    
-                    currentSquare = 'A'
-                    
-                    
                     stage[j][i] = '.'
                     
-                    // get movement bounds based on stage
-                    
-                    let xMin = 0;
+                    let xMin: number = 0;
                     let xMax = Math.ceil(this.level[0].length);
                     //min
                     for (let k = i - 1; k >= 0; k--){
@@ -368,11 +343,8 @@ export class World {
                     this.enemies.push(new Enemy(this.gameService, [i, 14 - j, this.gameService.ENEMY_ALPHA_DEPTH += .00001], i, i, 14 - j, (14 - j) + 2, currentSquare));
                     stage[j][i] = '.';
                 }
-                else if (currentSquare == 'H') {
-                    this.enemies.push(new Enemy(this.gameService, [i, 14 - j, this.gameService.ENEMY_ALPHA_DEPTH += .00001], i, i + 3, 14 - j, 14 - j, currentSquare));
-                    stage[j][i] = '.';
-                }
-                else if (currentSquare == 'V') {
+
+                else if (currentSquare == 'F') {
                     this.enemies.push(new Enemy(this.gameService, [i, 14 - j, this.gameService.ENEMY_ALPHA_DEPTH += .00001], i, i, 14 - (j + 3), 14 - j, currentSquare));
                     stage[j][i] = '.';
                 }

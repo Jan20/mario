@@ -17,9 +17,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { Part7Component } from './part7/part7.component';
 import { Part8Component } from './part8/part8.component';
 import { Part9Component } from './part9/part9.component';
-import { Part10Component } from './part10/part10.component';
-import { Part11Component } from './part11/part11.component';
-import { Part12Component } from './part12/part12.component';
 
 @NgModule({
   imports: [
@@ -46,9 +43,6 @@ import { Part12Component } from './part12/part12.component';
     Part7Component,
     Part8Component,
     Part9Component,
-    Part10Component,
-    Part11Component,
-    Part12Component,
     
   ],
   providers: [

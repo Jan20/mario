@@ -155,10 +155,13 @@ export class Player extends MovableObject{
         // document.getElementById("2").innerHTML = "walktime: " + this.walktime
         // document.getElementById("3").innerHTML = "texIndex: " + this.texIndex
         if (!this.collisionDown) {
+        
             this.texIndex = this.gameService.GAMEWORLD.levelTextures.player.textures.length - 2
             this.walkTimer.reset()
             this.walktime = 0
+        
         }
+        
         this.texIndex += this.texDir
         return this.texIndex
     }
@@ -324,8 +327,7 @@ export class Player extends MovableObject{
                 // Defeating an enemy.
                 if (bDist < tDist && bDist < lDist && bDist < rDist) {
                     
-                    
-
+    
                     this.audioService.playStomp()
 
                     this.sessionService.increaseScore(100)
@@ -337,15 +339,18 @@ export class Player extends MovableObject{
                 }
 
                 else {
-                
+
                     // User looses one life.
                     this.sessionService.decreaseLives()
-                    currentEnemy.enemyType
-                    console.log(playerRight)
-                    ////////////////////////////////////////
-                    // TODO: Handle different enemy types //
-                    ////////////////////////////////////////
-                    this.sessionService.increaseDefeatedByOpponentType1()
+
+                    // Stores the type of the opponent against the user has lost a live.
+                    switch(currentEnemy.enemyType){
+
+                        case 'C': this.sessionService.increaseDefeatedByOpponentType1(); break
+                        case 'J': this.sessionService.increaseDefeatedByOpponentType2(); break
+                        case 'F': this.sessionService.increaseDefeatedByOpponentType3(); break
+
+                    }
 
                     if (this.sessionService.getLives() === 0) {
                         
@@ -375,7 +380,7 @@ export class Player extends MovableObject{
 
         // handle power up collision
         for (var i = 0; i < this.gameService.GAMEWORLD.items.length; i++) {
-            
+                    
             var curItem = this.gameService.GAMEWORLD.items[i];
             var adjustedPlayerPos = this.pos[0] + (1 - this.playerWidth) / 2;
             var adjustedItemPos = curItem.pos[0] + (1 - curItem.powerWidth) / 2;
@@ -384,13 +389,15 @@ export class Player extends MovableObject{
                 (Math.abs(this.pos[1] - curItem.pos[1])) * 2 < (this.playerHeight + curItem.powerHeight)) {
                 
                 switch (curItem.powerType) {
+                    
                     case 'L':
                         
                         this.sessionService.increaseLives()
                         break;
 
                     case 'P':
-                        
+
+                        this.sessionService.powerUpSubject.next(true)
                         this.audioService.playPowerUp()
                         this.hasProjectiles = true;
                         break;
@@ -436,6 +443,7 @@ export class Player extends MovableObject{
                 this.finished = true
                 
             } else {
+                
                 this.restartLevel()
 
                 // this.pos = this.gameService.INITIAL_PLAYER_POS.slice(0);

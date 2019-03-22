@@ -1,7 +1,10 @@
 import { Component, OnInit, HostListener } from '@angular/core';
-import { Option } from 'src/app/models/option';
+import { FormControl } from '@angular/forms';
+import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { SurveyService } from 'src/app/shared/services/survey.service';
+import { startWith, map } from 'rxjs/operators';
+import { Option } from 'src/app/models/option';
 import { LanguageService } from 'src/app/shared/services/language.service';
 
 @Component({
@@ -11,7 +14,6 @@ import { LanguageService } from 'src/app/shared/services/language.service';
 })
 export class Part7Component implements OnInit {
 
- 
   ///////////////
   // Variables //
   ///////////////
@@ -30,42 +32,49 @@ export class Part7Component implements OnInit {
    * in English or in German.
    * 
    */
-  public questionPart1: Option = new Option(
+  public question: Option = new Option(
   
-    'Please decide to what extent you would agree with the statement "The presence of walking opponents (', 
-    'Bitte entscheiden Sie, inwieweit Sie der Aussage "Die Anwesenheit von laufenden Gegnern ('
+    'How many hours a week do you spend playing video games?', 
+    'Wie viele Stunden pro Woche verbringst Sie mit dem Spielen von Videospielen?'
   
   )
 
-  public questionPart2: Option = new Option(
-  
-    ') makes the game more challenging".', 
-    ') zustimmen würden'
-  
-  )
-  
-  /**
-   * 
-   * Defines five options on a Likert scale.
-   * 
-   */
-  public options: Option[] = [
-    
-    new Option('strongly agree', 'trifft zu'),
-    new Option('agree', 'trifft eher zu'),
-    new Option('neutral', 'teils-teils'),
-    new Option('disagree', 'trifft eher nicht zu'),
-    new Option('strongly disagree', 'trifft nicht zu')
-    
-  ]
-  
   /**
    * 
    * Declares an empty string serving as placeholder
    * for the user's answer.
    * 
    */
-  public answer: string = ''
+  public usage: string = '0'
+  public answer: string
+
+  public usageControl = new FormControl();
+  public usageOptionsEnglish: string[] = [
+    
+    'none',
+    '1-3',
+    '4-7',
+    '8-10',
+    '10-15',
+    '16-20',
+    'more than 15',
+  
+  ]
+
+  public usageOptionsGerman: string[] = [
+    
+    'keine',
+    '1-3',
+    '4-7',
+    '8-10',
+    '10-15',
+    '16-20',
+    'mehr als 20',
+  
+  ]
+
+  public filteredUsageOptionsEnglish: Observable<string[]>;
+  public filteredUsageOptionsGerman: Observable<string[]>;
 
   /**
    * 
@@ -85,14 +94,24 @@ export class Part7Component implements OnInit {
     private languageService: LanguageService,
 
   ) {
-    
+
     // Updates the language variable every time
     // the user changes the language setting.
     this.languageService.languageSubject.subscribe(language => this.language = language)
 
     // Requests the lanuage service's current language.
     this.languageService.fetchLanguage()
+  
+    this.usageControl.valueChanges.subscribe(usage => {
+      
+      this.usage = usage
+      this.answer = usage
 
+    })
+
+    this.filteredUsageOptionsEnglish = this.usageControl.valueChanges.pipe(startWith(''), map(usage => this.filterEnglish(usage)))
+    this.filteredUsageOptionsGerman = this.usageControl.valueChanges.pipe(startWith(''), map(usage => this.filterGerman(usage)))
+   
   }
   
   public ngOnInit() {}
@@ -120,20 +139,23 @@ export class Part7Component implements OnInit {
     
   }
 
+
   /**
    * 
-   * Stores the answer given by the user
-   * within the components scope.
+   * Filters 
    * 
-   * @param answer: A string referring to the choosen option. 
-   * 
+   * @param usage 
    */
-  public selectOption(answer: string): void {
-
-    // Writes the answer given by the user
-    // to a local variable.
-    this.answer = answer
+  private filterEnglish(usage: string): string[] {
     
+    return this.usageOptionsEnglish.filter(option => option.toLowerCase().includes(usage.toLowerCase()));
+  
+  }
+
+  private filterGerman(usage: string): string[] {
+    
+    return this.usageOptionsGerman.filter(option => option.toLowerCase().includes(usage.toLowerCase()));
+  
   }
 
   /**
@@ -142,14 +164,20 @@ export class Part7Component implements OnInit {
    * 
    */
   public async continue(): Promise<void> {
-
+    
     // Passes the given answer to the survey service. 
-    this.answer != undefined ? await this.surveyService.survey.storePerceptionOfWideGaps(this.answer) : null
+    this.usage != undefined ? await this.surveyService.survey.storeUsage(this.usage) : null
 
     // Checks whether a valid answer was given. If this is the case,
     // the user can progress to the next step of the survey.
-    this.answer != undefined ? this.router.navigate(['survey/part_5']) : null
+    this.usage != undefined ? this.router.navigate(['survey/part_8']) : null
+
   
   }
   
 }
+
+
+
+
+

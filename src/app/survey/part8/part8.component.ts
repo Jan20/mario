@@ -1,7 +1,10 @@
 import { Component, OnInit, HostListener } from '@angular/core';
-import { Option } from 'src/app/models/option';
+import { FormControl } from '@angular/forms';
+import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { SurveyService } from 'src/app/shared/services/survey.service';
+import { startWith, map } from 'rxjs/operators';
+import { Option } from 'src/app/models/option';
 import { LanguageService } from 'src/app/shared/services/language.service';
 
 @Component({
@@ -11,7 +14,6 @@ import { LanguageService } from 'src/app/shared/services/language.service';
 })
 export class Part8Component implements OnInit {
 
- 
   ///////////////
   // Variables //
   ///////////////
@@ -30,34 +32,12 @@ export class Part8Component implements OnInit {
    * in English or in German.
    * 
    */
-  public questionPart1: Option = new Option(
+  public question: Option = new Option(
   
-    'Please decide to what extent you would agree with the statement "The presence of walking opponents (', 
-    'Bitte entscheiden Sie, inwieweit Sie der Aussage "Die Anwesenheit von laufenden Gegnern ('
-  
-  )
-
-  public questionPart2: Option = new Option(
-  
-    ') makes the game more challenging".', 
-    ') zustimmen würden'
+    'What is your gender?', 
+    'Bitte geben Sie ihr Geschlecht an.'
   
   )
-  
-  /**
-   * 
-   * Defines five options on a Likert scale.
-   * 
-   */
-  public options: Option[] = [
-    
-    new Option('strongly agree', 'trifft zu'),
-    new Option('agree', 'trifft eher zu'),
-    new Option('neutral', 'teils-teils'),
-    new Option('disagree', 'trifft eher nicht zu'),
-    new Option('strongly disagree', 'trifft nicht zu')
-    
-  ]
   
   /**
    * 
@@ -65,7 +45,30 @@ export class Part8Component implements OnInit {
    * for the user's answer.
    * 
    */
-  public answer: string = ''
+  public gender: string = '0'
+  public answer: string
+
+  public genderControl = new FormControl();
+  public genderOptionsEnglish: string[] = [
+    
+    'male',
+    'female',
+    'diverse',
+    'prefer not state',
+  
+  ]
+
+  public genderOptionsGerman: string[] = [
+    
+    'männlich',
+    'weiblich',
+    'divers',
+    'mache lieber keine Angabe',
+  
+  ]
+
+  public filteredGenderOptionsEnglish: Observable<string[]>;
+  public filteredGenderOptionsGerman: Observable<string[]>;
 
   /**
    * 
@@ -85,14 +88,24 @@ export class Part8Component implements OnInit {
     private languageService: LanguageService,
 
   ) {
-    
+
     // Updates the language variable every time
     // the user changes the language setting.
     this.languageService.languageSubject.subscribe(language => this.language = language)
 
     // Requests the lanuage service's current language.
     this.languageService.fetchLanguage()
+  
+    this.genderControl.valueChanges.subscribe(gender => {
+      
+      this.gender = gender
+      this.answer = gender
 
+    })
+
+    this.filteredGenderOptionsEnglish = this.genderControl.valueChanges.pipe(startWith(''), map(gender => this.filterEnglish(gender)))
+    this.filteredGenderOptionsGerman = this.genderControl.valueChanges.pipe(startWith(''), map(gender => this.filterGerman(gender)))
+   
   }
   
   public ngOnInit() {}
@@ -120,20 +133,23 @@ export class Part8Component implements OnInit {
     
   }
 
+
   /**
    * 
-   * Stores the answer given by the user
-   * within the components scope.
+   * Filters 
    * 
-   * @param answer: A string referring to the choosen option. 
-   * 
+   * @param gender 
    */
-  public selectOption(answer: string): void {
-
-    // Writes the answer given by the user
-    // to a local variable.
-    this.answer = answer
+  private filterEnglish(gender: string): string[] {
     
+    return this.genderOptionsEnglish.filter(option => option.toLowerCase().includes(gender.toLowerCase()));
+  
+  }
+
+  private filterGerman(gender: string): string[] {
+    
+    return this.genderOptionsGerman.filter(option => option.toLowerCase().includes(gender.toLowerCase()));
+  
   }
 
   /**
@@ -142,13 +158,13 @@ export class Part8Component implements OnInit {
    * 
    */
   public async continue(): Promise<void> {
-
+    
     // Passes the given answer to the survey service. 
-    this.answer != undefined ? await this.surveyService.survey.storePerceptionOfNumberOfComponents(this.answer) : null
+    this.answer != undefined ? await this.surveyService.survey.storeGender(this.answer) : null
 
     // Checks whether a valid answer was given. If this is the case,
     // the user can progress to the next step of the survey.
-    this.answer != undefined ? this.router.navigate(['survey/part_6']) : null
+    this.answer != undefined ? this.router.navigate(['survey/part_9']) : null
   
   }
   

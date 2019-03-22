@@ -332,9 +332,8 @@ export class Player extends MovableObject{
                 if (bDist < tDist && bDist < lDist && bDist < rDist) {
 
                     currentEnemy.enemyType === 'C' ? this.sessionService.walkerSubject.next(true) : null
-                    currentEnemy.enemyType === 'A' ? this.sessionService.walkerSubject.next(true) : null
-                    currentEnemy.enemyType === 'V' ? this.sessionService.flyerSubject.next(true) : null
                     currentEnemy.enemyType === 'J' ? this.sessionService.jumperSubject.next(true) : null
+                    currentEnemy.enemyType === 'F' ? this.sessionService.flyerSubject.next(true) : null
 
                     if (currentEnemy.enemyType === 'C') {
 
@@ -356,16 +355,15 @@ export class Player extends MovableObject{
                 
                     // User looses one life.
                     this.sessionService.decreaseLives()
-                    currentEnemy.enemyType
-                    if (currentEnemy.enemyType === 'C') {
 
-                        // this.tutorialService.walkerSubject.next(true)
+                    // Stores the type of the opponent against the user has lost a live.
+                    switch(currentEnemy.enemyType){
+
+                        case 'C': this.sessionService.increaseDefeatedByOpponentType1(); break
+                        case 'J': this.sessionService.increaseDefeatedByOpponentType2(); break
+                        case 'F': this.sessionService.increaseDefeatedByOpponentType3(); break
+
                     }
-
-                    ////////////////////////////////////////
-                    // TODO: Handle different enemy types //
-                    ////////////////////////////////////////
-                    this.sessionService.increaseDefeatedByOpponentType1()
 
                     if (this.sessionService.getLives() === 0) {
                         

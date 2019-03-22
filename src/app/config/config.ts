@@ -1,5 +1,5 @@
 export class Config {
 
-    public static numberOfLives = 4
+    public static numberOfLives = 1
 
 }

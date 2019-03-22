@@ -24,7 +24,7 @@ export class SessionService {
   ///////////////
 
   // Holds a reference to the currently played session.
-  private session: Session
+  public session: Session
 
   private recentSessions: Session[]
 
@@ -44,6 +44,9 @@ export class SessionService {
   public timeSubject: Subject<string> = new Subject<string>()
   public scoreSubject: Subject<string> = new Subject<string>()
   public lifeSubject: Subject<number> = new Subject<number>()
+
+  public difficultyClassSubject: Subject<number> = new Subject<number>()
+  public showDifficultyClassSubject: Subject<boolean> = new Subject<boolean>()
 
   // Tutorial
   public coinSubject: Subject<boolean> = new Subject<boolean>()
@@ -257,7 +260,7 @@ export class SessionService {
     if (recentSessions.length > 1 && !this.surveyService.surveyCompleted) {
 
       // Writes the recently finished sessions to the survey service.
-      await this.surveyService.setRecentSessions(recentSessions)    
+      await this.surveyService.setRecentSessions(recentSessions)
 
       // indicates that the user can progress to the survey.
       isReady = true
@@ -489,7 +492,8 @@ public resetTimer(): void {
    */
   public setSession(session: Session): void { 
     
-    this.session = session 
+    this.session = session
+    this.difficultyClassSubject.next(session.performance.difficulty)
   
   }
 

@@ -1,17 +1,17 @@
 import { AfterViewInit, Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { interval } from "rxjs";
+import { Level } from 'src/app/models/level';
+import { Option } from 'src/app/models/option';
+import { LanguageService } from 'src/app/shared/services/language.service';
+import { LevelService } from '../../shared/services/level.service';
 import { SessionService } from '../../shared/services/session.service';
+import { AudioService } from '../audio/audio.service';
 import { initShaders } from '../commons/InitShaders';
 import { flatten, mat4, mult, translate, vec3 } from '../commons/MV';
 import { WebGLUtils } from '../commons/webgl-utils';
-import { World } from '../game/world';
 import { GameService } from '../game.service';
-import { LevelService } from '../../shared/services/level.service';
-import { Level } from 'src/app/models/level';
-import { AudioService } from '../audio/audio.service';
-import { Router } from '@angular/router';
-import { Option } from 'src/app/models/option';
-import { LanguageService } from 'src/app/shared/services/language.service';
+import { World } from '../game/world';
 
 @Component({
     selector: 'app-game',
@@ -56,6 +56,10 @@ export class GameComponent implements OnInit, AfterViewInit {
     public surveyMessage: Option = new Option('Please continue to the survey', 'Bitte fahren Sie mit der Umfrage fort')
     public secondLevelMessage: Option = new Option('Start the Second Level!', 'Fahren Sie mit dem zweiten Level fort!')
 
+    public showDifficulty: boolean = false
+    public difficultyClass: Option = new Option('','')
+    public showInformation: boolean = false
+
     //////////////////
     // Constructors //
     //////////////////
@@ -95,6 +99,21 @@ export class GameComponent implements OnInit, AfterViewInit {
 
         // Requests the lanuage service's current language.
         this.languageService.fetchLanguage()
+
+        this.sessionService.showDifficultyClassSubject.subscribe(showDifficulty => this.showDifficulty = showDifficulty)
+        this.sessionService.difficultyClassSubject.subscribe(difficultyClass => {
+            
+            switch(difficultyClass){
+
+                case 50: this.difficultyClass = new Option('You are within the first quintile of all users', 'Sie befinden sich im ersten Quintil aller Benutzer')
+                case 75: this.difficultyClass = new Option('You are within the second quintile of all users', 'Sie befinden sich im zweiten Quintil aller Benutzer')
+                case 100: this.difficultyClass = new Option('You are within the third quintile of all users', 'Sie befinden sich im dritten Quintil aller Benutzer')
+                case 125: this.difficultyClass = new Option('You are within the fourth quintile of all users', 'Sie befinden sich im vierten Quintil aller Benutzer')
+                case 150: this.difficultyClass = new Option('You are within the fifth quintile of all users', 'Sie befinden sich im fünften Quintil aller Benutzer')
+
+            }
+            
+        })
     }
 
     ngOnInit(): void {
@@ -288,6 +307,12 @@ export class GameComponent implements OnInit, AfterViewInit {
     ngAfterViewInit() {
 
         this.gameService.GL = new WebGLUtils().setupWebGL(this.canvas)
+
+    }
+
+    public toggleDifficultyInformation(): void {
+
+        this.showInformation ? this.showInformation = false : this.showInformation = true
 
     }
 
