@@ -1,5 +1,6 @@
 export class Config {
 
-    public static numberOfLives = 1
+    // Defines the amount of lives a player possesses.
+    public static numberOfLives = 3
 
 }

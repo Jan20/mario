@@ -162,7 +162,7 @@ export class UserService {
     // Constructs a key value for storing a new
     // user at firestore. The key should look
     // like 'user001'.
-    const user: User = new User(key, id)
+    const user: User = new User(key, id, 'english')
 
     // Creates a new entry at Firestore that 
     // corresponds to the newly created user key.
@@ -212,5 +212,86 @@ export class UserService {
     return new Promise<number>(resolve => resolve(highestUserId))
 
   }
+
+  /**
+   * 
+   * Stores the language setting of a given user persistently.
+   * 
+   */
+  public storeLanguage(userKey: string, language: string): void {
+
+    // Updates the Firestore entry of the current user by the
+    // newly adopted language setting.
+    this.angularFirestore.doc(`users/${userKey}`).update({
+      
+      'key': userKey,
+      'language': language
+    
+    })
+
+  }
+
+  public async getLanguage(userKey: string): Promise<string> {
+
+    let language = 'english'
+
+    // Checks whether the user_id stored at the user's browser
+    // actually exists within the firestore database. This should
+    // be always the case unless the user's entry has been explicitly
+    // deleted from the database or the dataset got somehow corrupted.
+    await this.angularFirestore.doc(`users/${userKey}`).get().toPromise().then(async user => {
+      
+      // Creates a new user.
+      language = user.data().language 
+    
+    })
+
+    return new Promise<string>(resolve => resolve(language))
+
+  }
+
+  /**
+   * 
+   * Stores the language setting of a given user persistently.
+   * 
+   */
+  public storeDeviceType(deviceType: string): void {
+
+    this.getCurrentUserKey().then(userKey => {
+    
+      // Updates the Firestore entry of the current user by the
+      // newly adopted language setting.
+      this.angularFirestore.doc(`users/${userKey}`).update({
+        
+        'key': userKey,
+        'deviceType': deviceType
+      
+      })
+    
+    })
+
+  }
+
+  /**
+   * 
+   * Stores the language setting of a given user persistently.
+   * 
+   */
+  public storeTutorial(tutorial: string): void {
+
+    this.getCurrentUserKey().then(userKey => {
+
+      this.angularFirestore.doc(`users/${userKey}`).update({
+        
+        'key': userKey,
+        'tutorial': tutorial
+      
+      })
+
+    })
+    
+  }
+
+
 
 }

@@ -36,8 +36,8 @@ export class Part1Component implements OnInit {
    */
   public question: Option = new Option(
   
-    'Which of the two levels you just played was more fun for you?', 
-    'Welches der beiden Levels, die Sie gerade gespielt haben, hat Ihnen mehr Spaß gemacht?'
+    'Which of the two levels you just played was more <b>fun for you</b>?', 
+    'Welches der beiden Levels, die Sie gerade gespielt haben, hat Ihnen mehr <b>Spaß gemacht</b>?'
   
   )
 

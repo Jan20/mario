@@ -11,7 +11,7 @@ import { firestore } from "firebase";
 */
 export class Samples {
 
-    public static sampleUser: User = new User('user_042', 42)
+    public static sampleUser: User = new User('user_042', 42, 'german')
 
     public static samplePerformance: Performance = new Performance(
         

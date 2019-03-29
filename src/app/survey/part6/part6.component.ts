@@ -32,17 +32,12 @@ export class Part6Component implements OnInit {
    */
   public questionPart1: Option = new Option(
   
-    'Please decide to what extent you would agree with the statement "The presence of walking opponents (', 
-    'Bitte entscheiden Sie, inwieweit Sie der Aussage "Die Anwesenheit von laufenden Gegnern ('
+    'Please decide to what extent you would agree with the statement “<b>Opponents placed at choke points</b> such as gaps or plateaus pose a challenge.“', 
+    'Bitte entscheiden Sie, inwieweit Sie der folgenden Aussage zustimmen würden: „<b>Gegner, die an Engstellen</b> wie Lücken oder auf Plateaus plaziert sind, stellen eine Herausforderung dargestellt.“'
   
   )
 
-  public questionPart2: Option = new Option(
-  
-    ') makes the game more challenging".', 
-    ') zustimmen würden'
-  
-  )
+  public questionPart2: Option = new Option('', '')
   
   /**
    * 

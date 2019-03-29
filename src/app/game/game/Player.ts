@@ -152,8 +152,7 @@ export class Player extends MovableObject{
             
             }
         }
-        // document.getElementById("2").innerHTML = "walktime: " + this.walktime
-        // document.getElementById("3").innerHTML = "texIndex: " + this.texIndex
+
         if (!this.collisionDown) {
         
             this.texIndex = this.gameService.GAMEWORLD.levelTextures.player.textures.length - 2

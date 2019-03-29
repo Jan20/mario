@@ -32,18 +32,13 @@ export class Part4Component implements OnInit {
    */
   public questionPart1: Option = new Option(
   
-    'Please decide to what extent you would agree with the statement "The presence of walking opponents (', 
-    'Bitte entscheiden Sie, inwieweit Sie der Aussage "Die Anwesenheit von laufenden Gegnern ('
+    'Please decide to what extent you would agree with the statement: “The <b>amount of opponents</b> pose a challenge.“', 
+    'Bitte entscheiden Sie, inwieweit Sie der folgenden Aussage zustimmen würden: „Die <b>Anzahl der Gegner</b> stellt eine Herausforderung dar.“'
   
   )
 
-  public questionPart2: Option = new Option(
-  
-    ') makes the game more challenging".', 
-    ') zustimmen würden'
-  
-  )
-  
+  public questionPart2: Option = new Option('', '')
+
   /**
    * 
    * Defines five options on a Likert scale.
@@ -144,11 +139,11 @@ export class Part4Component implements OnInit {
   public async continue(): Promise<void> {
 
     // Passes the given answer to the survey service. 
-    this.answer != undefined ? await this.surveyService.survey.storePerceptionOfWideGaps(this.answer) : null
+    this.answer != '' ? await this.surveyService.survey.storePerceptionOfNumberOfOpponents(this.answer) : null
 
     // Checks whether a valid answer was given. If this is the case,
     // the user can progress to the next step of the survey.
-    this.answer != undefined ? this.router.navigate(['survey/part_5']) : null
+    this.answer != '' ? this.router.navigate(['survey/part_5']) : null
   
   }
   

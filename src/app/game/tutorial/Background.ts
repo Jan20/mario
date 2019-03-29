@@ -51,7 +51,7 @@ export class Background {
      */
     public generateNormals(nBuffer: number[][]): void {
 
-        for (var i = 0; i < 6; i++){
+        for (let i = 0; i < 6; i++){
 
             nBuffer.push([1, 0, 0]);
  

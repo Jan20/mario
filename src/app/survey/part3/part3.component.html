@@ -1,7 +1,7 @@
 <div class='content'>
 
-    <p class='question' *ngIf='language == "english"'>{{question.english}}</p>
-    <p class='question' *ngIf='language == "german" '>{{question.german}}</p>
+    <p class='question' *ngIf='language == "english"' [innerHTML]="question.english"></p>
+    <p class='question' *ngIf='language == "german" ' [innerHTML]="question.german"></p>
 
     <div *ngIf='language == "english"'>
 

@@ -1,16 +1,9 @@
 <div class='content'>
 
-    <p class='question' *ngIf='language == "english"'>
-        {{questionPart1.english}}
-        <img  src='/assets/survey/gaps.png' class='image'>
-        {{questionPart2.english}}
-    </p>
-
-    <p class='question' *ngIf='language == "german"'>
-        {{questionPart1.german}}
-        <img  src='/assets/survey/gaps.png' class='image'>
-        {{questionPart2.german}}
-    </p>
+    <p class='question' *ngIf='language == "english"' [innerHTML]="questionPart1.english"></p>
+    <p class='question' *ngIf='language == "english"' [innerHTML]="questionPart2.english"></p>
+    <p class='question' *ngIf='language == "german"' [innerHTML]="questionPart1.german"></p>
+    <p class='question' *ngIf='language == "german"' [innerHTML]="questionPart2.german"></p>
 
     <div *ngIf='language == "english"'>
 

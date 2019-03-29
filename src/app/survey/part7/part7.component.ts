@@ -35,7 +35,7 @@ export class Part7Component implements OnInit {
   public question: Option = new Option(
   
     'How many hours a week do you spend playing video games?', 
-    'Wie viele Stunden pro Woche verbringst Sie mit dem Spielen von Videospielen?'
+    'Wie viele Stunden pro Woche spielen Sie Videospiele?'
   
   )
 
@@ -45,17 +45,17 @@ export class Part7Component implements OnInit {
    * for the user's answer.
    * 
    */
-  public usage: string = '0'
+  public usage: string
   public answer: string
 
   public usageControl = new FormControl();
   public usageOptionsEnglish: string[] = [
     
-    'none',
+    '0',
     '1-3',
     '4-7',
     '8-10',
-    '10-15',
+    '11-15',
     '16-20',
     'more than 15',
   
@@ -63,11 +63,11 @@ export class Part7Component implements OnInit {
 
   public usageOptionsGerman: string[] = [
     
-    'keine',
+    '0',
     '1-3',
     '4-7',
     '8-10',
-    '10-15',
+    '11-15',
     '16-20',
     'mehr als 20',
   

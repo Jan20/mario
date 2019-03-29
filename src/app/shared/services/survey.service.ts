@@ -59,6 +59,8 @@ export class SurveyService {
 
     await this.angularFirestore.doc(`users/${userKey}/surveys/survey_001`).set(this.survey.toObject())
 
+    localStorage.removeItem('user_key');
+
     return new Promise<string>(resolve => resolve('surveyStored'))
 
   }

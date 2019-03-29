@@ -51,14 +51,16 @@ export class GameComponent implements OnInit, AfterViewInit {
     public livesString: Option = new Option('Lives: ', 'Leben: ')
 
     public completedMessage: Option = new Option('Level Completed!', 'Level abgeschlossen!')
-    public lostMessage: Option = new Option('Thank you for having played the level!', 'Danke, dass Sie das Level gespielt hast!')
-    public waitMessage: Option = new Option('Please wait a second ...', 'Bitte warten Sie eine Sekunde ...')
-    public surveyMessage: Option = new Option('Please continue to the survey', 'Bitte fahren Sie mit der Umfrage fort')
-    public secondLevelMessage: Option = new Option('Start the Second Level!', 'Fahren Sie mit dem zweiten Level fort!')
+    public lostMessage: Option = new Option('Thank you for having played the level!', 'Danke, dass Sie das Level gespielt haben!')
+    public waitMessage: Option = new Option('loading...', 'lädt...')
+    public surveyMessage: Option = new Option('Continue with the survey', 'Weiter zur Umfrage')
+    public secondLevelMessage: Option = new Option('Continue with level 2', 'Weiter mit Level 2')
 
-    public showDifficulty: boolean = false
+    public showDifficulty: boolean = false  
     public difficultyClass: Option = new Option('','')
     public showInformation: boolean = false
+
+    public holdsPowerUp: boolean = false
 
     //////////////////
     // Constructors //
@@ -114,6 +116,9 @@ export class GameComponent implements OnInit, AfterViewInit {
             }
             
         })
+
+        this.sessionService.powerUpSubject.subscribe(holdsPowerUp => this.holdsPowerUp = holdsPowerUp)
+
     }
 
     ngOnInit(): void {
@@ -138,6 +143,7 @@ export class GameComponent implements OnInit, AfterViewInit {
     async handleKey(event: KeyboardEvent) {
 
         event.key === 'Enter' ? this.startNewLevel() : null
+        event.key === 'ArrowRight' ? this.startNewLevel() : null
 
     }
 
@@ -151,7 +157,6 @@ export class GameComponent implements OnInit, AfterViewInit {
         // Checks whether the user can progress to the survey.
         if (this.readyForSurvey) {
 
-            // 
             this.progressToSurvey()
             return
 
@@ -262,8 +267,8 @@ export class GameComponent implements OnInit, AfterViewInit {
         this.audioService.playTheme()
 
         // for hud initialization
-        this.sessionService.resetTimer();
-        this.sessionService.myTimer();
+        this.sessionService.resetTimer()
+        this.sessionService.startTimer()
 
         this.render();
     }

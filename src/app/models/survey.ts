@@ -15,12 +15,9 @@ export class Survey {
 
     private preferred_challenge_level: number
 
-    private perception_opponent_type_1
-    private perception_opponent_type_2
-    private perception_opponent_type_3
-    private perception_wide_gaps
-    private perception_number_of_opponents
-    private perception_opponents_at_choke_points
+    private perception_number_of_opponents: string
+    private perception_opponents_next_to_each_other: string
+    private perception_opponents_at_choke_points: string
 
     private age: string
     private gender: string
@@ -70,34 +67,16 @@ export class Survey {
         this.preferred_challenge_level = preferredChallengeLevel
     
     }
-
-    public storePerceptionOfOpponentType1(perception_opponent_type_1: string): void {
-
-        this.perception_opponent_type_1 = perception_opponent_type_1
-
-    }
-
-    public storePerceptionOfOpponentType2(perception_opponent_type_2: string): void {
-
-        this.perception_opponent_type_2 = perception_opponent_type_2
-
-    }
-
-    public storePerceptionOfOpponentType3(perception_opponent_type_3: string): void {
-
-        this.perception_opponent_type_3 = perception_opponent_type_3
-
-    }
     
-    public storePerceptionOfWideGaps(perception_wide_gaps: string): void {
-
-        this.perception_wide_gaps = perception_wide_gaps
-
-    }
-
-    public storePerceptionOfNumberOfComponents(perception_number_of_opponents: string): void {
+    public storePerceptionOfNumberOfOpponents(perception_number_of_opponents: string): void {
 
         this.perception_number_of_opponents = perception_number_of_opponents
+
+    }
+
+    public storePerceptionOfOpponentsNextToEachOther(perception_opponents_next_to_each_other: string): void {
+ 
+        this.perception_opponents_next_to_each_other = perception_opponents_next_to_each_other
 
     }
 
@@ -137,8 +116,8 @@ export class Survey {
             
             "prefered_challenge_level": this.preferred_challenge_level,
 
-            "perception_wide_gaps": this.perception_wide_gaps,
             "perception_number_of_opponents": this.perception_number_of_opponents,
+            "perception_opponents_next_to_each_other": this.perception_opponents_next_to_each_other,
             "perception_opponents_at_choke_points": this.perception_opponents_at_choke_points,
 
             "age: string": this.age,

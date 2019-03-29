@@ -27,6 +27,17 @@ span {
 
 	}
 
+
+	.image {
+
+		margin-top: 10px;
+		border-radius: 1px;
+		height: 20px;
+		width: 30px;
+		border-radius: 5px;
+
+	}
+
 }
 
 @media (max-width: 600px) {
@@ -36,6 +47,16 @@ span {
 		display: none;
 
 	}
+
+.image {
+
+	margin-top: 10px;
+	border-radius: 1px;
+	height: 20px;
+	width: 30px;
+	border-radius: 5px;
+
+}
 
 }
 
@@ -68,5 +89,15 @@ span {
 button {
 
 	margin-right: 0;
+
+}
+
+.image {
+
+	margin-top: 10px;
+	border-radius: 1px;
+	height: 20px;
+	width: 30px;
+	border-radius: 5px;
 
 }

@@ -1,16 +1,16 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
+import { Router } from '@angular/router';
 import { firestore } from 'firebase';
 import { interval, Subject } from 'rxjs';
-import { CloudService } from 'src/app/shared/services/cloud.service';
 import { Config } from 'src/app/config/config';
-import { Helper } from 'src/app/shared/helper';
 import { Level } from 'src/app/models/level';
+import { Helper } from 'src/app/shared/helper';
+import { CloudService } from 'src/app/shared/services/cloud.service';
 import { SurveyService } from 'src/app/shared/services/survey.service';
 import { Performance } from '../../models/performance';
 import { Session } from '../../models/session';
 import { UserService } from './user.service';
-import { Router } from '@angular/router';
 
 @Injectable({
 
@@ -26,6 +26,8 @@ export class SessionService {
   // Holds a reference to the currently played session.
   public session: Session
 
+  // Defines an array intended to store the two most
+  // recently finished sessions of a given user.
   private recentSessions: Session[]
 
   // Holds a reference to the currently played level.
@@ -34,7 +36,6 @@ export class SessionService {
   // Defines the number of lives the player starts with.
   private lives: number = Config.numberOfLives
 
-  // 
   private consecutiveSessions: number = 0
 
   public statusSubject: Subject<string> = new Subject<string>()
@@ -76,7 +77,7 @@ export class SessionService {
 
   ) {
 
-    for(let i = 0; i < 50; i++) {
+    for(let i = 0; i < 100; i++) {
 
       this.keyArray[i] = false
 
@@ -427,7 +428,7 @@ export class SessionService {
 private startTime = new Date().getTime();
 private timeElapsed = 0;
 
-public myTimer(): void {
+public startTimer(): void {
     
   interval(1000).subscribe( () => {
           
@@ -456,12 +457,6 @@ public resetTimer(): void {
   /////////////
   // Getters //
   /////////////
-
-  /**
-   * 
-   * Returns the session's level.
-   * 
-   */
   public getLevel(): Level {
 
     return this.level
@@ -480,16 +475,15 @@ public resetTimer(): void {
 
   }
 
+  public getLives(): number {
+
+    return this.lives
+
+  }
+
   /////////////
   // Setters //
   /////////////
-  /**
-   * 
-   * Sets a 
-   * 
-   * @param session: A new object of class Session
-   * 
-   */
   public setSession(session: Session): void { 
     
     this.session = session
@@ -509,12 +503,11 @@ public resetTimer(): void {
 
   }
 
-  public getLives(): number {
+  public setProgress(progress: number): void {
 
-    return this.lives
+    progress > this.session.performance.progress ? this.session.performance.progress = progress : null
 
   }
-
 
   //////////////////////
   // Helper Functions //
@@ -550,12 +543,6 @@ public resetTimer(): void {
     
   }
 
-  public setProgress(progress: number): void {
-
-    this.session.performance.progress = progress
-
-  }
-
   public increaseLives(): void {
 
     this.lives += 1
@@ -565,6 +552,10 @@ public resetTimer(): void {
 
   public decreaseLives(): void {
 
+    // Player looses the ability to shoot snowballs, which
+    // should result in hiding the corresponding button on
+    // mobile devices.
+    this.powerUpSubject.next(false)
     this.lives -= 1
     this.lifeSubject.next(this.lives)
 

@@ -160,17 +160,40 @@ export class World {
 
         //
         // Mechanism to facilitate movements, by catching key events
-        // and mapping such events to a an array 
+        // and mapping such events to a an array storing active key
+        // strokes.
         // 
         document.addEventListener('keydown', (event: KeyboardEvent) => {
+
+            // Enables the use of 'a', 'w' and 'd' keys instead of 
+            // the usual arrow keys.
+            switch(event.key) {
+                case 'a': this.sessionService.keyArray[37] = true; break
+                case 'w': this.sessionService.keyArray[38] = true; break
+                case 'd': this.sessionService.keyArray[39] = true; break
+            }
             
+            // 
             this.sessionService.keyArray[event.keyCode] = true
-            event.key === 'ArrowLeft' ? this.player.texDir = 1 : null
-            event.key === 'ArrowRight' ? this.player.texDir = 0 : null
+
+            event.key === 'ArrowLeft' || event.key === 'a' ? this.player.texDir = 1 : null
+            event.key === 'ArrowRight' || event.key === 'd'  ? this.player.texDir = 0 : null
          
         })
 
-        document.addEventListener('keyup', (event: KeyboardEvent) => this.sessionService.keyArray[event.keyCode] = false)
+        document.addEventListener('keyup', (event: KeyboardEvent) => {
+            
+            // Enables the use of 'a', 'w' and 'd' keys instead of 
+            // the usual arrow keys.
+            switch(event.key) {
+                case 'a': this.sessionService.keyArray[37] = false; break
+                case 'w': this.sessionService.keyArray[38] = false; break
+                case 'd': this.sessionService.keyArray[39] = false; break
+            }
+
+            this.sessionService.keyArray[event.keyCode] = false
+
+        })
 
         this.sessionService.selectActiveKeySubject.subscribe(keyCode => {
 
@@ -224,11 +247,10 @@ export class World {
             this.sessionService.tutorialHasBeenFinished = true
             
             this.audioService.stopMusic()
-            this.sessionService.setProgress(200)
+            this.sessionService.setProgress(this.player.pos[0])
             this.audioService.playFinished()
             // Stores all collected gameplay information
             // of the current session at Firestore.
-            this.sessionService.setProgress(200)
             this.player.resetToDefault()
             this.player.restartLevel()
             this.hasFinished = true

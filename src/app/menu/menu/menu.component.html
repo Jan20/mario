@@ -10,7 +10,8 @@
   </button>
 
   <button mat-button (click)='switchLanguage()'>
-    <mat-icon>translate</mat-icon>
+    <p *ngIf='language === "german"'><img src='/assets/languages/english.png' class='image'></p>
+    <p *ngIf='language === "english"'><img src='/assets/languages/german.png' class='image'></p>
   </button>
   
 </mat-toolbar>

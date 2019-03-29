@@ -60,6 +60,7 @@
         padding: 10px;
         border-radius: 10%;
         font-size: 24px;
+        color: rgb(80, 80, 80);
 
     }
 }
@@ -92,7 +93,7 @@
     .description {
 
         height: 50px;
-        margin-top: -45px;
+        margin-top: -40px;
         margin-left: 60px;
 
     }
@@ -100,7 +101,7 @@
     .description-last {
 
         height: 50px;
-        margin-top: -45px;
+        margin-top: -40px;
         margin-left: 60px;
     
     }
@@ -111,6 +112,7 @@
         padding: 10px;
         border-radius: 10%;
         font-size: 24px;
+        color: rgb(80, 80, 80);
 
     }
 }
@@ -121,27 +123,18 @@
     font-size: 24px;
     padding: 10px;
     font-weight: 300;
+    color: rgb(80, 80, 80);
     float: right;
-    color: rgb(80, 80, 80)
 
 }
 
 .tutorial-button {
 
-    float: left;
-
+    margin-right: 5px;
 }
 
 .proceed-button {
-
     float: right;
 
+
 }
-
-
-
-
-
-
-
-

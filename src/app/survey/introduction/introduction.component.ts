@@ -37,7 +37,7 @@ export class IntroductionComponent implements OnInit {
       } else {
 
         this.headline = 'Einführung'
-        this.text = "Sie sind eingeladen, zwei Level eines klassischen Jump'n'Run Spiels zu spielen und anschließend eine kleine Umfrage zu beantworten, was insgesamt maximal 10 Minuten in Anspruch nehmen sollte."
+        this.text = "Sie sind eingeladen, <b>zwei Level</b> eines Jump'n'Run-Spiels zu spielen und anschließend eine kurze Umfrage zu beantworten, was insgesamt maximal 10 Minuten in Anspruch nehmen sollte."
         this.button = 'Weiter'
 
       }
@@ -59,8 +59,12 @@ export class IntroductionComponent implements OnInit {
     event.key === 'Enter' ? this.proceed() : null
     
   }
-    
-
+  
+  /**
+   * 
+   * 
+   * 
+   */
   public proceed(): void {
 
     this.router.navigate(['description'])

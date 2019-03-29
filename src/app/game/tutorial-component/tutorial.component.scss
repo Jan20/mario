@@ -5,12 +5,22 @@
     .content {
 
         width: 100%;
-        height: 320px;
+        padding-top: 100%;
         padding: 0;
         margin: 0;
         padding-top: -10px;
         font-size: 12px;
     
+    }
+
+    .controls {
+
+        position: absolute;
+        width: 100%;
+        font: left;
+        margin-top: 2px;
+        animation: none;
+
     }
 
     .canvas-container {
@@ -23,7 +33,7 @@
     .canvas {
 
         width: 100%;
-        border-radius: 10px;
+        border-radius: none;
         background-image: url('/assets/background.png'); 
         margin: 0 !important;
 
@@ -83,38 +93,54 @@
 
     .control-button-left {
 
-        background-color: rgb(10, 80, 140);
+        background-color: rgb(50, 130, 180);
         color: white;
-        float: left;
         margin-left: 3px;
-        border-radius: 7px;
+        border-radius: 25%;
 
     }
     
     .control-button-right {
 
-        background-color: rgb(10, 80, 140);
+        background-color: rgb(50, 130, 180);
         color: white;
+        margin-left: 3px;
+        border-radius: 25%;
+
+    }
+    
+    .left-control-buttons {
+    
+        float: left;
+
+    }
+    
+    .right-control-buttons {
+
         float: right;
-        margin-left: 3px;
-        margin-left: 3px;
-        border-radius: 7px;
 
     }
 
     .control-icon {
 
+        position: relative;
         color: white;
+        animation: none !important;
 
+    }
+
+    .ice-bullet {
+
+        margin-top: -10px;
     }
 
     .menu {
 
         height: 400px;
         width: 100%;
-        border-radius: 10px;
+        border-radius: none;
         background-image: url('/assets/background.png'); 
-
+        cursor: default;
     }
 
     h1 {
@@ -148,8 +174,8 @@
     .instructions {
 
         margin: auto;
-        margin-top: 50px;
-        width: 100%;
+        margin-top: 35px;
+        width: 90%;
         position: absolute; 
         z-index: 12;
 
@@ -161,16 +187,15 @@
         width: 10px;
         float: left;
         position: absolute;
-        margin: 10px;
-        margin-top: 50px;
+        margin-left: 10px;
+        animation: fadeIn 4s ease-in-out;
 
     }
 
     .instruction {
 
-        width: 80%;
+        width: 90%;
         text-align: left;
-        margin-top: 50px;
         margin-left: 33px;
         font-weight: 300;
         display: inline-block;
@@ -185,9 +210,8 @@
 
     .instruction-completed {
         
-        width: 80%;
+        width: 90%;
         text-align: left;
-        margin-top: 50px;
         margin-left: 33px;
         font-weight: 300;
         display: inline-block;
@@ -195,7 +219,7 @@
         font-family: Tux;
         font-size: 14px;
         position: absolute;
-        color: rgb(220, 255, 192);
+        color: rgba(198, 233, 169, 0.822);
         opacity: 0;
         animation: fadeOut 4s ease-in-out;
 
@@ -213,7 +237,7 @@
         font-family: Tux;
         font-size: 14px;
         position: absolute;
-        color: rgb(220, 255, 192);
+        color: rgba(198, 233, 169, 0.822);
         opacity: 0;
         animation: fadeOut 0.01s ease-in-out;
 
@@ -269,17 +293,17 @@
 
     }
 
+
     .mat-icon {
         
-        position: absolute;
         color: white;
         animation: fadeIn 4s ease-in-out;
+    
     }
 
     .icon-completed {
         
-        position: absolute;
-        color: rgb(220, 255, 192);
+        color: rgba(198, 233, 169, 0.822);
         opacity: 0;
         animation: fadeOut 4s ease-in-out;
 
@@ -287,12 +311,30 @@
 
     .icon-completed-last {
         
-        position: absolute;
-        color: rgb(220, 255, 192);
+        color: rgba(198, 233, 169, 0.822);
         opacity: 0;
         animation: fadeOut 0.01s ease-in-out;
 
     }
+
+    .ready {
+
+        background-color: rgba(230, 230, 230, 0.7);
+        cursor: pointer; 
+        padding: 20px;
+        transition: background-color 0.5s ease
+    
+    }
+    
+    
+    .ready:hover {
+    
+        background-color: rgba(255, 255, 255, 0.7);
+        cursor: pointer; 
+        transition: background-color 0.5s ease
+    
+    }
+    
 
 }
 
@@ -316,8 +358,6 @@
         
     }
 
-
-
     .ui {
 
         font-family: Tux;
@@ -331,7 +371,7 @@
 
     .ui-element {
 
-        margin-top: 30px;
+        margin-top: 20px;
         margin-left: 12px;
         float:left;
         text-align: center;
@@ -383,6 +423,7 @@
         height: 512px;
         border-radius: 10px;
         background-image: url('/assets/background.png'); 
+        cursor: default;
 
     }
 
@@ -413,13 +454,24 @@
 
     }
 
-    .ready:hover {
+    .ready {
 
+        background-color: rgba(230, 230, 230, 0.7);
+        cursor: pointer; 
+        padding: 20px;
+        transition: background-color 0.5s ease
+    
+    }
+    
+    
+    .ready:hover {
+    
         background-color: rgba(255, 255, 255, 0.7);
         cursor: pointer; 
         transition: background-color 0.5s ease
-
+    
     }
+    
 
     //////////////////
     // Instructions //
@@ -444,6 +496,7 @@
         position: absolute;
         margin: 10px;
         margin-top: 50px;
+        animation: fadeIn 4s ease-in-out;
 
     }
 
@@ -476,7 +529,7 @@
         font-family: Tux;
         font-size: 14px;
         position: absolute;
-        color: rgb(220, 255, 192);
+        color: rgba(198, 233, 169, 0.822);
         opacity: 0;
         animation: fadeOut 4s ease-in-out;
 
@@ -494,7 +547,7 @@
         font-family: Tux;
         font-size: 14px;
         position: absolute;
-        color: rgb(220, 255, 192);
+        color: rgba(198, 233, 169, 0.822);
         opacity: 0;
         animation: fadeOut 0.01s ease-in-out;
 
@@ -552,15 +605,13 @@
 
     .mat-icon {
         
-        position: absolute;
         color: white;
         animation: fadeIn 4s ease-in-out;
     }
 
     .icon-completed {
         
-        position: absolute;
-        color: rgb(220, 255, 192);
+        color: rgba(198, 233, 169, 0.822);
         opacity: 0;
         animation: fadeOut 4s ease-in-out;
 
@@ -568,16 +619,13 @@
 
     .icon-completed-last {
         
-        position: absolute;
-        color: rgb(220, 255, 192);
+        color: rgba(198, 233, 169, 0.822);
         opacity: 0;
         animation: fadeOut 0.01s ease-in-out;
 
     }
 
 }
-
-
 
 .loader {
 
@@ -588,7 +636,6 @@
     z-index: -12;
 
 }
-
 
 .spinner {
     
@@ -642,4 +689,5 @@
         -webkit-transform: scale(1.0);
 
     }
+
 }

@@ -1,12 +1,11 @@
 @font-face { font-family: Tux; src: url('/assets/fonts/tux.ttf'); }
 
-
 @media (max-width: 900px) {
     
     .content {
 
         width: 100%;
-        height: 320px;
+        padding-top: 100%;
         padding: 0;
         margin: 0;
         padding-top: -10px;
@@ -24,9 +23,10 @@
     .canvas {
 
         width: 100%;
-        border-radius: 10px;
+        border-radius: none;
         background-image: url('/assets/background.png'); 
         margin: 0 !important;
+        position: relative;
 
     }
 
@@ -84,36 +84,52 @@
 
     .control-button-left {
 
-        background-color: rgb(10, 80, 140);
+        background-color: rgb(50, 130, 180);
         color: white;
-        float: left;
         margin-left: 3px;
-        border-radius: 7px;
+        border-radius: 25%;
 
     }
     
     .control-button-right {
 
-        background-color: rgb(10, 80, 140);
+        background-color: rgb(50, 130, 180);
         color: white;
+        margin-left: 3px;
+        border-radius: 25%;
+
+    }
+
+    .left-control-buttons {
+    
+        float: left;
+    
+    }
+    
+    .right-control-buttons {
+
         float: right;
-        margin-left: 3px;
-        margin-left: 3px;
-        border-radius: 7px;
 
     }
 
     .control-icon {
 
+        position: relative;
         color: white;
+        animation: none !important;
 
+    }
+
+    .ice-bullet {
+
+        margin-top: -10px;
     }
 
     .menu {
 
         height: 400px;
         width: 100%;
-        border-radius: 10px;
+        border-radius: none;
         background-image: url('/assets/background.png'); 
 
     }
@@ -148,6 +164,16 @@
         visibility: hidden;
 
     }
+
+    .controls {
+
+        position: absolute;
+        width: 100%;
+        font: left;
+        margin-top: 2px;
+
+    }
+
 
 }
 
@@ -185,14 +211,14 @@
         position: absolute;
         z-index: 1; 
         width:500px; 
-        height:20px; 
+        height: 20px; 
         color: white; 
 
     }
 
     .ui-element {
 
-        margin-top: 30px;
+        margin-top: 20px;
         margin-left: 12px;
         float:left;
         text-align: center;
@@ -224,6 +250,8 @@
         color: white
 
     }
+
+
 
     .control-button-left {
 
@@ -285,19 +313,24 @@
 
 }
 
+.ready {
+
+    background-color: rgba(230, 230, 230, 0.7);
+    cursor: pointer; 
+    padding: 20px;
+    transition: background-color 0.5s ease
+
+}
+
+
 .ready:hover {
 
     background-color: rgba(255, 255, 255, 0.7);
     cursor: pointer; 
-    transition: background-color 0.5s ease;
+    transition: background-color 0.5s ease
 
 }
 
-.notification {
-
-    border: none;
-
-}
 
 .check_box {
         
@@ -418,7 +451,4 @@ mat-icon {
         -webkit-transform: scale(1.0);
 
     }
-
-
-
 }

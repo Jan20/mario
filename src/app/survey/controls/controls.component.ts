@@ -35,21 +35,21 @@ export class ControlsComponent implements OnInit {
       if (language === 'english') {
 
         this.headline = 'Controls'
-        this.text = 'Please use the following buttons to move your avatar:'
-        this.control_0 = 'Right arrow Key: Move right'
-        this.control_1 = 'Left arrow key: Move left'
-        this.control_2 = 'Up Key: Jump'
+        this.text = 'You can control your avatar by using the following buttons. Please do not hesitate to try the tutorial before moving to the actual game to familiarize yourself with the controls.'
+        this.control_0 = 'Move right'
+        this.control_1 = 'Move left'
+        this.control_2 = 'Jump'
         this.control_3 = 'Space: Shoot snow balls (after collecting a power-up)'
         this.button = 'Continue'
 
       } else {
 
         this.headline = 'Steuerung'
-        this.text = 'Bitte nutzen Sie folgende Tasten, um Ihren Figure zu bewegen:'
-        this.control_0 = 'Rechte Pfeiltaste: Nach rechts bewegen'
-        this.control_1 = 'Linke Pfeiltaste: Nach links bewegen'
-        this.control_2 = 'obere Pfeiltaste: Springen'
-        this.control_3 = 'Leertaste: Schneebälle schießen (nur mit einem Power-Up möglich)'
+        this.text = 'Bitte benutzen Sie zur Steuerung die Pfeiltasten auf Ihrer Tastatur. Sie haben die Möglichkeit zunächst ein Tutorial zu spielen, um sich mit der Steuerung vertraut zu machen.'
+        this.control_0 = 'Nach rechts bewegen'
+        this.control_1 = 'Nach links bewegen'
+        this.control_2 = 'Springen'
+        this.control_3 = 'Leertaste: Schneeball feuern (nur mit einem Power-Up möglich)'
         this.button = 'Weiter'
 
       }

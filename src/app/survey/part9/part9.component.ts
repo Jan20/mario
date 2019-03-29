@@ -53,7 +53,7 @@ export class Part9Component implements OnInit {
    * for the user's answer.
    * 
    */
-  public age: string = '0'
+  public age: string
   public answer: string
 
   public ageControl = new FormControl();
@@ -78,7 +78,7 @@ export class Part9Component implements OnInit {
 
   ) {
 
-    for (let i = 13; i < 101; i++) {
+    for (let i = 16; i < 101; i++) {
 
       this.ageOptions.push('' + i)
 

@@ -36,8 +36,8 @@ export class Part2Component implements OnInit {
    */
   public question: Option = new Option(
   
-    'Which of the two levels you just played did you find more challenging?', 
-    'Welches der beiden Levels, die Sie gerade gespielt haben, war für Sie anspruchsvoller?'
+    'Which of the two levels you just played did you find <b>more challenging</>?', 
+    'Welches der beiden Level, die Sie gerade gespielt haben, war für Sie <b>anspruchsvoller</b>?'
   
   )
 

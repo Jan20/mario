@@ -45,7 +45,7 @@ export class Part8Component implements OnInit {
    * for the user's answer.
    * 
    */
-  public gender: string = '0'
+  public gender: string
   public answer: string
 
   public genderControl = new FormControl();
@@ -54,7 +54,7 @@ export class Part8Component implements OnInit {
     'male',
     'female',
     'diverse',
-    'prefer not state',
+    'prefer not to state',
   
   ]
 
@@ -63,7 +63,7 @@ export class Part8Component implements OnInit {
     'männlich',
     'weiblich',
     'divers',
-    'mache lieber keine Angabe',
+    'keine Angabe',
   
   ]
 

@@ -31,8 +31,8 @@ export class Part3Component implements OnInit {
    */
   public question: Option = new Option(
   
-    'Please decide to what extent you would agree with the statement "The level of difficulty of the second level was appropriate".', 
-    'Bitte entscheiden Sie, inwieweit Sie mit der Aussage "Der Schwierigkeitsgrad der zweiten Stufe war angemessen" einverstanden sind.'
+    'How would you judge the difficulty of the <b>second level</b>?', 
+    'Wie würden Sie den Schwierigkeitsgrad des <b>zweiten Levels</b> bewerten?'
   
   )
   
@@ -43,11 +43,11 @@ export class Part3Component implements OnInit {
    */
   public options: Option[] = [
     
-    new Option('strongly agree', 'trifft zu'),
-    new Option('agree', 'trifft eher zu'),
-    new Option('neutral', 'teils-teils'),
-    new Option('disagree', 'trifft eher nicht zu'),
-    new Option('strongly disagree', 'trifft nicht zu')
+    new Option('too easy', 'zu einfach'),
+    new Option('easy', 'einfach'),
+    new Option('appropriate', 'angemessen'),
+    new Option('difficult', 'schwierig'),
+    new Option('too difficult', 'zu schwierig')
     
   ]
   
@@ -74,7 +74,7 @@ export class Part3Component implements OnInit {
 
     private router: Router,
     private surveyService: SurveyService,
-    private languageService: LanguageService,
+    private languageService: LanguageService
 
   ) {
     
@@ -136,11 +136,11 @@ export class Part3Component implements OnInit {
   public async continue(): Promise<void> {
 
     // Passes the given answer to the survey service. 
-    this.answer != undefined ? await this.surveyService.survey.storePreferedChallengeLevel(this.answer) : null
+    this.answer != '' ? await this.surveyService.survey.storePreferedChallengeLevel(this.answer) : null
 
     // Checks whether a valid answer was given. If this is the case,
     // the user can progress to the next step of the survey.
-    this.answer != undefined ? this.router.navigate(['survey/part_4']) : null
+    this.answer != '' ? this.router.navigate(['survey/part_4']) : null
   
   }
   

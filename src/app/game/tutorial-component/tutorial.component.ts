@@ -12,6 +12,7 @@ import { initShaders } from '../commons/InitShaders';
 import { flatten, mat4, mult, translate, vec3 } from '../commons/MV';
 import { WebGLUtils } from '../commons/webgl-utils';
 import { World } from '../tutorial/world';
+import { UserService } from 'src/app/shared/services/user.service';
 
 @Component({
     selector: 'app-tutorial',
@@ -60,26 +61,28 @@ export class TutorialComponent implements OnInit, AfterViewInit {
     public livesString: Option = new Option('Lives: ', 'Leben: ')
 
     public tutorialMessage0: Option = new Option('Collect a coin by breaking the cracked ice block by jumping against the bottom side of the block.', 
-        'Sammeln Sie eine Münze, indem Sie den gebrochenen Eisblock brechen, indem Sie gegen die Unterseite des Blocks springen.')
+        'Sammeln Sie eine Münze, indem Sie gegen die Unterseite des angebrochenen Eisblocks springen.')
 
     public tutorialMessage1: Option = new Option('Obtain the ability to shoot snow balls by jumping against the bottom side of the block with the question mark and collect the item available afterwards.', 
-        'Erhalten Sie die Fähigkeit, Schneebälle zu schießen, indem Sie mit dem Fragezeichen gegen die Unterseite des Blocks springen und anschließend den verfügbaren Gegenstand einsammeln.')
+        'Sie können die Fähigkeit Schneebälle zu schießen, erhalten, indem Sie gegen die Unterseite des mit dem Fragezeichen markierten Blocks springen und anschließend den verfügbaren Gegenstand sammeln.')
 
     public tutorialMessage2: Option = new Option('Fire a snowball by pressing the space key on your keyboard.', 
-        'Schieße einen Schneeball, indem du die Leertaste auf deiner Tastatur drückst.')
+        'Schießen Sie einen Schneeball per Leertaste')
 
     public tutorialMessage3: Option = new Option('Defeat all three opponents by either jumping on top of them or hitten them with a snow ball.', 
-        'Besiege alle drei Gegner, indem du entweder auf sie springst oder sie mit einem Schneeball besiegst.')
+        'Besiegen Sie alle drei Gegner, indem Sie entweder auf sie springen oder sie mit einem Schneeball treffen.')
 
     public tutorialMessage4: Option = new Option('Finish the tutorial by reaching the goal field at the right side of the level.', 
-        'Beenden Sie das Tutorial, indem Sie das Zielfeld auf der rechten Seite des Levels erreichen.')
+        'Beenden Sie das Tutorial, indem Sie das Ziel auf der rechten Seite des Levels erreichen.')
 
 
     public leaveMessage: Option = new Option('Thank you for having played the tutorial.', 'Vielen Dank, dass Sie das Tutorial gespielt haben.')
-    public progressMessage: Option = new Option('Progress to the main game.', 'Gehen Sie zum Hauptspiel über.')
+    public progressMessage: Option = new Option('Continue to the first level', 'Weiter zum ersten Level')
     public waitMessage: Option = new Option('Please wait a second ...', 'Bitte warten Sie eine Sekunde ...')
     public surveyMessage: Option = new Option('Please continue to the survey', 'Bitte fahren Sie mit der Umfrage fort')
     public secondLevelMessage: Option = new Option('Start the Second Level!', 'Fahren Sie mit dem zweiten Level fort!')
+
+    public holdsPowerUp: boolean = false
 
     //////////////////
     // Constructors //
@@ -91,6 +94,7 @@ export class TutorialComponent implements OnInit, AfterViewInit {
      */
     public constructor(
 
+        private userService: UserService,
         private gameService: GameService,
         private sessionService: SessionService,
         private levelService: LevelService,
@@ -120,14 +124,23 @@ export class TutorialComponent implements OnInit, AfterViewInit {
         this.sessionService.walkerSubject.subscribe(walkerDefeated => this.walkerDefeated = walkerDefeated)
         this.sessionService.jumperSubject.subscribe(jumperDefeated => this.jumperDefeated = jumperDefeated)
         this.sessionService.flyerSubject.subscribe(flyerDefeated => this.flyerDefeated = flyerDefeated)
-        this.sessionService.finishSubject.subscribe(reachedFinishLine => this.reachedFinishLine = reachedFinishLine)
-        
+        this.sessionService.finishSubject.subscribe(reachedFinishLine => {
+
+            this.userService.storeTutorial('done')
+            this.reachedFinishLine = reachedFinishLine
+       
+        })
+
+
         // Updates the language variable every time
         // the user changes the language setting.
         this.languageService.languageSubject.subscribe(language => this.language = language)
 
         // Requests the lanuage service's current language.
         this.languageService.fetchLanguage()
+
+        this.sessionService.powerUpSubject.subscribe(holdsPowerUp => this.holdsPowerUp = holdsPowerUp)
+
     }
 
     ngOnInit(): void {
@@ -144,10 +157,10 @@ export class TutorialComponent implements OnInit, AfterViewInit {
     @HostListener('document:keydown', ['$event'])
     async handleKey(event: KeyboardEvent) {
 
-        event.key === 'Enter' ? this.progressToTheMainGame() : null
+        this.status === "completed" && event.key === 'Enter' ? this.progressToTheMainGame() : null
+        this.status === "completed" && event.key === 'ArrowRight' ? this.progressToTheMainGame() : null
 
     }
-
     /**
      * 
      * Retrieves 
@@ -199,14 +212,15 @@ export class TutorialComponent implements OnInit, AfterViewInit {
     }
 
 
+
     /**
      * 
      * Directs the user further to the first part of the survey.
      * 
      */
-    public progressToTheMainGame(): void {
+    public async progressToTheMainGame(): Promise<void> {
 
-        this.reachedFinishLine ? this.router.navigate(['game']) : null
+        this.status === "completed" ? this.router.navigate(['game']) : null
     
     }
 
@@ -262,7 +276,7 @@ export class TutorialComponent implements OnInit, AfterViewInit {
 
         // for hud initialization
         this.sessionService.resetTimer();
-        this.sessionService.myTimer();
+        this.sessionService.startTimer();
 
         this.render()
 

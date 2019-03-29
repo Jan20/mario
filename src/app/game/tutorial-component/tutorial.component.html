@@ -5,7 +5,7 @@
     </div>
 </div>    
 
-<div class='instructions'>
+<div class='instructions' *ngIf='status != "completed"'>
 
     <div class='check_box'>
         <mat-icon *ngIf='!coinCollected && !reachedFinishLine' class='mat-icon'>check_box_outline_blank</mat-icon>
@@ -18,7 +18,6 @@
         <p *ngIf='coinCollected && !reachedFinishLine && language == "german"' class='instruction-completed'>{{tutorialMessage0.german}}</p>
     </div>
 
-    
     <div class='check_box'>
         <mat-icon *ngIf='!powerUpCollected && coinCollected && !reachedFinishLine' class='mat-icon'>check_box_outline_blank</mat-icon>
         <mat-icon *ngIf='powerUpCollected && coinCollected && !reachedFinishLine' class='icon-completed' >check_box</mat-icon>
@@ -30,18 +29,16 @@
         <p *ngIf='powerUpCollected && coinCollected && !reachedFinishLine && language == "german"' class='instruction-completed'>{{tutorialMessage1.german}}</p>
     </div>
 
-    
     <div class='check_box'>
         <mat-icon *ngIf='!snowBallShot && powerUpCollected && coinCollected && !reachedFinishLine' class='mat-icon'>check_box_outline_blank</mat-icon>
         <mat-icon *ngIf='snowBallShot && powerUpCollected && coinCollected && !reachedFinishLine' class='icon-completed'>check_box</mat-icon>
     </div>
     <div class='task'>
-        <p *ngIf='!snowBallShot && powerUpCollected && coinCollected && !reachedFinishLine && language == "english"' class='instruction' >{{tutorialMessage2.english}}</p>
-        <p *ngIf='!snowBallShot && powerUpCollected && coinCollected && !reachedFinishLine && language == "german"' class='instruction' >{{tutorialMessage2.german}}</p>
-        <p *ngIf='snowBallShot && powerUpCollected && coinCollected && !reachedFinishLine && language == "english"' class='instruction-completed'>{{tutorialMessage2.english}}</p>
-        <p *ngIf='snowBallShot && powerUpCollected && coinCollected && !reachedFinishLine && language == "german"' class='instruction-completed'>{{tutorialMessage2.german}}</p>
+        <p *ngIf='!reachedFinishLine && !snowBallShot && powerUpCollected && coinCollected && !reachedFinishLine && language == "english"' class='instruction' >{{tutorialMessage2.english}}</p>
+        <p *ngIf='!reachedFinishLine && !snowBallShot && powerUpCollected && coinCollected && !reachedFinishLine && language == "german"' class='instruction' >{{tutorialMessage2.german}}</p>
+        <p *ngIf='!reachedFinishLine && snowBallShot && powerUpCollected && coinCollected && !reachedFinishLine && language == "english"' class='instruction-completed'>{{tutorialMessage2.english}}</p>
+        <p *ngIf='!reachedFinishLine && snowBallShot && powerUpCollected && coinCollected && !reachedFinishLine && language == "german"' class='instruction-completed'>{{tutorialMessage2.german}}</p>
     </div> 
-
 
     <div class='check_box'>
         <mat-icon *ngIf='(!walkerDefeated || !jumperDefeated || !flyerDefeated) && snowBallShot && !reachedFinishLine' class='mat-icon'>check_box_outline_blank</mat-icon>
@@ -53,7 +50,6 @@
         <p *ngIf='(walkerDefeated && jumperDefeated && flyerDefeated) && snowBallShot && coinCollected && powerUpCollected && !reachedFinishLine && language == "english"' class='instruction-completed'>{{tutorialMessage3.english}}</p>
         <p *ngIf='(walkerDefeated && jumperDefeated && flyerDefeated) && snowBallShot && coinCollected && powerUpCollected && !reachedFinishLine && language == "german"' class='instruction-completed'>{{tutorialMessage3.german}}</p>
     </div>
-
 
     <div class='check_box'>
         <mat-icon *ngIf='!reachedFinishLine && (walkerDefeated && jumperDefeated && flyerDefeated)' class='mat-icon'>check_box_outline_blank</mat-icon>
@@ -68,9 +64,10 @@
 
 </div>
  
+
 <div class='content'>
 
-    <div class='menu' *ngIf='status === "completed"'>
+    <div [class.processing]='!isStored' class='menu' *ngIf='status === "completed"'>
 
         <h1 *ngIf='language == "english"'>{{leaveMessage.english}}</h1>
         <h1 *ngIf='language == "german"'>{{leaveMessage.german}}</h1>
@@ -80,7 +77,7 @@
     </div>
 
     <div *ngIf='status === "running"' class='ui'>
-    
+
         <div class='ui-element ui-element-first'>
             <span class='element' *ngIf='language == "english"'>{{timeString.english}}</span>
             <span class='element' *ngIf='language == "german"'>{{timeString.german}}</span>
@@ -101,31 +98,29 @@
 
     </div>
 
-    <div class='canvas-container'>
-        <canvas [style.display]="status === 'running' ? 'inherit' : 'none'" #canvas class='canvas' width="1500" height="1500"></canvas>
+    <canvas [style.display]="status === 'running' ? 'inherit' : 'none'" #canvas class='canvas' width="1500" height="1500"></canvas>
+
+</div>
+
+<div *ngIf='status == "running"' class='controls'>
+
+    <div class='left-control-buttons'>
+        <button class='control-button-left' mat-stroked-button (mousedown)='selectActiveKey(38)' (touchstart)='selectActiveKey(38)' (mouseup)='removeActiveKey(38)' (touchend)='removeActiveKey(38)'>  
+            <mat-icon class='control-icon'>arrow_upward</mat-icon>
+        </button>
+        <button *ngIf='holdsPowerUp' class='control-button-left' mat-stroked-button (mousedown)='selectActiveKey(32)' (touchstart)='selectActiveKey(32)' (mouseup)='removeActiveKey(32)' (touchend)='removeActiveKey(32)'>  
+            <mat-icon class='control-icon ice-bullet'><img src='assets/ui/ice_bullet.png'></mat-icon>
+        </button>
     </div>
-
+    
+    <div class='right-control-buttons'>
+        <button class='control-button-right' mat-stroked-button (mousedown)='selectActiveKey(37)' (touchstart)='selectActiveKey(37)' (mouseup)='removeActiveKey(37)' (touchend)='removeActiveKey(37)'>  
+            <mat-icon class='control-icon'>arrow_backward</mat-icon>
+        </button>
+        <button class='control-button-left' mat-stroked-button (mousedown)='selectActiveKey(39)' (touchstart)='selectActiveKey(39)' (mouseup)='removeActiveKey(39)' (touchend)='removeActiveKey(39)'>  
+            <mat-icon class='control-icon'>arrow_forward</mat-icon>
+        </button>
+    </div>
 </div>
-
-<div *ngIf='status != "completed"'>
-
-    <button class='control-button-left' mat-stroked-button (mousedown)='selectActiveKey(38)' (touchstart)='selectActiveKey(38)' (mouseup)='removeActiveKey(38)' (touchend)='removeActiveKey(38)'>  
-        <mat-icon class='control-icon'>arrow_upward</mat-icon>
-    </button>
     
-    <button class='control-button-left' mat-stroked-button (mousedown)='selectActiveKey(32)' (touchstart)='selectActiveKey(32)' (mouseup)='removeActiveKey(32)' (touchend)='removeActiveKey(32)'>  
-        <mat-icon class='control-icon'>space_bar</mat-icon>
-    </button>
     
-    <button class='control-button-right' mat-stroked-button (mousedown)='selectActiveKey(39)' (touchstart)='selectActiveKey(39)' (mouseup)='removeActiveKey(39)' (touchend)='removeActiveKey(39)'>  
-        <mat-icon class='control-icon'>arrow_forward</mat-icon>
-    </button>
-    
-    <button class='control-button-right' mat-stroked-button (mousedown)='selectActiveKey(37)' (touchstart)='selectActiveKey(37)' (mouseup)='removeActiveKey(37)' (touchend)='removeActiveKey(37)'>  
-        <mat-icon class='control-icon'>arrow_backward</mat-icon>
-    </button>
-
-</div>
-
-
-
