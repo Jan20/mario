@@ -1,11 +1,11 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
-import { SurveyService } from 'src/app/shared/services/survey.service';
-import { startWith, map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
 import { Option } from 'src/app/models/option';
 import { LanguageService } from 'src/app/shared/services/language.service';
+import { SurveyService } from 'src/app/shared/services/survey.service';
 
 @Component({
   selector: 'app-part8',

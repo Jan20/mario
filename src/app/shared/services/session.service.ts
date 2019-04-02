@@ -46,8 +46,9 @@ export class SessionService {
   public scoreSubject: Subject<string> = new Subject<string>()
   public lifeSubject: Subject<number> = new Subject<number>()
 
-  public difficultyClassSubject: Subject<number> = new Subject<number>()
-  public showDifficultyClassSubject: Subject<boolean> = new Subject<boolean>()
+
+  public timeElapsedSubject: Subject<number> = new Subject<number>()
+  public rawScoreSubject: Subject<number> = new Subject<number>()
 
   // Tutorial
   public coinSubject: Subject<boolean> = new Subject<boolean>()
@@ -63,6 +64,8 @@ export class SessionService {
   public selectActiveKeySubject: Subject<number> = new Subject<number>()
 
   public keyArray: boolean[] = []
+
+  public performanceSubject: Subject<number> = new Subject<number>()
 
   //////////////////
   // Constructors //
@@ -222,6 +225,7 @@ export class SessionService {
     
     canProgressToSurvey ? this.readyForSurveySubject.next(canProgressToSurvey): null
     canProgressToSurvey ? this.sessionSubject.next('stored') : null
+    canProgressToSurvey ? this.performanceSubject.next(this.session.performance.difficulty): null
 
     // Calls the backend in order to adapt the difficulty of the next level.
     await this.cloudService.evolveLevel(userKey)
@@ -437,6 +441,7 @@ public startTimer(): void {
     this.timeElapsed += Math.floor((timeNow - this.startTime)/1000)
     
     this.session.performance.time = this.timeElapsed
+    this.timeElapsedSubject.next(this.session.performance.time)
 
     this.timeSubject.next(Helper.buildSixDigitNumber(this.timeElapsed))
 
@@ -487,7 +492,6 @@ public resetTimer(): void {
   public setSession(session: Session): void { 
     
     this.session = session
-    this.difficultyClassSubject.next(session.performance.difficulty)
   
   }
 
@@ -539,6 +543,7 @@ public resetTimer(): void {
   public increaseScore(value: number): void {
 
     this.session.performance.score += value
+    this.rawScoreSubject.next(this.session.performance.score)
     this.scoreSubject.next(Helper.buildSixDigitNumber(this.session.performance.score))
     
   }

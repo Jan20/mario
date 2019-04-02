@@ -32,8 +32,8 @@ export class Part5Component implements OnInit {
    */
   public questionPart1: Option = new Option(
   
-    'Please decide to what extent you would agree with the statement “<b>Opponents placed close to each other</b> present a challenge.“', 
-    'Bitte entscheiden Sie, inwieweit Sie der folgenden Aussage zustimmen würden: „<b>Nahe bei einander platzierte Gegner</b> stellen eine Herausforderung dar.“'
+    'Please decide to what extent you would agree with the statement “<b>Opponents placed very closely to each other</b> presented a challenge in the second level.“', 
+    'Bitte entscheiden Sie, inwieweit Sie der folgenden Aussage zustimmen würden: „<b>Nahe bei einander platzierte Gegner</b> stellten im zweiten Level eine Herausforderung dar.“'
   
   )
 

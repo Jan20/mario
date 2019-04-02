@@ -1,53 +1,53 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+// import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { IntroductionComponent } from './introduction.component';
-import { MaterialModule } from 'src/app/config/material.module';
-import { TuxModule } from 'src/app/tux/tux.module';
-import { AngularFireModule } from '@angular/fire';
-import { environment } from 'src/environments/environment';
-import { AngularFirestore } from '@angular/fire/firestore';
-import { RouterModule } from '@angular/router';
-import { APP_BASE_HREF } from '@angular/common';
-import { RouterTestingModule } from '@angular/router/testing';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+// import { IntroductionComponent } from './introduction.component';
+// import { MaterialModule } from 'src/app/config/material.module';
+// import { TuxModule } from 'src/app/tux/tux.module';
+// import { AngularFireModule } from '@angular/fire';
+// import { environment } from 'src/environments/environment';
+// import { AngularFirestore } from '@angular/fire/firestore';
+// import { RouterModule } from '@angular/router';
+// import { APP_BASE_HREF } from '@angular/common';
+// import { RouterTestingModule } from '@angular/router/testing';
+// import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-describe('IntroductionComponent', () => {
-  let component: IntroductionComponent;
-  let fixture: ComponentFixture<IntroductionComponent>;
+// describe('IntroductionComponent', () => {
+//   let component: IntroductionComponent;
+//   let fixture: ComponentFixture<IntroductionComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ 
+//   beforeEach(async(() => {
+//     TestBed.configureTestingModule({
+//       declarations: [ 
         
-        IntroductionComponent,
+//         IntroductionComponent,
 
-      ], 
-      imports: [ 
+//       ], 
+//       imports: [ 
         
-        MaterialModule, 
-        TuxModule,
-        AngularFireModule.initializeApp(environment.firebaseConfig),
-        RouterTestingModule,
-        BrowserAnimationsModule,
+//         MaterialModule, 
+//         TuxModule,
+//         AngularFireModule.initializeApp(environment.firebaseConfig),
+//         RouterTestingModule,
+//         BrowserAnimationsModule,
 
-      ], 
-      providers: [
+//       ], 
+//       providers: [
 
-        AngularFirestore,
-        {provide: APP_BASE_HREF, useValue : '/' }
+//         AngularFirestore,
+//         {provide: APP_BASE_HREF, useValue : '/' }
 
-      ]
-      })
-    .compileComponents();
-  }));
+//       ]
+//       })
+//     .compileComponents();
+//   }));
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(IntroductionComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+//   beforeEach(() => {
+//     fixture = TestBed.createComponent(IntroductionComponent);
+//     component = fixture.componentInstance;
+//     fixture.detectChanges();
+//   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-});
+//   it('should create', () => {
+//     expect(component).toBeTruthy();
+//   });
+// });

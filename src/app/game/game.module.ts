@@ -4,7 +4,6 @@ import { GameComponent } from './game-component/game.component';
 import { LevelService } from '../shared/services/level.service';
 import { HttpClientModule } from '@angular/common/http';
 import { MaterialModule } from '../config/material.module';
-import { AudioComponent } from './audio/audio.component';
 import { SharedModule } from '../shared/shared.module';
 import { TutorialComponent } from './tutorial-component/tutorial.component';
 import { GameService } from './game.service';
@@ -13,7 +12,6 @@ import { GameService } from './game.service';
   declarations: [
 
     GameComponent,
-    AudioComponent,
     TutorialComponent,
 
   ],
@@ -35,7 +33,6 @@ import { GameService } from './game.service';
 
     GameComponent,
     MaterialModule,
-    AudioComponent,
 
   ]
 })

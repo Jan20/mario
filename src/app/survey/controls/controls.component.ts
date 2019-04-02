@@ -19,6 +19,7 @@ export class ControlsComponent implements OnInit {
   public control_2: string = ''
   public control_3: string = ''
   public button: string = ''
+  public tutorialButton: string = ''
 
   //////////////////
   // Constructors //
@@ -41,6 +42,7 @@ export class ControlsComponent implements OnInit {
         this.control_2 = 'Jump'
         this.control_3 = 'Space: Shoot snow balls (after collecting a power-up)'
         this.button = 'Continue'
+        this.tutorialButton = 'Try the Tutorial'
 
       } else {
 
@@ -51,6 +53,7 @@ export class ControlsComponent implements OnInit {
         this.control_2 = 'Springen'
         this.control_3 = 'Leertaste: Schneeball feuern (nur mit einem Power-Up möglich)'
         this.button = 'Weiter'
+        this.tutorialButton = 'Tutorial Spielen'
 
       }
 
@@ -68,7 +71,7 @@ export class ControlsComponent implements OnInit {
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
     
-    event.key === 'Enter' ? this.proceed() : null
+    event.key === 'Enter' ? this.switchToTutorial() : null
     
   }
     

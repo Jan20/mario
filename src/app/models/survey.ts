@@ -1,7 +1,3 @@
-import { Performance } from '../models/performance'
-import { firestore } from 'firebase';
-import { Session } from './session';
-
 export class Survey {
 
     ///////////////

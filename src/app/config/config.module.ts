@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFireDatabaseModule } from '@angular/fire/database';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
+import { RouterModule } from '@angular/router';
 import { environment } from '../../environments/environment';
 import { ROUTES } from './routing.config';
 

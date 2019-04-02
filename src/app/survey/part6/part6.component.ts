@@ -32,8 +32,8 @@ export class Part6Component implements OnInit {
    */
   public questionPart1: Option = new Option(
   
-    'Please decide to what extent you would agree with the statement “<b>Opponents placed at choke points</b> such as gaps or plateaus pose a challenge.“', 
-    'Bitte entscheiden Sie, inwieweit Sie der folgenden Aussage zustimmen würden: „<b>Gegner, die an Engstellen</b> wie Lücken oder auf Plateaus plaziert sind, stellen eine Herausforderung dargestellt.“'
+    'Please decide to what extent you would agree with the statement “<b>Opponents placed at choke points</b> such as gaps or plateaus posed a challenge in the second level.“', 
+    'Bitte entscheiden Sie, inwieweit Sie der folgenden Aussage zustimmen würden: „<b>Gegner, die an Engstellen</b> wie Lücken oder auf Plateaus plaziert waren, stellten im zweiten Level eine Herausforderung dar.“'
   
   )
 

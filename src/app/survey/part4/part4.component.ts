@@ -32,8 +32,8 @@ export class Part4Component implements OnInit {
    */
   public questionPart1: Option = new Option(
   
-    'Please decide to what extent you would agree with the statement: “The <b>amount of opponents</b> pose a challenge.“', 
-    'Bitte entscheiden Sie, inwieweit Sie der folgenden Aussage zustimmen würden: „Die <b>Anzahl der Gegner</b> stellt eine Herausforderung dar.“'
+    'Please decide to what extent you would agree with the statement: The <b>number of opponents</b> in the second level was a challenge.“', 
+    'Bitte entscheiden Sie, inwieweit Sie der folgenden Aussage zustimmen würden: Die <b>Anzahl der Gegner</b> im zweiten Level stellte eine Herausforderung dar.“'
   
   )
 

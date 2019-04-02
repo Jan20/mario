@@ -11,9 +11,6 @@ export class Performance {
     public time: number
     public progress: number
     public difficulty: number
-    // public passedOpponents: number
-    // public detroyedOpponents: number
-    // public idleTime: number
 
     //////////////////
     // Constructors //

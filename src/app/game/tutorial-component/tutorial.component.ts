@@ -64,12 +64,12 @@ export class TutorialComponent implements OnInit, AfterViewInit {
         'Sammeln Sie eine Münze, indem Sie gegen die Unterseite des angebrochenen Eisblocks springen.')
 
     public tutorialMessage1: Option = new Option('Obtain the ability to shoot snow balls by jumping against the bottom side of the block with the question mark and collect the item available afterwards.', 
-        'Sie können die Fähigkeit Schneebälle zu schießen, erhalten, indem Sie gegen die Unterseite des mit dem Fragezeichen markierten Blocks springen und anschließend den verfügbaren Gegenstand sammeln.')
+        'Erhalten Sie die Fähigkeit Schneebälle zu schießen, indem Sie gegen die Unterseite des mit dem Fragezeichen markierten Blocks springen und anschließend den verfügbaren Gegenstand einsammeln.')
 
     public tutorialMessage2: Option = new Option('Fire a snowball by pressing the space key on your keyboard.', 
         'Schießen Sie einen Schneeball per Leertaste')
 
-    public tutorialMessage3: Option = new Option('Defeat all three opponents by either jumping on top of them or hitten them with a snow ball.', 
+    public tutorialMessage3: Option = new Option('Defeat all three opponents by either jumping on top of them or hit them with a snow ball.', 
         'Besiegen Sie alle drei Gegner, indem Sie entweder auf sie springen oder sie mit einem Schneeball treffen.')
 
     public tutorialMessage4: Option = new Option('Finish the tutorial by reaching the goal field at the right side of the level.', 

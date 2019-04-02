@@ -100,8 +100,6 @@ export class Player extends MovableObject{
 
         !this.finished ? this.move() : null
     
-        // this.move
-        
         let ctm = mat4()
 
         ctm = mult(ctm, translate(this.pos))
@@ -191,7 +189,6 @@ export class Player extends MovableObject{
 
                 ))
 
-                // this.audioService.playFireball()
             }
         
         }
@@ -299,8 +296,8 @@ export class Player extends MovableObject{
         
         } else {
 
-        // no y collision
-        this.pos[1] += this.velocity[1];
+            // no y collision
+            this.pos[1] += this.velocity[1];
 
         }
 
@@ -335,12 +332,6 @@ export class Player extends MovableObject{
                     currentEnemy.enemyType === 'J' ? this.sessionService.jumperSubject.next(true) : null
                     currentEnemy.enemyType === 'F' ? this.sessionService.flyerSubject.next(true) : null
 
-                    if (currentEnemy.enemyType === 'C') {
-
-                        console.log('helo')
-                        this.sessionService.walkerSubject.next(true)
-                    }
-
                     this.audioService.playStomp()
 
                     this.sessionService.increaseScore(100)
@@ -369,7 +360,7 @@ export class Player extends MovableObject{
                         
                         this.sessionService.tutorialHasBeenFinished = true
                         this.sessionService.statusSubject.next('completed')
-                            this.audioService.stopMusic()
+                        this.audioService.stopMusic()
                         this.resetToDefault()
                         this.sessionService.setProgress(playerRight)
                         this.sessionService.finishTutorial()
@@ -403,43 +394,21 @@ export class Player extends MovableObject{
             if ((Math.abs(adjustedPlayerPos - adjustedItemPos)) * 2 < (this.playerWidth + curItem.powerWidth) &&
                 (Math.abs(this.pos[1] - curItem.pos[1])) * 2 < (this.playerHeight + curItem.powerHeight)) {
                 
-                switch (curItem.powerType) {
-                    
-                    case 'L':
-                        
-                        this.sessionService.increaseLives()
-                        break;
+                if(curItem.powerType = 'P') {
 
-                    case 'P':
+                    this.sessionService.powerUpSubject.next(true)
+                    this.audioService.playPowerUp()
+                    this.hasProjectiles = true;
 
-                        this.sessionService.powerUpSubject.next(true)
-                        this.audioService.playPowerUp()
-                        this.hasProjectiles = true;
-                        break;
-
-                    case 'F':
-                        
-                        this.gameService.X_VELO_CONSTANT = .045;
-                        break
-
-                    case 'G':
-                        
-                        this.gameService.GRAVITY_CONSTANT = -.0055;
-                        break;
                 }
 
-                setTimeout(function () {
-
-                    this.gameService.GRAVITY_CONSTANT = -.0075;
-                    this.gameService.X_VELO_CONSTANT = .0175;
-
-                }, 20000); // holds for 10 seconds, should be longer?
-                curItem.lives = 0;
+                curItem.lives = 0
+    
             }
         }
         
         // handle off stage death
-        if (this.pos[1] <= -.5) {
+        if (this.pos[1] <= -0.5) {
             
             this.sessionService.decreaseLives()
             this.sessionService.increaseDefeatedByGaps()
@@ -458,13 +427,8 @@ export class Player extends MovableObject{
                 this.finished = true
                 
             } else {
-                this.restartLevel()
 
-                // this.pos = this.gameService.INITIAL_PLAYER_POS.slice(0);
-                // this.gameService.CAMERA_POS = this.gameService.INITIAL_CAMERA_POS.slice(0);
-                // this.gameService.GAMEWORLD.xBoundRight = this.gameService.INITIAL_WORLD_BOUND_RIGHT;
-                // this.gameService.GAMEWORLD.xBoundLeft = this.gameService.INITIAL_WORLD_BOUND_LEFT;
-                // this.velocity = [0, 0];
+                this.restartLevel()
             
             }
         }

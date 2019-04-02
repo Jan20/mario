@@ -1,7 +1,43 @@
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /{document=**} {
-      allow read, write;
+
+
+    function checkForValidUserKey() {
+      return request.resource.data.key[0:4] == 'user';
+    }
+
+    function checkForValidTutorial() {
+      return request.resource.data.key[0:7] == 'tutorial';
+    }
+
+    function checkForValidLevel() {
+      return request.resource.data.key[0:4] == 'level';
+    }
+    
+    match /users/{document=**} {
+      allow read;
+      allow write;
+    }
+
+    match /tutorials/{document=**} {
+      allow read;
+      allow write: if checkForValidTutorial();
+    }
+
+    match /performances/{document=**} {
+      allow read;
+      allow write;
+    }
+
+    match /levels/{document=**} {
+      allow read;
+      allow write;
+    }
+
+    match /level_prototypes/{document=**} {
+      allow read;
+      allow write;
     }
   }
+  
 }

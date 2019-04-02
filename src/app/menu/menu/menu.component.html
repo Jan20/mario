@@ -4,7 +4,7 @@
 
   <span class='spacer'></span>
 
-  <button mat-button (click)='toggleSound()'>
+  <button mat-button (click)='toggleAudio()'>
     <mat-icon *ngIf='audioIsEnbabled && status != undefined && status != "lost" && status != "completed"' >music_note</mat-icon>
     <mat-icon *ngIf='!audioIsEnbabled && status != undefined && status != "lost" && status != "completed"'>music_off</mat-icon>
   </button>

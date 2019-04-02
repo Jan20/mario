@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
+import { SessionService } from 'src/app/shared/services/session.service';
 
 @Injectable({
   providedIn: 'root'
@@ -9,91 +10,138 @@ export class AudioService {
   ///////////////
   // Variables //
   ///////////////
-  public coin: HTMLAudioElement = new Audio('assets/Sound/coin.wav')
-  public powerUp: HTMLAudioElement = new Audio('assets/Sound/upgrade.wav')
-  public fireball: HTMLAudioElement = new Audio('assets/Sound/fireworks.wav')
-  public stomp: HTMLAudioElement = new Audio('assets/Sound/fall.wav')
-  public lostLife: HTMLAudioElement = new Audio('assets/Sound/LostLife.mp3')
-  public theme: HTMLAudioElement = new Audio('assets/Sound/forest_theme.mp3')
-  public finished: HTMLAudioElement = new Audio('assets/Sound/finished.mp3')
-  public isAllowed: boolean = false
 
-  public isAllowedSubject: Subject<boolean> = new Subject<boolean>()
+  // HTML Audio Elements intended to be initialized after the user
+  // enables audio.
+  public coin: HTMLAudioElement
+  public powerUp: HTMLAudioElement 
+  public stomp: HTMLAudioElement
+  public lostLife: HTMLAudioElement
+  public theme: HTMLAudioElement
+  public finished: HTMLAudioElement
+  
+  // Boolean Variable which turns true if audio is enabled.
+  public isEnabled: boolean = false
 
-  constructor() {
+  // Boolean Variable intended to hold the status of the current session.
+  public status: string
 
-    this.isAllowedSubject.subscribe(isAllowed => {
-      
-      this.isAllowed = isAllowed
-      
-      if (!isAllowed) {
+  // Boolean subject intended to switch whenever
+  // The user decides to enable sound.
+  public isEnabledSubject: Subject<boolean> = new Subject<boolean>()
 
-        this.theme.pause()
-        this.coin.pause()
-        this.powerUp.pause()
-        this.fireball.pause()
-        this.stomp.pause()
-        this.lostLife.pause()
-        
-      }
-      
-    })
+  //////////////////
+  // Constructors //
+  //////////////////
+  public constructor(
+
+    private sessionService: SessionService
+
+  ) {
+
+    this.sessionService.statusSubject.subscribe(status => this.status = status)
 
   }
 
   ///////////////
   // Functions //
   ///////////////
+
+  /**
+   * 
+   * Switches the sound on and off.
+   * 
+   */
+  public toggleAudio(): void {
+
+    // Sets the 'isEnabled' boolean variable True if it is
+    // has been False before and False if True before, respectively.
+    this.isEnabled = !this.isEnabled
+
+    // If audio has been enabled, all audio track are going to be
+    // initialzed. 
+    this.isEnabled ? this.createAudioElements() : null
+
+    // Checks whether audio is allowed and a session has been started and
+    // starts the main theme if the conditions are met.
+    this.isEnabled && (this.status === 'running' || this.status === 'ready') ? this.playTheme() : null
+
+    // Turns off all running audio tracks.
+    !this.isEnabled ? this.stopMusic() : null
+
+    // Propagates the current audio setting through the application.
+    this.isEnabledSubject.next(this.isEnabled)
+
+  }
+
+  /**
+   * 
+   * Initializes all HTML audio elements with there
+   * intented audio tracks.
+   * 
+   */
+  public createAudioElements(): void {
+    
+    this.coin = new Audio('assets/audio/coin.wav')
+    this.powerUp = new Audio('assets/audio/upgrade.wav')
+    this.stomp = new Audio('assets/audio/fall.wav')
+    this.lostLife = new Audio('assets/audio/LostLife.mp3')
+    this.theme = new Audio('assets/audio/forest_theme.mp3')
+    this.finished = new Audio('assets/audio/finished.mp3')
+  
+  }
+
+  /**
+   * 
+   * Pauses all running audio tracks.
+   * 
+   */
   public stopMusic(): void {
 
-    this.theme.pause()
-    this.coin.pause()
-    this.powerUp.pause()
-    this.fireball.pause()
-    this.stomp.pause()
+    if(this.theme != undefined) {
+
+      this.theme.pause()
+      this.coin.pause()
+      this.powerUp.pause()
+      this.stomp.pause()
+
+    }
 
   }
 
   public playTheme(): void {
 
-    this.isAllowed ? this.theme.play() : null
-
+    this.isEnabled ? this.theme.play() : null
     
   }
 
   public playCoin(): void {
 
-    this.isAllowed ? this.coin.play() : null
+    this.isEnabled ? this.coin.play() : null
 
   }
 
   public playPowerUp(): void {
 
-    this.isAllowed ? this.powerUp.play() : null
-
-  }
-
-  public playFireball(): void {
-
-    this.isAllowed ? this.fireball.play() : null
+    this.isEnabled ? this.powerUp.play() : null
 
   }
 
   public playStomp(): void {
 
-    this.isAllowed ? this.stomp.play() : null
+    this.isEnabled ? this.stomp.play() : null
 
   }
 
   public playlostLife(): void {
 
-    this.isAllowed ? this.lostLife.play() : null
+    this.isEnabled ? this.lostLife.play() : null
 
   }
 
   public playFinished(): void {
 
-    this.isAllowed ? this.finished.play() : null
+    this.isEnabled ? this.finished.play() : null
 
   }
 

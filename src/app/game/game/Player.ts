@@ -191,7 +191,6 @@ export class Player extends MovableObject{
 
                 ))
 
-                // this.audioService.playFireball()
             }
         
         }
@@ -267,14 +266,12 @@ export class Player extends MovableObject{
                 
                 if (isBlock(blockCollide)) {
                     
+                    this.audioService.playCoin()
+
                     if (blockCollide == 'S') {
                     
+                        this.sessionService.coinSubject.next(true)
                         this.sessionService.increaseScore(150)
-                        this.audioService.playCoin()
-                    
-                    } else {
-                    
-                        // this.audioService.playFireball()
                     
                     }
 
@@ -294,8 +291,8 @@ export class Player extends MovableObject{
         
         } else {
 
-        // no y collision
-        this.pos[1] += this.velocity[1];
+            // no y collision
+            this.pos[1] += this.velocity[1];
 
         }
 
@@ -354,10 +351,8 @@ export class Player extends MovableObject{
                     if (this.sessionService.getLives() === 0) {
                         
                         this.audioService.stopMusic()
-                        this.resetToDefault()
                         this.sessionService.setProgress(playerRight)
                         this.sessionService.storeSession('lost')
-                        this.restartLevel()
                         this.finished = true
 
                     }
@@ -387,71 +382,37 @@ export class Player extends MovableObject{
             if ((Math.abs(adjustedPlayerPos - adjustedItemPos)) * 2 < (this.playerWidth + curItem.powerWidth) &&
                 (Math.abs(this.pos[1] - curItem.pos[1])) * 2 < (this.playerHeight + curItem.powerHeight)) {
                 
-                switch (curItem.powerType) {
-                    
-                    case 'L':
-                        
-                        this.sessionService.increaseLives()
-                        break;
+                if (curItem.powerType === 'P') {
+                
 
-                    case 'P':
+                    this.sessionService.powerUpSubject.next(true);
+                    this.audioService.playPowerUp();
+                    this.hasProjectiles = true;
+                    curItem.lives = 0;
+                    this.gameService.GAMEWORLD.items[i].lives = 0
 
-                        this.sessionService.powerUpSubject.next(true)
-                        this.audioService.playPowerUp()
-                        this.hasProjectiles = true;
-                        break;
-
-                    case 'F':
-                        
-                        this.gameService.X_VELO_CONSTANT = .045;
-                        break
-
-                    case 'G':
-                        
-                        this.gameService.GRAVITY_CONSTANT = -.0055;
-                        break;
                 }
-
-                setTimeout(function () {
-
-                    this.gameService.GRAVITY_CONSTANT = -.0075;
-                    this.gameService.X_VELO_CONSTANT = .0175;
-
-                }, 20000); // holds for 10 seconds, should be longer?
-                curItem.lives = 0;
             }
         }
         
         // handle off stage death
-        if (this.pos[1] <= -.5) {
+        if (this.pos[1] <= -0.5) {
             
             this.sessionService.decreaseLives()
             this.sessionService.increaseDefeatedByGaps()
-
-            this.restartLevel()
-            this.resetToDefault()
-            this.audioService.playlostLife()
 
             if (this.sessionService.getLives() === 0) {
 
                 this.audioService.stopMusic()
                 this.sessionService.setProgress(this.pos[0])
                 this.sessionService.storeSession('lost')
-                // this.pos = this.gameService.INITIAL_PLAYER_POS.slice(0);
-                this.restartLevel()
                 this.finished = true
                 
-            } else {
-                
-                this.restartLevel()
-
-                // this.pos = this.gameService.INITIAL_PLAYER_POS.slice(0);
-                // this.gameService.CAMERA_POS = this.gameService.INITIAL_CAMERA_POS.slice(0);
-                // this.gameService.GAMEWORLD.xBoundRight = this.gameService.INITIAL_WORLD_BOUND_RIGHT;
-                // this.gameService.GAMEWORLD.xBoundLeft = this.gameService.INITIAL_WORLD_BOUND_LEFT;
-                // this.velocity = [0, 0];
-            
             }
+
+            this.restartLevel()
+            this.resetToDefault()
+            this.audioService.playlostLife()
         }
     }
     

@@ -31,13 +31,13 @@ export class IntroductionComponent implements OnInit {
       if (language === 'english') {
 
         this.headline = 'Introduction'
-        this.text = 'You are invited to play <b>two levels</b> of a platform game and to answer a small survey afterwards which should not take more than 10 minutes in total.'
+        this.text = 'Thank you for participating in this study. You are invited to play <u><b>two levels</b></u> of a platform game and to answer a small survey afterwards which should not take more than 10 minutes in total.'
         this.button = 'Continue'
 
       } else {
 
         this.headline = 'Einführung'
-        this.text = "Sie sind eingeladen, <b>zwei Level</b> eines Jump'n'Run-Spiels zu spielen und anschließend eine kurze Umfrage zu beantworten, was insgesamt maximal 10 Minuten in Anspruch nehmen sollte."
+        this.text = "Vielen Dank für die Teilnahme an dieser Studie. Sie haben die Chance <u><b>zwei Level</b></u> eines Jump'n'Run-Spiels zu spielen und anschließend eine kurze Umfrage zu beantworten. Zusammen sollte dies maximal 10 Minuten in Anspruch nehmen."
         this.button = 'Weiter'
 
       }

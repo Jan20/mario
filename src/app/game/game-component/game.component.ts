@@ -50,8 +50,12 @@ export class GameComponent implements OnInit, AfterViewInit {
     public scoreString: Option = new Option('Score: ', 'Punkte: ')
     public livesString: Option = new Option('Lives: ', 'Leben: ')
 
-    public completedMessage: Option = new Option('Level Completed!', 'Level abgeschlossen!')
-    public lostMessage: Option = new Option('Thank you for having played the level!', 'Danke, dass Sie das Level gespielt haben!')
+    public timeElapsed: number = 0
+    public rawScore: number = 0
+
+
+    public completedMessage: Option = new Option(`You have completed the level and reached a score of ${this.rawScore} points!`, `Sie haben das Level abgeschlossen und einen Punktestand von ${this.rawScore} erziehlt.`)
+    public lostMessage: Option = new Option(`You have reached a score of ${this.rawScore} points! Thank you for having tried the level.`, `Sie haben ${this.rawScore} Punkte gesammelt! Vielen Dank, dass Sie das Level gespielt haben.`)
     public waitMessage: Option = new Option('loading...', 'lädt...')
     public surveyMessage: Option = new Option('Continue with the survey', 'Weiter zur Umfrage')
     public secondLevelMessage: Option = new Option('Continue with level 2', 'Weiter mit Level 2')
@@ -61,6 +65,7 @@ export class GameComponent implements OnInit, AfterViewInit {
     public showInformation: boolean = false
 
     public holdsPowerUp: boolean = false
+
 
     //////////////////
     // Constructors //
@@ -84,11 +89,19 @@ export class GameComponent implements OnInit, AfterViewInit {
         this.sessionService.readyForSurveySubject.subscribe(readyForSurvey => this.readyForSurvey = readyForSurvey)
         this.sessionService.sessionSubject.subscribe(status => {
 
-            status === 'stored' ? this.isStored = true : this.isStored = false
+              status === 'stored' ? this.isStored = true : this.isStored = false
 
         })
 
-        this.sessionService.statusSubject.subscribe(status => this.status = status)
+        this.sessionService.statusSubject.subscribe(status => {
+
+            this.completedMessage = new Option(`You have completed the level and reached a score of ${this.rawScore}!`, `Sie haben das Level abgeschlossen und einen Punktestand von ${this.rawScore} erziehlt.`)
+            this.lostMessage = new Option(`You have reached a score of ${this.rawScore} points! Thank you for having tried the level.`, `Sie haben ${this.rawScore} Punkte gesammelt! Vielen Dank, dass Sie das Level gespielt haben.`)
+    
+            this.status = status
+
+        })
+
         this.sessionService.statusSubject.next('ready')
         
         this.sessionService.timeSubject.subscribe(time => this.time = time)
@@ -102,22 +115,10 @@ export class GameComponent implements OnInit, AfterViewInit {
         // Requests the lanuage service's current language.
         this.languageService.fetchLanguage()
 
-        this.sessionService.showDifficultyClassSubject.subscribe(showDifficulty => this.showDifficulty = showDifficulty)
-        this.sessionService.difficultyClassSubject.subscribe(difficultyClass => {
-            
-            switch(difficultyClass){
-
-                case 50: this.difficultyClass = new Option('You are within the first quintile of all users', 'Sie befinden sich im ersten Quintil aller Benutzer')
-                case 75: this.difficultyClass = new Option('You are within the second quintile of all users', 'Sie befinden sich im zweiten Quintil aller Benutzer')
-                case 100: this.difficultyClass = new Option('You are within the third quintile of all users', 'Sie befinden sich im dritten Quintil aller Benutzer')
-                case 125: this.difficultyClass = new Option('You are within the fourth quintile of all users', 'Sie befinden sich im vierten Quintil aller Benutzer')
-                case 150: this.difficultyClass = new Option('You are within the fifth quintile of all users', 'Sie befinden sich im fünften Quintil aller Benutzer')
-
-            }
-            
-        })
-
         this.sessionService.powerUpSubject.subscribe(holdsPowerUp => this.holdsPowerUp = holdsPowerUp)
+
+        this.sessionService.timeElapsedSubject.subscribe(timeElapsed => this.timeElapsed = timeElapsed)
+        this.sessionService.rawScoreSubject.subscribe(rawScore => this.rawScore = rawScore)
 
     }
 
@@ -264,8 +265,6 @@ export class GameComponent implements OnInit, AfterViewInit {
 
         this.gameService.GAMEWORLD = new World(this.gameService, level, this.sessionService, this.levelService, this.audioService)
 
-        this.audioService.playTheme()
-
         // for hud initialization
         this.sessionService.resetTimer()
         this.sessionService.startTimer()
@@ -301,10 +300,10 @@ export class GameComponent implements OnInit, AfterViewInit {
 
                 // Draw the world and everything in it    
                 this.gameService.GAMEWORLD.draw();
-            });
+            })
 
 
-        });
+        })
 
 
     }
@@ -312,12 +311,6 @@ export class GameComponent implements OnInit, AfterViewInit {
     ngAfterViewInit() {
 
         this.gameService.GL = new WebGLUtils().setupWebGL(this.canvas)
-
-    }
-
-    public toggleDifficultyInformation(): void {
-
-        this.showInformation ? this.showInformation = false : this.showInformation = true
 
     }
 

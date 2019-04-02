@@ -35,10 +35,9 @@ export class MenuComponent implements OnInit {
     private languageService: LanguageService
   
   ) {
-    
 
     this.sessionService.statusSubject.subscribe(status => this.status = status)
-    this.audioService.isAllowedSubject.subscribe(audioIsEnbabled => this.audioIsEnbabled = audioIsEnbabled)
+    this.audioService.isEnabledSubject.subscribe(audioIsEnbabled => this.audioIsEnbabled = audioIsEnbabled)
 
     this.languageService.languageSubject.subscribe(language => this.language = language)
     this.languageService.fetchLanguage()
@@ -49,7 +48,7 @@ export class MenuComponent implements OnInit {
 
     this.userService.getCurrentUserKey().then(userKey => this.userKey = userKey)
 
-    window.innerWidth < 600 ? this.userService.storeDeviceType('mobile') : this.userService.storeDeviceType('desktop')
+    window.innerWidth < 900 ? this.userService.storeDeviceType('mobile') : this.userService.storeDeviceType('desktop')
   
   }
 
@@ -72,26 +71,10 @@ export class MenuComponent implements OnInit {
    * 
    * 
    */
-  public toggleSound(): void {
+  public toggleAudio(): void {
 
-    this.audioService.isAllowed ? this.disableSound() : this.enableSound()
-
-    this.audioService.isAllowed && this.status === 'running' ? this.audioService.playTheme() : null
-
-    !this.audioService.isAllowed ? this.audioService.theme.pause() : null
-    
-  }
-
-  private enableSound(): void {
-
-    this.audioService.isAllowedSubject.next(true)
-
-  }
-
-  private disableSound(): void {
-    
-    this.audioService.isAllowedSubject.next(false)
-
+    this.audioService.toggleAudio()
+ 
   }
   
   public switchLanguage(): void {
