@@ -362,7 +362,6 @@ export class Player extends MovableObject{
                         this.sessionService.statusSubject.next('completed')
                         this.audioService.stopMusic()
                         this.resetToDefault()
-                        this.sessionService.setProgress(playerRight)
                         this.sessionService.finishTutorial()
                         this.restartLevel()
                         this.finished = true
@@ -420,7 +419,6 @@ export class Player extends MovableObject{
             if (this.sessionService.getLives() === 0) {
                 this.sessionService.statusSubject.next('completed')
                 this.audioService.stopMusic()
-                this.sessionService.setProgress(this.pos[0])
                 this.sessionService.finishTutorial()
                 // this.pos = this.gameService.INITIAL_PLAYER_POS.slice(0);
                 this.restartLevel()

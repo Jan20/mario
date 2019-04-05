@@ -247,7 +247,6 @@ export class World {
             this.sessionService.tutorialHasBeenFinished = true
             
             this.audioService.stopMusic()
-            this.sessionService.setProgress(this.player.pos[0])
             this.audioService.playFinished()
             // Stores all collected gameplay information
             // of the current session at Firestore.

@@ -151,10 +151,8 @@ export class Part9Component implements OnInit {
 
       await this.surveyService.survey.storeAge(this.answer)
 
-      await this.surveyService.storeSurvey()
+      this.isStored = await this.surveyService.storeSurvey()
     
-      this.isStored = true
-
     } 
     
   }

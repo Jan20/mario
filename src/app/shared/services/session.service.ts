@@ -474,7 +474,7 @@ public resetTimer(): void {
 
   public setProgress(progress: number): void {
 
-    progress > this.session.performance.progress ? this.session.performance.progress = progress : null
+    progress > this.session.performance.progress ? this.session.performance.progress = progress / this.level.representation[0].length : null
 
   }
 
