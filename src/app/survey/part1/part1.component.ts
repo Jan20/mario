@@ -19,7 +19,8 @@ export class Part1Component implements OnInit {
   ///////////////
   // Variables //
   ///////////////
-    /**
+  
+  /**
    * 
    * Refers to the language choosen by the user, which
    * can either by English or German.
@@ -40,28 +41,23 @@ export class Part1Component implements OnInit {
     'Welches der beiden Levels, die Sie gerade gespielt haben, hat Ihnen mehr <b>Spaß gemacht</b>?'
   
   )
-
+  
+  // Defines the text displayed on the progress
+  // button at the bottom end of the page.
+  public button: Option = new Option('Continue', 'Weiter')
+    
   // All recently finished sessions that serve as the input
   // of the survey section.
   public rankOptionsEnglish: RankOption[] = []
   public rankOptionsGerman: RankOption[] = []
   
-  // Boolean variable indicating whether a hint showcasing
-  // possible answers should be shown or not.
-  public displayHint: boolean = false
-
+  // Defines the variables needed for ranking previously
+  // finished sessions.
   private rankOne: string = ''
   private rankTwo: string = ''
   
-  
-  /**
-   * 
-   * Defines the text displayed on the progress
-   * button at the bottom end of the page.
-   * 
-   */
-  public button: Option = new Option('Continue', 'Weiter')
-
+  // Defines the variable intentended to give the user a
+  // clear response after selecting an option.
   public isChosen: string = ''
 
   //////////////////
@@ -86,6 +82,7 @@ export class Part1Component implements OnInit {
     // Retrieves all recently finished sessions.
     this.initialize()
 
+    // 
     this.languageService.languageSubject.subscribe(language => this.language = language)
 
     this.languageService.fetchLanguage()
@@ -102,24 +99,39 @@ export class Part1Component implements OnInit {
    */
   private async initialize(): Promise<void> {
 
+    // Gets the current user key.
     const userKey: string = await this.userService.getCurrentUserKey()
 
-    const sessions: Session[] = await this.sessionService.getSessions(userKey)
+    // Gets all sessions of the current user.
+    const recentSessions: Session[] = await this.sessionService.getSessions(userKey)
 
+    // Generates two initial values for the most recently and second
+    // most recently finished sessions.
     let mostRecentSession: Session = new Session(null, null, null, firestore.Timestamp.fromMillis(0), null)
     let secondMostRecentSession: Session = new Session(null, null, null, firestore.Timestamp.fromMillis(0), null)
 
-    sessions.forEach(session => {
+    // Iterates over all recently finished sessions.
+    recentSessions.forEach(session => {
 
+      // Checks whether the session of the current iteration has been finished
+      // after the session that has been stored in the 'mostRecentSession' variable
+      // before. For the first two sessions within the 'recentSessions' array, this
+      // holds true by default as those values are compared with the initial values
+      // of the 'mostRecentSession' and 'secondMostRecentSession' variables which have
+      // been initialized with zeros.
       if (session.timestamp.toMillis() > mostRecentSession.timestamp.toMillis() && session.status == 'finished') {
 
+        // Writes the former most recently finished session to the
+        // second most recently finished variable. 
         secondMostRecentSession = mostRecentSession
         mostRecentSession = session
 
       } 
       
     })
- 
+    
+    // Creates the options, displayed to the user after the most recently finished
+    // and second most recently finished sessions have been identified.
     this.rankOptionsEnglish[0] = new RankOption('First Level', secondMostRecentSession)
     this.rankOptionsEnglish[1] = new RankOption('Second Level', mostRecentSession)
     
@@ -130,7 +142,9 @@ export class Part1Component implements OnInit {
 
   /**
    * 
-   * @param event 
+   * Simply event listender 
+   * 
+   * @param event: Keyboard event.
    */
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
@@ -139,7 +153,13 @@ export class Part1Component implements OnInit {
     
   }
   
-  
+  /**
+   * 
+   * 
+   * 
+   * @param rankOne 
+   * @param rankTwo 
+   */
   public selectOption(rankOne: RankOption, rankTwo: RankOption): void {
 
     this.isChosen = rankOne.option
@@ -161,7 +181,7 @@ export class Part1Component implements OnInit {
 
     // Checks wether all segments have been completed. If all conditions are met, the 
     // user can progress to the next step of the survey.
-    this.rankOne != '' && this.rankTwo != ''  ? this.router.navigate(['survey/part_2']) : this.displayHint = true
+    this.rankOne != '' && this.rankTwo != ''  ? this.router.navigate(['survey/part_2']) : null
   
   }
 

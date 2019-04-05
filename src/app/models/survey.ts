@@ -102,6 +102,23 @@ export class Survey {
 
     public toObject(): object {
 
+        this.fun_rank_01 == undefined ? this.fun_rank_01 = '' : null
+        this.fun_rank_02 == undefined ? this.fun_rank_02 = '' : null
+    
+        this.challenge_rank_01 == undefined ? this.fun_rank_01 = '' : null
+        this.challenge_rank_02 == undefined ? this.fun_rank_02 = '' : null
+    
+        this.preferred_challenge_level == undefined ? this.preferred_challenge_level = 404 : null 
+    
+        this.perception_number_of_opponents == undefined ? this.perception_number_of_opponents = '' : null
+        this.perception_opponents_next_to_each_other == undefined ? this.perception_opponents_next_to_each_other = '' : null
+        this.perception_opponents_at_choke_points == undefined ? this.perception_opponents_at_choke_points = '' : null
+    
+        this.age == undefined ? this.age = '' : null
+        this.gender == undefined ? this.gender = '' : null
+    
+        this.usage == undefined ? this.usage = '' : null
+
         return {
 
             "fun_rank_01": this.fun_rank_01,

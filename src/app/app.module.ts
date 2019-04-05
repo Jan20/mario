@@ -8,9 +8,8 @@ import { ConfigModule } from './config/config.module';
 import { MaterialModule } from './config/material.module';
 import { GameModule } from './game/game.module';
 import { SurveyModule } from './survey/survey.module';
-import { TestModule } from './test/test.module';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { MenuModule } from './menu/menu.module'
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
   
@@ -28,10 +27,9 @@ import { MenuModule } from './menu/menu.module'
     ReactiveFormsModule,
     BrowserAnimationsModule,
     ConfigModule,
-    MenuModule,
     GameModule,
     SurveyModule,
-    TestModule
+    SharedModule,
 
   ],
   providers: [

@@ -54,7 +54,7 @@ export class World {
         //
         // need to do this before constructing the stage
         //
-        this.generateEnemies()
+        this.createOpponents()
         this.player = new Player(this.gameService, this.sessionService, this.levelService, this.audioService)
         this.stage = new Stage(this.gameService, level.representation)
 
@@ -65,93 +65,93 @@ export class World {
         {
             'player': {
                 'fileNames': [
-                    "/assets/images/tux/Char/idle.png",
-                    "/assets/images/tux/Char/idleback.png",
-                    "/assets/images/tux/Char/walk1.png",
-                    "/assets/images/tux/Char/walk1back.png",
-                    "/assets/images/tux/Char/walk2.png",
-                    "/assets/images/tux/Char/walk2back.png",
-                    "/assets/images/tux/Char/walk3.png",
-                    "/assets/images/tux/Char/walk3back.png",
-                    "/assets/images/tux/Char/walk4.png",
-                    "/assets/images/tux/Char/walk4back.png",
-                    "/assets/images/tux/Char/walk5.png",
-                    "/assets/images/tux/Char/walk5back.png",
-                    "/assets/images/tux/Char/jump.png",
-                    "/assets/images/tux/Char/jumpback.png"
+                    '/assets/images/tux/character/idle.png',
+                    '/assets/images/tux/character/idleback.png',
+                    '/assets/images/tux/character/walk1.png',
+                    '/assets/images/tux/character/walk1back.png',
+                    '/assets/images/tux/character/walk2.png',
+                    '/assets/images/tux/character/walk2back.png',
+                    '/assets/images/tux/character/walk3.png',
+                    '/assets/images/tux/character/walk3back.png',
+                    '/assets/images/tux/character/walk4.png',
+                    '/assets/images/tux/character/walk4back.png',
+                    '/assets/images/tux/character/walk5.png',
+                    '/assets/images/tux/character/walk5back.png',
+                    '/assets/images/tux/character/jump.png',
+                    '/assets/images/tux/character/jumpback.png'
                 ],
                 'textures': []
             },
             'enemies': [
                 {
                     'fileNames': [
-                        "/assets/images/tux/Enemies/Crawler/idle.png",
-                        "/assets/images/tux/Enemies/Crawler/idleback.png",
-                        "/assets/images/tux/Enemies/Crawler/walk1.png",
-                        "/assets/images/tux/Enemies/Crawler/walk1back.png",
-                        "/assets/images/tux/Enemies/Crawler/walk2.png",
-                        "/assets/images/tux/Enemies/Crawler/walk2back.png",
-                        "/assets/images/tux/Enemies/Crawler/walk3.png",
-                        "/assets/images/tux/Enemies/Crawler/walk3back.png",
+                        '/assets/images/tux/walker/idle.png',
+                        '/assets/images/tux/walker/idleback.png',
+                        '/assets/images/tux/walker/walk1.png',
+                        '/assets/images/tux/walker/walk1back.png',
+                        '/assets/images/tux/walker/walk2.png',
+                        '/assets/images/tux/walker/walk2back.png',
+                        '/assets/images/tux/walker/walk3.png',
+                        '/assets/images/tux/walker/walk3back.png',
                     ],
                     'textures': []
                 },
                 {
                     'fileNames': [
-                        "/assets/images/tux/Enemies/Jumper/idle.png",
-                        "/assets/images/tux/Enemies/Jumper/idleback.png"
+                        '/assets/images/tux/jumper/idle.png',
+                        '/assets/images/tux/jumper/idleback.png'
                     ],
                     'textures': []
                 },
                 {
                     'fileNames': [
-                        "/assets/images/tux/Enemies/Flyer/fly1.png",
-                        "/assets/images/tux/Enemies/Flyer/fly1back.png",
-                        "/assets/images/tux/Enemies/Flyer/fly2.png",
-                        "/assets/images/tux/Enemies/Flyer/fly2back.png",
+                        '/assets/images/tux/flyer/fly1.png',
+                        '/assets/images/tux/flyer/fly1back.png',
+                        '/assets/images/tux/flyer/fly2.png',
+                        '/assets/images/tux/flyer/fly2back.png',
                     ],
                     'textures': []
                 },
                 {
                     'fileNames': [
-                        "/assets/images/tux/Enemies/Flyer/fly1.png",
-                        "/assets/images/tux/Enemies/Flyer/fly1back.png",
-                        "/assets/images/tux/Enemies/Flyer/fly2.png",
-                        "/assets/images/tux/Enemies/Flyer/fly2back.png",
+                        '/assets/images/tux/flyer/fly1.png',
+                        '/assets/images/tux/flyer/fly1back.png',
+                        '/assets/images/tux/flyer/fly2.png',
+                        '/assets/images/tux/flyer/fly2back.png',
                     ],
                     'textures': []
                 }
             ],
             'projectile': {
                 'fileNames': [
-                    "/assets/images/tux/projectile.png"
+                    '/assets/images/tux/power-ups/projectile.png'
                 ],
                 'textures': []
             },
             'item': {
                 'fileNames': [
-                    "/assets/images/tux/Power-ups/coin.png",
-                    "/assets/images/tux/Power-ups/life.png",
-                    "/assets/images/tux/Power-ups/fireball.png",
-                    "/assets/images/tux/Power-ups/star.png",
-                    "/assets/images/tux/Power-ups/wings.png"
+                    '/assets/images/tux/power-ups/coin.png',
+                    '/assets/images/tux/power-ups/flower.png',
+                    '/assets/images/tux/power-ups/flower.png',
+                    '/assets/images/tux/power-ups/flower.png',
+                    '/assets/images/tux/power-ups/flower.png'
                 ],
                 'textures': []
             },
             'background': {
                 'fileNames': [
-                    "/assets/images/tux/background.png"
+                    '/assets/images/tux/background.png'
                 ],
                 'textures': []
             },
             'stage': {
                 'fileNames': [
-                    "/assets/images/tux/Stage/groundblock.png",
-                    "/assets/images/tux/Stage/brickblock.png",
-                    "/assets/images/tux/Stage/itemblock.png",
-                    "/assets/images/tux/Stage/coinblock.png",
-                    "/assets/images/tux/Stage/blockblock.png",
-                    "/assets/images/checkerboard.png"
+                    '/assets/images/tux/stage/groundblock.png',
+                    '/assets/images/tux/stage/brickblock.png',
+                    '/assets/images/tux/stage/itemblock.png',
+                    '/assets/images/tux/stage/coinblock.png',
+                    '/assets/images/tux/stage/blockblock.png',
+                    '/assets/images/tux/stage/checkerboard.png'
                 ],
                 'textures': []
             }
@@ -321,7 +321,7 @@ export class World {
      * 
      * 
      */
-    public generateEnemies(): void {
+    public createOpponents(): void {
 
         // Go through stage and create enemies
         // Might want to store the stages themselves somewhere

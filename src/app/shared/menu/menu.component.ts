@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core'
-import { Router } from '@angular/router'
-import { MenuItem } from '../menu-model/menu.item'
 import { AudioService } from 'src/app/game/audio/audio.service';
 import { SessionService } from 'src/app/shared/services/session.service';
 import { LanguageService } from 'src/app/shared/services/language.service';
@@ -16,19 +14,16 @@ export class MenuComponent implements OnInit {
   ///////////////
   // Variables //
   ///////////////
-  public title: string = ''
-  public items: MenuItem[]
-  public status: string
-  public audioIsEnbabled: boolean = false
   private userKey: string
+  public status: string
   public language: string = 'english'
+  public audioIsEnbabled: boolean = false
 
   //////////////////
   // Constructors //
   //////////////////
   constructor(
 
-    private router: Router,
     private userService: UserService,
     private audioService: AudioService,
     private sessionService: SessionService,
@@ -55,17 +50,6 @@ export class MenuComponent implements OnInit {
   ///////////////
   // Functions //
   ///////////////
-  public navigateToMenuEntry(item: MenuItem): void {
-
-    this.router.navigate([item.getLink()])
-
-  }
-
-  public switchToLandingPage(): void {
-
-    this.router.navigate([''])
-
-  }
   /**
    * 
    * 
@@ -77,6 +61,11 @@ export class MenuComponent implements OnInit {
  
   }
   
+  /**
+   * 
+   * 
+   * 
+   */
   public switchLanguage(): void {
 
     this.userKey != undefined ? this.languageService.switchLanguage(this.userKey) : null

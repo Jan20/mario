@@ -7,19 +7,9 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
 
-  ///////////////
-  // Variables //
-  ///////////////
-  public title: string = 'Tux'
-
   //////////////////
   // Constructors //
   //////////////////
-  public constructor(
-
-    
-  ) {
-
-  }
+  public constructor() {}
 
 }

@@ -13,6 +13,7 @@ import { flatten, mat4, mult, translate, vec3 } from '../commons/MV';
 import { WebGLUtils } from '../commons/webgl-utils';
 import { World } from '../tutorial/world';
 import { UserService } from 'src/app/shared/services/user.service';
+import { Helper } from 'src/app/shared/helper';
 
 @Component({
     selector: 'app-tutorial',
@@ -104,20 +105,13 @@ export class TutorialComponent implements OnInit, AfterViewInit {
 
     ) {
 
-        this.sessionService.readyForSurveySubject.subscribe(readyForSurvey => this.readyForSurvey = readyForSurvey)
-        this.sessionService.sessionSubject.subscribe(status => {
-
-            status === 'stored' ? this.isStored = true : this.isStored = false
-
-        })
-
         this.sessionService.statusSubject.subscribe(status => this.status = status)
         this.sessionService.statusSubject.next('ready')
         
         this.sessionService.timeSubject.subscribe(time => this.time = time)
         this.sessionService.lifeSubject.subscribe(lives => this.lives = lives)
-        this.sessionService.scoreSubject.subscribe(score => this.score = score)
-
+        this.sessionService.scoreSubject.subscribe(score => this.score = Helper.buildSixDigitNumber(score))
+        
         this.sessionService.coinSubject.subscribe(coinCollected => this.coinCollected = coinCollected)
         this.sessionService.powerUpSubject.subscribe(powerUpCollected => this.powerUpCollected = powerUpCollected)
         this.sessionService.snowballSubject.subscribe(snowBallShot => this.snowBallShot = snowBallShot)
@@ -144,6 +138,8 @@ export class TutorialComponent implements OnInit, AfterViewInit {
     }
 
     ngOnInit(): void {
+
+        this.gameService.GL != undefined ? location.reload() : null
 
         this.startNewLevel()
      
@@ -244,10 +240,6 @@ export class TutorialComponent implements OnInit, AfterViewInit {
         this.gameService.GL.enable(this.gameService.GL.DEPTH_TEST);
         this.gameService.GL.enable(this.gameService.GL.BLEND);
         this.gameService.GL.blendFunc(this.gameService.GL.SRC_ALPHA, this.gameService.GL.ONE_MINUS_SRC_ALPHA);
-
-        //
-        //  Load shaders and initialize attribute buffers
-        //
 
         this.gameService.PROGRAM = initShaders(this.gameService.GL, this.vertexShaderText, this.fragmentShaderText)
 

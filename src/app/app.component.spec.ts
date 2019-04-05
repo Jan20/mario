@@ -1,6 +1,5 @@
 import { TestBed, async } from '@angular/core/testing';
 import { AppComponent } from './app.component';
-import { MenuModule } from './menu/menu.module';
 import { RouterModule } from '@angular/router';
 import { SurveyModule } from './survey/survey.module';
 import { AngularFirestore } from '@angular/fire/firestore';
@@ -15,7 +14,6 @@ describe('AppComponent', () => {
       ],
       imports: [
 
-        MenuModule,
         RouterModule,
         SurveyModule,
         AngularFireModule.initializeApp(environment.firebaseConfig)

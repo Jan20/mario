@@ -2,7 +2,6 @@ import { GameService } from "../game.service";
 import { mat4, mult, translate, rotate, flatten } from "../commons/MV"
 import { MovableObject } from "./MoveableObject"
 import { LevelService } from "../../shared/services/level.service";
-import { World } from "./world";
 import { SessionService } from "src/app/shared/services/session.service";
 import { Level } from "src/app/models/level";
 import { AudioService } from "../audio/audio.service";

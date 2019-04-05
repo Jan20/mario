@@ -15,7 +15,6 @@
         <h2 *ngIf='!isStored && language == "german"'>{{waitMessage.german}}</h2>
         
         <app-spinner *ngIf='!isStored'></app-spinner>
-        
         <h2 *ngIf='isStored && readyForSurvey && language == "english"' (click)='progressToSurvey()' class='ready'>{{surveyMessage.english}}</h2>
         <h2 *ngIf='isStored && readyForSurvey && language == "german"' (click)='progressToSurvey()' class='ready'>{{surveyMessage.german}}</h2>
         <h2 *ngIf='isStored && !readyForSurvey && language == "english"' (click)='startNewLevel()' class='ready'>{{secondLevelMessage.english}}</h2>
@@ -72,7 +71,7 @@
             <mat-icon class='control-icon'>arrow_upward</mat-icon>
         </button>
         <button *ngIf='holdsPowerUp' class='control-button-left' mat-stroked-button (mousedown)='selectActiveKey(32)' (touchstart)='selectActiveKey(32)' (mouseup)='removeActiveKey(32)' (touchend)='removeActiveKey(32)'>  
-            <mat-icon class='control-icon ice-bullet'><img src='assets/ui/ice_bullet.png'></mat-icon>
+            <mat-icon class='control-icon ice-bullet'><img src='assets/images/ui/ice_bullet.png'></mat-icon>
         </button>
     </div>
     

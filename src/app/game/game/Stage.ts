@@ -39,7 +39,7 @@ export class Stage {
             'B': 1, // Brick
             'Y': 2, // Coin
             'L': 2, // Life
-            'P': 2, // Fireball
+            'P': 2, // Snowball
             'F': 2, // Star
             'G': 2, // Wing
             'S': 3, // Brick

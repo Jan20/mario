@@ -72,4 +72,48 @@ export class GameService {
     //////////////////
     public constructor() {}
 
+
+    public resetService(): void {
+
+        this.lightPosition = null
+        this.GAMEWORLD = null
+        this.FOVY = 30
+        this.ASPECT_RATIO = 1
+        this.PERSPECTIVE = perspective(this.FOVY, this.ASPECT_RATIO, 0.1, 500)
+        this.INITIAL_CAMERA_POS = vec3(-7.5, -7.5, -7.5/Math.tan(radians(this.FOVY/2)))
+        this.GL = null
+        this.pixels = null
+        this.UNIFORM_MODEL = null
+        this.UNIFORM_CAMERA_X = null
+        this.UNIFORM_PROJECTION = null
+        this.UNIFORM_VIEW = null
+        this.V_BUFFER = null
+        this.T_BUFFER = null
+        this.N_BUFFER = null
+        this.S_BUFFER = null
+        this.UNIFORM_LIGHTPOSITION = null
+        this.UNIFORM_SHININESS = null
+        this.UNIFORM_SHADOWMAP = null
+        this.UNIFORM_SHADOW_VIEW = null
+        this.PROGRAM = null
+        this.CAMERA_POS = null
+        this.INITIAL_WORLD_BOUND_LEFT = 0
+        this.INITIAL_WORLD_BOUND_RIGHT = 14
+        this.DRAW_BOUND = 5.5
+        this.ENEMY_ALPHA_DEPTH = -0.90
+        this.INITIAL_PLAYER_POS = [1, 10, 0]
+        this.INITIAL_PLAYER_VEL = [0, 0]
+        this.X_VELO_CONSTANTMAX = 8.0
+        this.X_VELO_CONSTANT = .0175
+        this.X_GROUND_FRICTION = .865
+        this.X_AIR_FRICTION = .92
+        this.GRAVITY_CONSTANT = -.0075
+        this.JUMP_CONSTANT = .26
+        this.WALK_CUTOFF = 0.003
+        this.ANIM_SPEED = 40
+        this.stage = 0
+        this.shininess =  50
+
+    }
+
 }

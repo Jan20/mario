@@ -12,14 +12,16 @@ import { flatten, mat4, mult, translate, vec3 } from '../commons/MV';
 import { WebGLUtils } from '../commons/webgl-utils';
 import { GameService } from '../game.service';
 import { World } from '../game/world';
+import { Helper } from 'src/app/shared/helper';
 
 @Component({
     selector: 'app-game',
     templateUrl: './game.component.html',
     styleUrls: ['./game.component.scss']
 })
-export class GameComponent implements OnInit, AfterViewInit {
-
+export class GameComponent implements OnInit {
+    
+    
     ///////////////
     // Variables //
     ///////////////
@@ -50,7 +52,6 @@ export class GameComponent implements OnInit, AfterViewInit {
     public scoreString: Option = new Option('Score: ', 'Punkte: ')
     public livesString: Option = new Option('Lives: ', 'Leben: ')
 
-    public timeElapsed: number = 0
     public rawScore: number = 0
 
 
@@ -86,10 +87,16 @@ export class GameComponent implements OnInit, AfterViewInit {
 
     ) {
 
-        this.sessionService.readyForSurveySubject.subscribe(readyForSurvey => this.readyForSurvey = readyForSurvey)
         this.sessionService.sessionSubject.subscribe(status => {
 
-              status === 'stored' ? this.isStored = true : this.isStored = false
+            if (status === 'readyForSurvey') {
+
+                this.isStored = true
+                this.readyForSurvey = true
+
+            }
+
+            status === 'stored' ? this.isStored = true : null
 
         })
 
@@ -106,7 +113,12 @@ export class GameComponent implements OnInit, AfterViewInit {
         
         this.sessionService.timeSubject.subscribe(time => this.time = time)
         this.sessionService.lifeSubject.subscribe(lives => this.lives = lives)
-        this.sessionService.scoreSubject.subscribe(score => this.score = score)
+        this.sessionService.scoreSubject.subscribe(score => {
+            
+            this.score = Helper.buildSixDigitNumber(score)
+            this.rawScore = score
+
+        })
         
         // Updates the language variable every time
         // the user changes the language setting.
@@ -117,12 +129,12 @@ export class GameComponent implements OnInit, AfterViewInit {
 
         this.sessionService.powerUpSubject.subscribe(holdsPowerUp => this.holdsPowerUp = holdsPowerUp)
 
-        this.sessionService.timeElapsedSubject.subscribe(timeElapsed => this.timeElapsed = timeElapsed)
-        this.sessionService.rawScoreSubject.subscribe(rawScore => this.rawScore = rawScore)
 
     }
 
     ngOnInit(): void {
+
+        this.gameService.GL != undefined ? location.reload() : null
 
         if (this.sessionService.tutorialHasBeenFinished === true) {
 
@@ -177,11 +189,8 @@ export class GameComponent implements OnInit, AfterViewInit {
 
         }
 
-        if ((this.status === 'completed' || this.status === 'lost') && this.isStored === true) {
+        (this.status === 'completed' || this.status === 'lost') && this.isStored === true ? location.reload() : null
 
-            location.reload() 
-
-        }
     
         // If the current session has been stored successfully,
         // a page refresh is performend. 
@@ -223,6 +232,16 @@ export class GameComponent implements OnInit, AfterViewInit {
      */
     private async init(level: Level) {
 
+        if (this.gameService.GL != undefined) {
+
+            this.gameService.GL.clear(this.gameService.GL.COLOR_BUFFER_BIT)
+            this.gameService.GL.clear(this.gameService.GL.DEPTH_BUFFER_BIT)
+            this.gameService.GL.clear(this.gameService.GL.STENCIL_BUFFER_BIT)
+
+        }
+    
+        this.gameService.GL = new WebGLUtils().setupWebGL(this.canvas)
+
         this.gameService.lightPosition = vec3(0.0, 1.0, 1.0)
 
         !this.gameService.GL ? alert("WebGL isn't available") : null
@@ -238,9 +257,7 @@ export class GameComponent implements OnInit, AfterViewInit {
         this.gameService.GL.enable(this.gameService.GL.BLEND);
         this.gameService.GL.blendFunc(this.gameService.GL.SRC_ALPHA, this.gameService.GL.ONE_MINUS_SRC_ALPHA);
 
-        //
-        //  Load shaders and initialize attribute buffers
-        //
+        //  Load shaders 
 
         this.gameService.PROGRAM = initShaders(this.gameService.GL, this.vertexShaderText, this.fragmentShaderText)
 
@@ -269,7 +286,7 @@ export class GameComponent implements OnInit, AfterViewInit {
         this.sessionService.resetTimer()
         this.sessionService.startTimer()
 
-        this.render();
+        this.render()
     }
 
 
@@ -279,27 +296,27 @@ export class GameComponent implements OnInit, AfterViewInit {
 
             requestAnimationFrame(() => {
 
-                this.gameService.GL.clear(this.gameService.GL.COLOR_BUFFER_BIT | this.gameService.GL.DEPTH_BUFFER_BIT);
+                // this.gameService.GL.clear(this.gameService.GL.COLOR_BUFFER_BIT | this.gameService.GL.DEPTH_BUFFER_BIT);
 
                 // Set the perspective
-                this.gameService.GL.uniformMatrix4fv(this.gameService.UNIFORM_PROJECTION, false, flatten(this.gameService.PERSPECTIVE));
+                this.gameService.GL.uniformMatrix4fv(this.gameService.UNIFORM_PROJECTION, false, flatten(this.gameService.PERSPECTIVE))
 
-
-                this.gameService.GL.uniform1f(this.gameService.UNIFORM_CAMERA_X, -this.gameService.CAMERA_POS[0]);
+                this.gameService.GL.uniform1f(this.gameService.UNIFORM_CAMERA_X, -this.gameService.CAMERA_POS[0])
+                
                 // Set the view
-                var vtm = mat4();
+                var vtm = mat4()
 
                 // initial CameraPos set in main to (0, 0, -40) to view all cubes
-                vtm = mult(vtm, translate(this.gameService.CAMERA_POS));
-                this.gameService.GL.uniformMatrix4fv(this.gameService.UNIFORM_VIEW, false, flatten(vtm));
+                vtm = mult(vtm, translate(this.gameService.CAMERA_POS))
+                this.gameService.GL.uniformMatrix4fv(this.gameService.UNIFORM_VIEW, false, flatten(vtm))
 
 
                 //  Set lighting
-                this.gameService.GL.uniform3fv(this.gameService.UNIFORM_LIGHTPOSITION, flatten(this.gameService.lightPosition));
-                this.gameService.GL.uniform1f(this.gameService.UNIFORM_SHININESS, this.gameService.shininess);
+                this.gameService.GL.uniform3fv(this.gameService.UNIFORM_LIGHTPOSITION, flatten(this.gameService.lightPosition))
+                this.gameService.GL.uniform1f(this.gameService.UNIFORM_SHININESS, this.gameService.shininess)
 
                 // Draw the world and everything in it    
-                this.gameService.GAMEWORLD.draw();
+                this.gameService.GAMEWORLD.draw()
             })
 
 
@@ -308,11 +325,7 @@ export class GameComponent implements OnInit, AfterViewInit {
 
     }
 
-    ngAfterViewInit() {
-
-        this.gameService.GL = new WebGLUtils().setupWebGL(this.canvas)
-
-    }
+ 
 
     /**
      * 

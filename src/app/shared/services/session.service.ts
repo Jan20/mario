@@ -7,7 +7,6 @@ import { Config } from 'src/app/config/config';
 import { Level } from 'src/app/models/level';
 import { Helper } from 'src/app/shared/helper';
 import { CloudService } from 'src/app/shared/services/cloud.service';
-import { SurveyService } from 'src/app/shared/services/survey.service';
 import { Performance } from '../../models/performance';
 import { Session } from '../../models/session';
 import { UserService } from './user.service';
@@ -36,19 +35,12 @@ export class SessionService {
   // Defines the number of lives the player starts with.
   private lives: number = Config.numberOfLives
 
-  private consecutiveSessions: number = 0
-
   public statusSubject: Subject<string> = new Subject<string>()
   public sessionSubject: Subject<string> = new Subject<string>()
-  public readyForSurveySubject: Subject<boolean> = new Subject<boolean>()
 
   public timeSubject: Subject<string> = new Subject<string>()
-  public scoreSubject: Subject<string> = new Subject<string>()
+  public scoreSubject: Subject<number> = new Subject<number>()
   public lifeSubject: Subject<number> = new Subject<number>()
-
-
-  public timeElapsedSubject: Subject<number> = new Subject<number>()
-  public rawScoreSubject: Subject<number> = new Subject<number>()
 
   // Tutorial
   public coinSubject: Subject<boolean> = new Subject<boolean>()
@@ -65,7 +57,6 @@ export class SessionService {
 
   public keyArray: boolean[] = []
 
-  public performanceSubject: Subject<number> = new Subject<number>()
 
   //////////////////
   // Constructors //
@@ -75,7 +66,6 @@ export class SessionService {
     private angularFirestore: AngularFirestore,
     private userService: UserService,
     private cloudService: CloudService,
-    private surveyService: SurveyService,
     private router: Router
 
   ) {
@@ -223,17 +213,15 @@ export class SessionService {
     // Checks whether the user can progress to the survey.
     const canProgressToSurvey: boolean = await this.checkProgressToSurvey(userKey)
     
-    canProgressToSurvey ? this.readyForSurveySubject.next(canProgressToSurvey): null
-    canProgressToSurvey ? this.sessionSubject.next('stored') : null
-    canProgressToSurvey ? this.performanceSubject.next(this.session.performance.difficulty): null
+    // Propagates the information that the user can progress to the survey
+    // through the application.
+    canProgressToSurvey ? this.sessionSubject.next('readyForSurvey') : null
 
     // Calls the backend in order to adapt the difficulty of the next level.
-    await this.cloudService.evolveLevel(userKey)
-
-    this.readyForSurveySubject.next(canProgressToSurvey)
+    !canProgressToSurvey ? await this.cloudService.evolveLevel(userKey): null
 
     // Informs the user that the current session has been stored.
-    this.sessionSubject.next('stored')
+    !canProgressToSurvey ? this.sessionSubject.next('stored'): null
 
   }
 
@@ -253,28 +241,12 @@ export class SessionService {
    */
   public async checkProgressToSurvey(userKey: string): Promise<boolean> {
 
-    // Boolean variable indicating whether a user can
-    // progress to the survey.
-    let isReady: boolean = false
-
     // Retrieves all recently finished sessions.
     const recentSessions: Session[] = await this.getRecentlyFinishedSessions(userKey)
 
-    // Checks whether at least 3 sessions have been finished while the user
-    // has not finished a survey yet.
-    if (recentSessions.length > 1 && !this.surveyService.surveyCompleted) {
-
-      // Writes the recently finished sessions to the survey service.
-      await this.surveyService.setRecentSessions(recentSessions)
-
-      // indicates that the user can progress to the survey.
-      isReady = true
-    
-    }
-
     // Returns a promise which is resolved when the state
     // of the 'isReady' variable changes.
-    return new Promise<boolean>(resolve => resolve(isReady))
+    return new Promise<boolean>(resolve => resolve(recentSessions.length > 1))
 
   }
   
@@ -441,7 +413,6 @@ public startTimer(): void {
     this.timeElapsed += Math.floor((timeNow - this.startTime)/1000)
     
     this.session.performance.time = this.timeElapsed
-    this.timeElapsedSubject.next(this.session.performance.time)
 
     this.timeSubject.next(Helper.buildSixDigitNumber(this.timeElapsed))
 
@@ -471,12 +442,6 @@ public resetTimer(): void {
   public getRecentSessions(): Session[] {
 
     return this.recentSessions
-
-  }
-
-  public getConsecutiveSessions(): number {
-
-    return this.consecutiveSessions
 
   }
 
@@ -543,8 +508,7 @@ public resetTimer(): void {
   public increaseScore(value: number): void {
 
     this.session.performance.score += value
-    this.rawScoreSubject.next(this.session.performance.score)
-    this.scoreSubject.next(Helper.buildSixDigitNumber(this.session.performance.score))
+    this.scoreSubject.next(this.session.performance.score)
     
   }
 

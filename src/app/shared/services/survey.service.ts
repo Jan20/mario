@@ -1,10 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { Subject } from 'rxjs';
-import { Session } from 'src/app/models/session';
 import { Survey } from 'src/app/models/survey';
 import { UserService } from 'src/app/shared/services/user.service';
-import { Samples } from 'src/app/test/samples';
 
 @Injectable({
   providedIn: 'root'
@@ -15,14 +12,7 @@ export class SurveyService {
   // Variables //
   ///////////////
 
-  // Boolean variable indicating whether a user has already
-  // finished a survey or not.
-  public surveyCompleted: boolean = false
-
-  private recentSessions: Session[] = [Samples.sampleSession1, Samples.sampleSession2, Samples.sampleSession3]
-
-  public surveySubject: Subject<string> = new Subject<string>()
-
+  // Initializes the survey with an empty survey object.
   public survey: Survey = new Survey()
 
   //////////////////
@@ -33,10 +23,7 @@ export class SurveyService {
     private userService: UserService,
     private angularFirestore: AngularFirestore
 
-  ) {   
-
-
-  }
+  ) {}
 
   ///////////////
   // Functions //
@@ -44,45 +31,25 @@ export class SurveyService {
 
   /**
    * 
-   * 
+   * Stores a survey persistently at Firestore.
    * 
    */
-  public startExperiment(): void {
+  public async storeSurvey(): Promise<boolean> {
 
-    this.surveySubject.next('running')
-
-  }
-
-  public async storeSurvey(): Promise<string> {
-
+    // Gets the key of the current user.
     const userKey: string = await this.userService.getCurrentUserKey()
 
-    await this.angularFirestore.doc(`users/${userKey}/surveys/survey_001`).set(this.survey.toObject())
+    // Converts the survey variable to a JSON like object and stores it
+    // at Firestore.
+    await this.angularFirestore.doc(`users/${userKey}/surveys/survey`).set(this.survey.toObject())
 
-    localStorage.removeItem('user_key');
+    // Deletes the user key from the user's browser after the survey
+    // has been stored persistendly.
+    localStorage.removeItem('user_key')
 
-    return new Promise<string>(resolve => resolve('surveyStored'))
-
-  }
-
-  /////////////
-  // Getters //
-  /////////////
-  public getRecentSessions(): Session[] {
-
-    return this.recentSessions
+    // Returns true after the survey has been sotred at Firebase.
+    return new Promise<boolean>(resolve => resolve(true))
 
   }
-
-  /////////////
-  // Setters //
-  /////////////
-  public setRecentSessions(recentSessions: Session[]): void {
-    
-    this.recentSessions = recentSessions
-
-  }
-
-
 
 }
